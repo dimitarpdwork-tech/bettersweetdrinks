@@ -1,0 +1,7 @@
+dist/
+.venv/
+__pycache__/
+*.sql
+*.wpress
+private/
+.env
