@@ -1,0 +1,23 @@
+{
+  "id": "28",
+  "title": "Homemade Hardee’s Milkshake Recipe",
+  "description": "Hardee’s Milkshake is a classic treat offered by Hardee’s , a fast-food chain known for its burgers and other comfort foods. Their milkshakes are typically made with real ice cream and come in various flavors. Common options include chocolate, vanilla, and strawberry, but sometimes seasonal or special flavors are available as well.",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "1. Ice Cream: 2 cups of premium vanilla, chocolate, or strawberry ice cream (depending on your preference); make sure it’s full-fat for that rich flavor and creamy texture.",
+    "2. Milk: ½ cup of whole milk, adjusting to your preferred consistency. The less milk, the thicker the shake.",
+    "3. Whipped Cream: Enough for a generous topping.",
+    "4.Flavoring (Optional): For vanilla or chocolate shakes, consider adding a dash of pure vanilla extract or a scoop of chocolate syrup to intensify the flavor. Strawberry shakes can be enhanced with a few slices of fresh strawberries."
+  ],
+  "instructions": "<p></p><ol><li><strong>Prep Your Ingredients:</strong> Make sure your ice cream is slightly softened for easier blending. If you’re adding flavor enhancers, have them measured and ready.</li><li><strong>Blend</strong>: In a blender, combine the ice cream and milk. For enhanced flavors, add your vanilla extract, chocolate syrup, or fresh strawberries here. Blend on a low speed to combine, then ramp up the power for smooth consistency. If the shake is too thick, you can add a little more milk; if it is too thin, add more ice cream.</li><li><strong>Serve</strong>: Pour the shake into a tall glass, leaving enough room for the whipped cream. Add a generous dollop (or two) of whipped cream on top. If you wish, garnish with a drizzle of syrup, sprinkles, or a piece of fresh fruit corresponding to your shake’s flavor.</li></ol>",
+  "notes": "<p></p><ul><li><strong>Temperature Matters:</strong> Use a chilled glass to keep your shake colder for longer. You can freeze your serving glass for 15-30 minutes before pouring the shake in.</li><li><strong>Quality Over Everything:</strong> The better the quality of ice cream and milk, the richer and creamier the shake. If available, consider using ice cream from local creameries.</li><li><strong>Customize</strong>: Don’t hesitate to experiment with mix-ins like cookies, brownie chunks, or different syrups to create your own signature shake.</li></ul>",
+  "yield": "1",
+  "prepTime": "PT5M",
+  "cookTime": "",
+  "totalTime": "PT5M",
+  "image": "/wp-content/uploads/2024/09/Firefly-Homemade-Hardees-Milkshake-214314-735x572.jpg",
+  "nutrition": {},
+  "keywords": "Homemade Hardee’s Milkshake Recipe, Milkshake, Sweet drink",
+  "category": "Milkshake",
+  "cuisine": ""
+}

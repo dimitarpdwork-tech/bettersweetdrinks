@@ -1,0 +1,50 @@
+name: Publish website
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      site_url:
+        description: 'Full destination URL, including repository path for a preview'
+        required: true
+        default: 'https://dimitarpdwork-tech.github.io/bettersweetdrinks'
+        type: string
+      production:
+        description: 'Live domain launch (enables indexing and custom domain)'
+        default: false
+        type: boolean
+permissions:
+  contents: read
+concurrency:
+  group: pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: ${{ inputs.site_url || 'https://dimitarpdwork-tech.github.io/bettersweetdrinks' }}
+      PRODUCTION: ${{ inputs.production || false }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install -r requirements.txt
+      - run: python scripts/build.py
+      - run: python scripts/verify.py
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

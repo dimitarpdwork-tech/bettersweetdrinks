@@ -1,0 +1,28 @@
+{
+  "id": "98",
+  "title": "Homemade Strawberry Rhubarb Wine Recipe",
+  "description": "Wine making, traditionally seen as a craft reserved for grapes, has taken a whimsical turn in my kitchen. My latest adventure? Strawberry Rhubarb Wine . This blend is not just a drink; it’s a playful dance between sweet and tart, a liquid ode to summer’s bounty. For years, I’ve been a devout fan of the classic strawberry and rhubarb pie, a dessert that encapsulates the essence of warmth, family gatherings, and the joy of seasonal eating. During one such nostalgic indulgence, a thought struck me—why not capture this delightful harmony in a bottle?",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "2 lbs of fresh strawberries",
+    "2 lbs of fresh rhubarb",
+    "2.5 lbs of sugar (preferably white for a cleaner fermentation)",
+    "1 gallon of water (preferably filtered or spring water)",
+    "1 tsp of acid blend (to balance the wine’s pH)",
+    "1 tsp of yeast nutrient (to support yeast health)",
+    "1 package of wine yeast (Montrachet or any preferred wine yeast strain)",
+    "Campden tablets (optional for sterilization)",
+    "Pectic enzyme (helps break down the fruit’s pectin)"
+  ],
+  "instructions": "<h3>Preparation:</h3><ol><li>Rinse the strawberries and rhubarb under cool water. Hull the strawberries and cut both the strawberries and rhubarb into small pieces.</li></ol><h3>Initial Fermentation:</h3><ol><li>In a large pot, bring the water to a boil and dissolve the sugar in it. Let it cool down to room temperature.</li><li>Place the cut strawberries and rhubarb in a fermentation bag inside a primary fermentation container (a food-grade bucket works well).</li><li>Pour the cooled sugar water over the fruits, ensuring they’re fully submerged.</li><li>Add the acid blend, yeast nutrient, and pectic enzyme according to the dosage recommended on their packages. If you’re using Campden tablets, crush and add one tablet, then let the mixture sit for 24 hours to sterilize.</li><li>After 24 hours (or immediately if not using Campden tablets), sprinkle the wine yeast on top of the liquid without stirring.</li></ol><h3>Primary Fermentation Continues:</h3><ol><li>Cover the fermentation container with a clean cloth or lid fitted with an airlock. Let it sit in a cool, dark place.</li><li>Stir the mixture once daily, squeezing the fermentation bag gently to extract flavors for 5 to 7 days.</li></ol><h3>Secondary Fermentation:</h3><ol><li>After the primary fermentation period, remove the fermentation bag, squeezing out any excess liquid back into the container.</li><li>Transfer the liquid to a secondary fermentation vessel, like a glass carboy, using a siphon to avoid transferring sediment.</li><li>Fit the carboy with an airlock and let the wine sit in a cool, dark place for about 4-6 weeks. This allows the wine to clear and mature.</li></ol><h3>Bottling:</h3><ol><li>Once the wine has cleared and no more sediments form at the bottom, it’s ready to be bottled.</li><li>Siphon the wine into clean bottles, leaving about an inch of headspace. Cork the bottles.</li></ol><h3>Aging:</h3><ol><li>Store the bottles in a cool, dark place. The wine will continue to improve with age, and it’s generally best after 6 months to a year.</li></ol>",
+  "notes": "<ul><li><strong>Sanitation is Key:</strong> Ensure all your equipment is thoroughly sanitized to prevent any unwanted bacteria from spoiling your wine.</li><li><strong>Patience Pays Off: </strong>Resist the urge to rush the process. The longer your wine ages, the better the flavors will develop.</li><li><strong>Taste Test:</strong> Feel free to taste your wine at different stages. This will not only be enjoyable but also give you insight into the fermentation process.</li></ul>",
+  "yield": "1",
+  "prepTime": "PT15M",
+  "cookTime": "PT5M",
+  "totalTime": "PT20M",
+  "image": "/wp-content/uploads/2024/07/Untitled-design-2024-07-05T211500.596-735x735.png",
+  "nutrition": {},
+  "keywords": "",
+  "category": "Cocktails",
+  "cuisine": ""
+}

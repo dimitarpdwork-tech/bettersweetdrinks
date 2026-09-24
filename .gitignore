@@ -5,3 +5,4 @@ __pycache__/
 *.wpress
 private/
 .env
+public/wp-content/uploads/

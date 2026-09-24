@@ -1,0 +1,28 @@
+{
+  "id": "77",
+  "title": "Sprite Blueberry Lemonade Recipe",
+  "description": "As the leaves show their first blush of green, we yearn to bask in the sun with a refreshingly cool drink in hand. For those of us who relish the making of homemade beverages that sparkle both in flavor and creativity, there’s a delightful concoction that’s been dancing on the edge of our palates: the Sprite Blueberry Lemonade . This drink is not just a thirst quencher; it’s a vibrant symphony of zesty lemon and sweet, juicy blueberries that serenades your taste buds.",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "1 cup of fresh blueberries (you can also use frozen blueberries if fresh ones aren’t available, but remember, the fresher, the better!)",
+    "1/2 cup of sugar (adjust based on your sweetness preference)",
+    "1 cup of freshly squeezed lemon juice (this usually takes about 4-6 medium-sized lemons)",
+    "1 cup of water (for the blueberry syrup)",
+    "2 cups of cold water (to dilute the mixture)",
+    "1 bottle of Sprite (or any lemon-lime soda of your choice; 2 litres work well)",
+    "Ice cubes (for serving)",
+    "Fresh mint leaves (optional, for garnish)",
+    "Lemon slices (optional, for garnish)"
+  ],
+  "instructions": "<h3>Make the Blueberry Syrup:</h3><ol><li>In a medium saucepan, combine the blueberries, sugar, and 1 cup of water. Bring the mixture to a boil over medium heat.</li><li>Lower the heat and let it simmer for about 15 minutes, or until the blueberries have broken down and the mixture has thickened slightly.</li><li>Strain the syrup through a fine sieve into a bowl, pressing on the blueberries to extract as much liquid as possible. Discard the solids and let the syrup cool to room temperature.</li></ol><h3>Combine With Lemon Juice:</h3><ol><li>In a large pitcher, pour in the freshly squeezed lemon juice and the blueberry syrup. Stir well to combine.</li></ol><h3>Dilute and Chill:</h3><ol><li>Add the 2 cups of cold water to the pitcher and stir. Place the pitcher in the refrigerator to chill. This helps meld the flavors together beautifully.</li></ol><h3>Add the Sprite:</h3><ol><li>Just before serving, gently stir in the Sprite to the chilled blueberry lemonade mixture. This will ensure that the fizz stays bubbly and bright.</li></ol><h3>Serving:</h3><ol><li>Fill glasses with ice cubes to the brim.</li><li>Pour the Sprite blueberry lemonade over the ice, allowing the fizz to settle before filling the glasses to the top.</li><li>Garnish with fresh mint leaves and lemon slices for that extra touch of elegance and freshness.</li></ol>",
+  "notes": "<ul><li><strong>Freshness Matters:</strong> Using fresh lemons and blueberries will significantly impact the flavor. The freshness brings a vibrant and tangy taste that bottled juice and frozen berries can’t match.</li><li><strong>Adjusting Sweetness:</strong> Depending on your preference or the sweetness of the blueberries, you may want to adjust the amount of sugar. Start with less and taste as you go.</li><li><strong>Chilling Time:</strong> For the best flavor, allow the blueberry lemonade (before adding Sprite) to chill in the refrigerator for at least 1-2 hours. This enhances the flavors, making them more pronounced and refreshing.</li><li><strong>Adding Fizz Last:</strong> Always add Sprite just before serving to maintain its sparkling fizz, which beautifully complements the tangy-sweet lemonade.</li><li><strong>Experiment</strong>: Don’t hesitate to experiment with other fruits or combinations. Raspberry or strawberry can add exciting twists to this classic beverage.</li></ul>",
+  "yield": "1",
+  "prepTime": "PT15M",
+  "cookTime": "",
+  "totalTime": "PT15M",
+  "image": "/wp-content/uploads/2024/07/Untitled-design-2024-07-23T152520.104-735x735.png",
+  "nutrition": {},
+  "keywords": "",
+  "category": "Lemonades",
+  "cuisine": ""
+}

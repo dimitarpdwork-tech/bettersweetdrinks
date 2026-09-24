@@ -1,0 +1,13 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ title }} | {{ site.title }}</title><meta name="description" content="{{ description }}"><link rel="canonical" href="{{ canonical }}">
+{% if noindex %}<meta name="robots" content="noindex, nofollow">{% endif %}
+<meta property="og:title" content="{{ title }}"><meta property="og:description" content="{{ description }}"><meta property="og:url" content="{{ canonical }}"><meta property="og:type" content="{% if doc is defined %}article{% else %}website{% endif %}">
+{% if image %}<meta property="og:image" content="{{ site.url }}{{ image }}">{% endif %}
+<link rel="stylesheet" href="{{ link('/assets/site.css') }}"><script src="{{ link('/assets/site.js') }}" defer></script>
+{% for schema in schemas %}<script type="application/ld+json">{{ schema|tojson }}</script>{% endfor %}</head>
+<body><a class="skip" href="#main">Skip to content</a>
+<header><div class="header-inner"><a href="{{ link('/') }}" aria-label="Better Sweet Drinks home"><img class="logo" src="{{ link(site.logo) }}" alt="Better Sweet Drinks"></a>
+<button class="menu-button" aria-expanded="false" aria-controls="navigation">Menu</button><nav id="navigation" aria-label="Main navigation"><a href="{{ link('/') }}">Home</a><details><summary>Recipes</summary><div class="submenu"><a href="{{ link('/recipes/') }}">All recipes</a>{% for c in categories %}<a href="{{ link('/'+c.slug+'/') }}">{{ c.name }}</a>{% endfor %}</div></details><a href="{{ link('/about-us/') }}">About Us</a><a href="{{ link('/contact-us/') }}">Contact Us</a><a href="{{ link('/search/') }}">Search</a></nav></div></header>
+<main id="main">{% block content %}{% endblock %}</main>
+<footer><div><strong>Better Sweet Drinks</strong><p>Incredible Drink Recipes</p></div><nav aria-label="Footer"><a href="{{ link('/about-us/') }}">About Us</a><a href="{{ link('/contact-us/') }}">Contact Us</a><a href="{{ link('/privacy-policy/') }}">Privacy Policy</a></nav><p>© {{ year }} Better Sweet Drinks</p></footer></body></html>

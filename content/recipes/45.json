@@ -1,0 +1,26 @@
+{
+  "id": "45",
+  "title": "Homemade Stok Espresso Shots Recipe",
+  "description": "Stok Espresso Shots is a brand of pre-brewed espresso shots designed to be convenient and versatile. These shots are typically sold in small bottles or cans and are meant for people who want a quick caffeine boost without brewing espresso. You can use them to make lattes and cappuccinosos or just enjoy them on their own.",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "Fresh Espresso Beans: Opt for a high-quality, dark roast for the best flavor and caffeine content. About 18-20 grams per shot.",
+    "Filtered Water: The quality of water can affect the taste of your espresso, so filtered water is recommended.",
+    "Optional Sweetener: If you prefer a slightly sweet shot, consider adding sugar, honey, or your favorite sweetener to taste.",
+    "Equipment",
+    "Espresso machine or a stovetop Moka pot",
+    "Coffee grinder (for freshest taste)",
+    "Espresso cup or small container"
+  ],
+  "instructions": "<p></p><ol><li><strong>Grind Your Beans:</strong> Start by grinding your espresso beans to a fine consistency, similar to table salt. The fresher the grind, the better the extraction.</li><li><strong>Heat Your Water:</strong> If using a stovetop Moka pot, fill the bottom chamber with filtered water up to the safety valve. For an espresso machine, ensure your water reservoir is full.</li><li><strong>Pack the Grounds:</strong> Fill the espresso basket with your freshly ground coffee. Use about 18-20 grams for a single shot. Tamp it down firmly and evenly to ensure even water distribution.</li><li><strong>Brew Your Espresso:</strong> If using an espresso machine, lock in the portafilter and start the brew according to your machine’s instructions. Aim for about 25-30 seconds of extraction time. For a Moka pot, place it on the stove over medium heat. Once the water boils, it will push through the coffee grounds and fill the top chamber. Remove from heat once it’s done brewing.</li><li><strong>Serve Immediately:</strong> Pour your freshly brewed espresso shot into a cup. Add sweetener before brewing or immediately after to ensure it dissolves properly.</li></ol>",
+  "notes": "<p></p><ul><li><strong>Water Temperature:</strong> The ideal water temperature for espresso machines is between 195°F and 205°F. Too hot and you risk burning the coffee, too cold and the extraction will be poor.</li><li><strong>Tamping Pressure:</strong> Apply pressure evenly when tamping the grounds. Aim for about 30 pounds of pressure. Consistency is key!</li><li><strong>Experiment</strong>: Don’t be afraid to experiment with different beans and grind sizes. Espresso is as much art as it is science, and finding your preferred balance can make all the difference.</li><li><strong>Maintenance:</strong> Keep your equipment clean. Coffee oils can go rancid and affect the taste of your shots.</li></ul>",
+  "yield": "1",
+  "prepTime": "PT10M",
+  "cookTime": "",
+  "totalTime": "PT10M",
+  "image": "/wp-content/uploads/2024/09/Add-a-heading-32-735x735.png",
+  "nutrition": {},
+  "keywords": "",
+  "category": "Shots",
+  "cuisine": ""
+}

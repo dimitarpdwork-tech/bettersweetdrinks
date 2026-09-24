@@ -1,0 +1,30 @@
+{
+  "id": "12",
+  "title": "Lavender Lemonade Sprite Recipe",
+  "description": "Lavender Lemonade Sprite is a refreshing drink that combines the floral notes of lavender with the zesty flavor of lemonade and the bubbly sweetness of Sprite. Typically, it’s made by mixing lavender syrup (which can be homemade or store-bought) with freshly squeezed lemon juice and Sprite.",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "1. For the Lavender Simple Syrup:",
+    "1 cup water",
+    "1 cup granulated sugar",
+    "2 tablespoons dried lavender flowers (culinary grade)",
+    "2. For the Lemonade:",
+    "1 cup freshly squeezed lemon juice (about 4-6 lemons, depending on size and juiciness)",
+    "4 cups cold water",
+    "Ice cubes",
+    "3. For the Final Touch:",
+    "1 can of Sprite (or any lemon-lime soda)",
+    "Lemon slices and lavender sprigs for garnish"
+  ],
+  "instructions": "<ol><h3>1. Prepare the Lavender Simple Syrup:</h3></ol><ol><li>In a small saucepan, combine 1 cup of water and 1 cup of granulated sugar.</li><li>Bring to a boil and stir until the sugar has completely dissolved.</li><li>Remove from heat and add the dried lavender flowers.</li><li>Allow the mixture to steep for about 20-30 minutes. This process infuses the syrup with lavender’s fragrant essence.</li><li>Strain the mixture through a fine mesh sieve to remove the lavender flowers, and let the syrup cool to room temperature.</li></ol><h3>2. Make the Lemonade:</h3><ol><li>In a large pitcher, combine 1 cup of freshly squeezed lemon juice with 4 cups of cold water. Adjust the water to suit your taste preference—if you like it more tart, reduce the water a bit.</li></ol><h3>3. Mix it all together:</h3><ol><li>To the pitcher of lemonade, add ½ to ¾ cup of the lavender simple syrup you prepared earlier. Again, adjust according to how sweet you like your lemonade.</li><li>Stir well to combine all the flavors.</li></ol><h3>4. Serve:</h3><ol><li>Fill glasses with ice cubes.</li><li>Pour the lavender lemonade into each glass, filling about three-quarters of the way full.</li><li>Top off each glass with a splash of Sprite for that fizz and slight lemon-lime tang.</li><li>Garnish with a slice of lemon and a sprig of lavender.</li></ol>",
+  "notes": "<p></p><ul><li><strong>Adjust sweetness:</strong> Taste as you go. Some prefer their lemonade more tart, while others like it sweeter. Adjust the amount of lavender syrup and the balance of lemon juice to water accordingly.</li><li><strong>Lavender grade:</strong> Ensure you’re using culinary-grade lavender for the syrup. Lavender intended for potpourri or decoration may have been treated with chemicals that are not safe for consumption.</li><li><strong>Presentation matters:</strong> Serve this refreshing beverage in clear glasses to show off its beautiful, pale hue. The garnish adds a touch of elegance and enhances the lavender and lemon scent with every sip.</li><li><strong>Chill:</strong> For an extra refreshing experience, ensure all components are chilled before mixing. It helps to keep the fizzy delight from losing its sparkle too quickly.</li></ul>",
+  "yield": "1",
+  "prepTime": "PT10M",
+  "cookTime": "PT5M",
+  "totalTime": "PT5M",
+  "image": "/wp-content/uploads/2024/09/Untitled-design-2024-09-24T155414.074-735x735.png",
+  "nutrition": {},
+  "keywords": "Lavender Lemonade Sprite Recipe, Refreshing Summer Drinks, Lavender Lemonade, Lemonade",
+  "category": "Lemonades",
+  "cuisine": ""
+}

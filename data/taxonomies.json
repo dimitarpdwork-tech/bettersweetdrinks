@@ -1,0 +1,378 @@
+{
+  "category": [
+    {
+      "slug": "cocktails",
+      "name": "Cocktails"
+    },
+    {
+      "slug": "fruit-drinks",
+      "name": "Fruit Drinks"
+    },
+    {
+      "slug": "energy-drinks",
+      "name": "Energy Drinks"
+    },
+    {
+      "slug": "lemonades",
+      "name": "Lemonades"
+    },
+    {
+      "slug": "brewed-drinks",
+      "name": "Brewed Drinks"
+    },
+    {
+      "slug": "beverages",
+      "name": "Beverages"
+    },
+    {
+      "slug": "spirits",
+      "name": "Spirits"
+    },
+    {
+      "slug": "shots",
+      "name": "Shots"
+    },
+    {
+      "slug": "mocktails",
+      "name": "Mocktails"
+    },
+    {
+      "slug": "wines",
+      "name": "Wines"
+    },
+    {
+      "slug": "milkshake",
+      "name": "Milkshake"
+    }
+  ],
+  "post_tag": [
+    {
+      "slug": "martini-recipes",
+      "name": "Martini Recipes"
+    },
+    {
+      "slug": "tequila-based-recipes",
+      "name": "Tequila Based Recipes"
+    },
+    {
+      "slug": "tropical-drinks",
+      "name": "Tropical Drinks"
+    },
+    {
+      "slug": "passion-fruit-recipes",
+      "name": "Passion Fruit Recipes"
+    },
+    {
+      "slug": "magarita-recipes",
+      "name": "Magarita Recipes"
+    },
+    {
+      "slug": "dutch-bros-recipes",
+      "name": "Dutch Bros Recipes"
+    },
+    {
+      "slug": "starbucks-recipes",
+      "name": "Starbucks Recipes"
+    },
+    {
+      "slug": "sutter-home-recipes",
+      "name": "Sutter Home Recipes"
+    },
+    {
+      "slug": "syrups",
+      "name": "Syrups"
+    },
+    {
+      "slug": "vodka-recipes",
+      "name": "Vodka Recipes"
+    },
+    {
+      "slug": "sonic-recipes",
+      "name": "Sonic Recipes"
+    },
+    {
+      "slug": "orange-recipes",
+      "name": "Orange Recipes"
+    },
+    {
+      "slug": "soda-recipes",
+      "name": "Soda Recipes"
+    },
+    {
+      "slug": "wendys-recipes",
+      "name": "Wendy's Recipes"
+    },
+    {
+      "slug": "punch-recipes",
+      "name": "Punch Recipes"
+    },
+    {
+      "slug": "rum-recipes",
+      "name": "Rum Recipes"
+    },
+    {
+      "slug": "pistachio-recipes",
+      "name": "Pistachio Recipes"
+    },
+    {
+      "slug": "bitters-recipes",
+      "name": "Bitters Recipes"
+    },
+    {
+      "slug": "fee-brothers-recipes",
+      "name": "Fee Brothers Recipes"
+    },
+    {
+      "slug": "liqueur-recipes",
+      "name": "Liqueur Recipes"
+    },
+    {
+      "slug": "minute-maid-recipes",
+      "name": "Minute Maid Recipes"
+    },
+    {
+      "slug": "aperol-recipes",
+      "name": "Aperol Recipes"
+    },
+    {
+      "slug": "prosecco-recipes",
+      "name": "Prosecco Recipes"
+    },
+    {
+      "slug": "jello-recipes",
+      "name": "Jello Recipes"
+    },
+    {
+      "slug": "2-ingredients-recipes",
+      "name": "2 Ingredients Recipes"
+    },
+    {
+      "slug": "cachaca-recipes",
+      "name": "Cachaça Recipes"
+    },
+    {
+      "slug": "topo-chico-recipe",
+      "name": "Topo Chico Recipe"
+    },
+    {
+      "slug": "limoncello-recipes",
+      "name": "Limoncello Recipes"
+    },
+    {
+      "slug": "prime-recipes",
+      "name": "Prime Recipes"
+    },
+    {
+      "slug": "ina-garten-recipes",
+      "name": "Ina Garten Recipes"
+    },
+    {
+      "slug": "chocolate-recipes",
+      "name": "Chocolate Recipes"
+    },
+    {
+      "slug": "strawberry-recipes",
+      "name": "Strawberry Recipes"
+    },
+    {
+      "slug": "rhubarb-recipes",
+      "name": "Rhubarb Recipes"
+    },
+    {
+      "slug": "frappuccino-recipes",
+      "name": "Frappuccino Recipes"
+    },
+    {
+      "slug": "matcha-recipes",
+      "name": "Matcha Recipes"
+    },
+    {
+      "slug": "latte-recipes",
+      "name": "Latte Recipes"
+    },
+    {
+      "slug": "hennessy-recipes",
+      "name": "Hennessy Recipes"
+    },
+    {
+      "slug": "lemon-recipes",
+      "name": "Lemon Recipes"
+    },
+    {
+      "slug": "pineapple-recipes",
+      "name": "Pineapple Recipes"
+    },
+    {
+      "slug": "churro-recipes",
+      "name": "Churro Recipes"
+    },
+    {
+      "slug": "mango-recipes",
+      "name": "Mango Recipes"
+    },
+    {
+      "slug": "sprite-recipes",
+      "name": "Sprite Recipes"
+    },
+    {
+      "slug": "vanilla-recipes",
+      "name": "Vanilla Recipes"
+    },
+    {
+      "slug": "zero-sugar-recipes",
+      "name": "Zero Sugar Recipes"
+    },
+    {
+      "slug": "bittermens-recipes",
+      "name": "Bittermens Recipes"
+    },
+    {
+      "slug": "coffee-recipes",
+      "name": "Coffee Recipes"
+    },
+    {
+      "slug": "truffle-recipes",
+      "name": "Truffle Recipes"
+    },
+    {
+      "slug": "blueberry-recipes",
+      "name": "Blueberry Recipes"
+    },
+    {
+      "slug": "margarita-recipes",
+      "name": "Margarita Recipes"
+    },
+    {
+      "slug": "cayman-jack-recipes",
+      "name": "Cayman Jack Recipes"
+    },
+    {
+      "slug": "stella-rosa-recipes",
+      "name": "Stella Rosa Recipes"
+    },
+    {
+      "slug": "espresso-recipes",
+      "name": "Espresso Recipes"
+    },
+    {
+      "slug": "chilis-recipes",
+      "name": "Chili's Recipes"
+    },
+    {
+      "slug": "cafe-bustelo-recipes",
+      "name": "Café Bustelo Recipes"
+    },
+    {
+      "slug": "trader-joes-recipes",
+      "name": "Trader Joe's Recipes"
+    },
+    {
+      "slug": "titos-recipes",
+      "name": "Tito's Recipes"
+    },
+    {
+      "slug": "bolthouse-farms-recipes",
+      "name": "Bolthouse Farms Recipes"
+    },
+    {
+      "slug": "chai-recipes",
+      "name": "Chai Recipes"
+    },
+    {
+      "slug": "themed-drinks",
+      "name": "Themed Drinks"
+    },
+    {
+      "slug": "angostura-bitters-recipes",
+      "name": "Angostura Bitters Recipes"
+    },
+    {
+      "slug": "old-fashioned-recipes",
+      "name": "Old Fashioned Recipes"
+    },
+    {
+      "slug": "rumchata-recipes",
+      "name": "Rumchata Recipes"
+    },
+    {
+      "slug": "lime-recipes",
+      "name": "Lime Recipes"
+    },
+    {
+      "slug": "baileys-recipes",
+      "name": "Bailey's Recipes"
+    },
+    {
+      "slug": "yogurt-recipes",
+      "name": "Yogurt Recipes"
+    },
+    {
+      "slug": "asian-recipes",
+      "name": "Asian Recipes"
+    },
+    {
+      "slug": "swiss-miss-recipes",
+      "name": "Swiss Miss Recipes"
+    },
+    {
+      "slug": "caramel-recipes",
+      "name": "Caramel Recipes"
+    },
+    {
+      "slug": "jolly-rancher-recipes",
+      "name": "Jolly Rancher Recipes"
+    },
+    {
+      "slug": "tea-recipes",
+      "name": "Tea Recipes"
+    },
+    {
+      "slug": "smoothie-king-recipes",
+      "name": "Smoothie King Recipes"
+    },
+    {
+      "slug": "watermelon-recipes",
+      "name": "Watermelon Recipes"
+    },
+    {
+      "slug": "cocoa-recipes",
+      "name": "Cocoa Recipes"
+    },
+    {
+      "slug": "dunkin-recipes",
+      "name": "Dunkin' Recipes"
+    },
+    {
+      "slug": "chick-fil-a-recipes",
+      "name": "Chick-fil-A Recipes"
+    },
+    {
+      "slug": "waterloo-recipes",
+      "name": "Waterloo Recipes"
+    },
+    {
+      "slug": "milo-recipes",
+      "name": "Milo Recipes"
+    },
+    {
+      "slug": "hardeess-recipe",
+      "name": "Hardees's Recipe"
+    },
+    {
+      "slug": "painkiller-cocktail",
+      "name": "painkiller cocktail"
+    },
+    {
+      "slug": "painkiller-cocktail-recipe",
+      "name": "painkiller cocktail recipe"
+    },
+    {
+      "slug": "painkiller-drink",
+      "name": "painkiller drink"
+    },
+    {
+      "slug": "painkiller-cocktail-quick-facts",
+      "name": "painkiller cocktail quick facts"
+    }
+  ]
+}

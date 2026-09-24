@@ -1,0 +1,23 @@
+{
+  "id": "132",
+  "title": "Vodka Mash Recipe",
+  "description": "Now, you may be thinking, “Isn’t vodka made from potatoes?” Sure, that’s one way to conjure up this clear liquid delight, but did you know vodka can be brewed from a bounty of ingredients, including grains, fruits, and even sugar? Oh yes, the world of vodka mash is your oyster, and we’re about to shuck it wide open!",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "Water: The unsung hero. Make sure it’s filtered; we’re crafting high-quality hooch here.",
+    "Sugar: The fuel for fermentation. Plain old sugar will do, but don’t shy away from experimenting with different types, like beet or cane sugar, for unique flavors.",
+    "Yeast: The magic dust. Yeast is what turns your sugary water into alcohol. Go for a high-quality distiller’s yeast for the best results.",
+    "The Base: Here’s where you can get creative. Traditionalists might go for potatoes, but grains like barley, wheat, or even ripe fruits can add a unique twist. Choose your adventure!"
+  ],
+  "instructions": "<ol></ol><ul><li><strong>The Mix:</strong> Kick things off by heating your water (not too hot, though, you don’t want to anger the yeast gods) and dissolve the sugar until it’s totally blended. This is the sweet beginning every mash dreams of.</li><li><strong>Choosing Your Base:</strong> For grain or potato-based mashes, you’ll need to cook your base to release those essential sugars. Think of it as coaxing the flavors out to play. For fruits, a good mash (the squishy kind) will do the trick.</li><li><strong>Cool Down:</strong> Let your concoction cool to yeast-friendly temperatures. Too hot and you’ll send your yeast to an early grave, too cold and they’ll go on strike.</li><li><strong>Yeast Party:</strong> Introduce your yeast to the mix. This is where the magic starts. A good stir to make sure they’re well acquainted, then cover your bucket or fermenter to give them some privacy.</li><li><strong>Waiting Game</strong>: Fermentation time. This could take anywhere from a week to ten days. Look for the tell-tale signs of fermentation like bubbling, fizzing, and the unmistakable smell of alcohol.</li><li><strong>Strain it Out:</strong> Once the party’s over, it’s time to separate the liquid gold from the solids. Strain with care.</li></ul>",
+  "notes": "<ul><li><strong>Temperature Matters:</strong> Keep a close eye on your mash’s environment. Too cold, and your yeast will nap; too warm, and it might die. Somewhere between cozy room temperature and a mild summer day is your sweet spot.</li><li><strong>Patience, Young Grasshopper:</strong> Rushing fermentation only leads to heartbreak—and bad vodka. Give it time, and you’ll be rewarded.</li><li><strong>Cleanliness is Next to Godliness</strong>: This isn’t just about your hands. Make sure everything that comes in contact with your mash is sanitized. We’re brewing vodka, not science experiments gone wrong.</li><li><strong>Experiment:</strong> Once you’ve got the basics down, play around! Try different bases or a mix of them, tweak your sugar levels, maybe whisper sweet nothings to your yeast. Make this recipe your own.</li></ul>",
+  "yield": "1",
+  "prepTime": "PT10M",
+  "cookTime": "",
+  "totalTime": "PT10M",
+  "image": "/wp-content/uploads/2024/05/Untitled-design-2024-05-31T103718.175-735x735.png",
+  "nutrition": {},
+  "keywords": "Vodka mash recipe, making of vodka, vodka from grains, vodka from potato",
+  "category": "Cocktails",
+  "cuisine": ""
+}

@@ -1,0 +1,60 @@
+backend:
+  name: github
+  repo: SET_AT_BUILD
+  branch: main
+  auth_methods: [token]
+media_folder: public/images/uploads
+public_folder: /images/uploads
+collections:
+  - name: posts
+    label: Articles
+    folder: content/posts
+    create: true
+    slug: '{{slug}}'
+    fields: &article_fields
+      - {name: id, label: Internal ID, widget: string}
+      - {name: title, label: Title, widget: string}
+      - {name: slug, label: URL slug, widget: string}
+      - {name: publishDate, label: Published date, widget: datetime, format: YYYY-MM-DD, time_format: false}
+      - {name: updatedDate, label: Updated date, widget: datetime, format: YYYY-MM-DD, time_format: false}
+      - {name: description, label: Search description, widget: text}
+      - {name: seoTitle, label: Search title, widget: string}
+      - {name: author, label: Author, widget: string, default: Better Sweet Drinks}
+      - {name: authorSlug, label: Author URL slug, widget: string, default: editor}
+      - {name: categories, label: Categories, widget: list}
+      - {name: tags, label: Tags, widget: list, required: false}
+      - {name: featuredImage, label: Featured image, widget: image, required: false}
+      - {name: featuredImageAlt, label: Image description, widget: string, required: false}
+      - {name: recipeIds, label: Recipe card IDs, widget: list, required: false}
+      - {name: draft, label: Draft, widget: boolean, default: true}
+      - {name: noindex, label: Hide from search engines, widget: boolean, default: false}
+      - {name: canonicalUrl, label: Canonical URL override, widget: string, required: false}
+      - {name: body, label: Article, widget: markdown}
+  - name: pages
+    label: Pages
+    folder: content/pages
+    create: false
+    fields: *article_fields
+  - name: recipes
+    label: Recipe cards
+    folder: content/recipes
+    format: json
+    create: true
+    identifier_field: title
+    slug: '{{id}}'
+    fields:
+      - {name: id, label: Recipe ID, widget: string}
+      - {name: title, label: Recipe title, widget: string}
+      - {name: description, label: Description, widget: text}
+      - {name: author, label: Author, widget: string}
+      - {name: image, label: Image, widget: image}
+      - {name: yield, label: Servings, widget: string}
+      - {name: ingredients, label: Ingredients, widget: list}
+      - {name: instructions, label: Instructions HTML, widget: text}
+      - {name: notes, label: Notes HTML, widget: text, required: false}
+      - {name: prepTime, label: Prep duration (e.g. PT10M), widget: string, required: false}
+      - {name: cookTime, label: Cook duration (e.g. PT5M), widget: string, required: false}
+      - {name: totalTime, label: Total duration (e.g. PT15M), widget: string, required: false}
+      - {name: keywords, label: Keywords, widget: string, required: false}
+      - {name: category, label: Category, widget: string, required: false}
+      - {name: cuisine, label: Cuisine, widget: string, required: false}

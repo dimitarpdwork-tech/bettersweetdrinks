@@ -1,0 +1,25 @@
+{
+  "id": "8",
+  "title": "Classic Espresso Martini",
+  "description": "An espresso martini is a delicious cocktail that combines the rich, bold flavors of espresso coffee with the smoothness of vodka and the sweetness of coffee liqueur. It's typically served chilled in a martini glass and often garnished with coffee beans or a twist of lemon peel.",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "1½ oz vodka",
+    "1 oz cold-brew espresso",
+    "1 oz coffee liqueur",
+    "½ oz simple syrup",
+    "Ice, for shaking",
+    "3 coffee beans, for garnish"
+  ],
+  "instructions": "<ol><ol><li>Brew a mean shot of espresso. Like really, make it count. If it’s not rich and robust, what’s even the point?</li><li>Fill your cocktail shaker with a generous scoop of ice. It’s not a snowball fight, but feel free to be enthusiastic.</li><li>Pour in the vodka, coffee liqueur, that proud shot of espresso, and the simple syrup.</li><li>Put a lid on it – the shaker, that is. Now shake it like you’re cheering for your favorite team from the sidelines. Enthusiasm meets workout: about 10 seconds should do it.</li><li>Strain it into a chilled martini glass. You’re going for the ‘wow’, the ‘oomph’, the perfect cascade that looks as smooth as it tastes.</li><li>Garnish with three coffee beans. They’re not just for show; they’re the classic espresso martini finishing touch, so let’s keep traditions alive!</li></ol></ol>",
+  "notes": "<h2><strong>A Few Tips from the Cocktail Corner:</strong></h2><ul><li>The colder the ingredients, the better. Try to chill your vodka and coffee liqueur before their big moment.</li><li>For the espresso, the fresher, the better. If you can pull a shot right before mixing, you’ll be the mixologist of the moment.</li><li>Not sweet enough? Tweak the simple syrup to taste, but don’t go overboard. You want balance, not a sugar rush.</li><li>No shaker? No problem. A mason jar can be a solid stand-in. Just make sure the lid’s on tight; we’re making cocktails, not abstract ceiling art.</li><li>If you crave a creamier texture, a tiny bit of half-and-half can work wonders – think of it as the velvet drapes to your liquid stage.</li></ul>",
+  "yield": "1",
+  "prepTime": "PT5M",
+  "cookTime": "",
+  "totalTime": "PT5M",
+  "image": "/wp-content/uploads/2024/05/ChatGPT-Image-Apr-21-2025-03_24_35-PM-735x1103.png",
+  "nutrition": {},
+  "keywords": "Classic Espresso Martini, cold brew, get together drink, cocktail, martini",
+  "category": "",
+  "cuisine": ""
+}
