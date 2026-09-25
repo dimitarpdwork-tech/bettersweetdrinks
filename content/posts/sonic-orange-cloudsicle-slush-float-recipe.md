@@ -30,7 +30,7 @@ Sonic Orange Cloudsicle Slush Float Recipe
 
 ## **How to make Sonic Orange Cloudsicle Slush Float**
 
-The Sonic Orange Cloudsicle Slush Float is a refreshing and indulgent drink offered by [Sonic Drive-In](https://www.sonicdrivein.com/), a fast-food chain known for its extensive drink menu. This particular concoction typically features a combination of Sonic's signature slush (often flavored with orange) and vanilla soft-serve ice cream, creating a creamy, tangy, and sweet treat reminiscent of an orange creamsicle.
+This homemade orange slush float combines orange juice, lemon-lime soda and vanilla ice cream. Its name takes inspiration from Sonic-style slush floats, but it is not a verified current Sonic menu item or the chain’s official formula.
 
 ### **Ingredients:**
 
