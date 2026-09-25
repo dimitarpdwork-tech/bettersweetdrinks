@@ -140,6 +140,8 @@ You can tailor your 2-Ingredient Prosecco Cocktail to suit your tastes and prefe
 
 ## More Cocktail Recipes:
 
+- For a Christmas gathering, try the [cranberry rosemary spritz](/christmas-cranberry-rosemary-spritz/).
+- For a midnight toast, make the [New Year's pomegranate Champagne cocktail](/new-years-pomegranate-champagne-cocktail/).
 - [Sparkling Sake Cocktail](/sparkling-sake-cocktail-recipe/) for a rice-based bubbly alternative
 
 - [Pistachio Martini Recipe](/pistachio-martini-recipe/)

@@ -90,5 +90,7 @@ There you have it, a perfect recipe on How to Make Jello Shots with Vodka. Remem
 
 ## More Jello Recipes:
 
+If you're putting together a Halloween drinks table, the [blackberry witch fizz](/halloween-blackberry-witch-fizz/) is a purple, ginger beer cocktail to serve alongside the shots.
+
 - [How to Make Jello Shots With Rum](/how-to-make-jello-shots-with-rum/)
 - [Prosecco Jello Shots Recipe](/prosecco-jello-shots-recipe/)

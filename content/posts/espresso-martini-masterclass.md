@@ -174,6 +174,7 @@ And there you have it, an espresso martini that's ready to steal the spotlight a
 
 ## More Martini Recipes:
 
+- [Black Friday maple espresso martini](/black-friday-maple-espresso-martini/) for a maple-sweetened variation
 - [Chili’s Inspired Espresso Martini](/copycat-chilis-espresso-martini-recipe/)
 - [Mr Black Coffee Liqueur Cocktails](/mr-black-coffee-liqueur/)
 

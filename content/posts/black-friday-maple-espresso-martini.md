@@ -11,8 +11,8 @@ authorSlug: admin
 categories:
 - cocktails
 tags: []
-featuredImage: /images/uploads/black-friday-maple-espresso-martini.svg
-featuredImageAlt: Illustrated dark espresso martini with coffee beans
+featuredImage: /images/uploads/black-friday-maple-espresso-martini.jpg
+featuredImageAlt: Espresso martini topped with three coffee beans in a coupe glass
 recipeIds:
 - '165'
 draft: false
@@ -21,7 +21,7 @@ noindex: false
 
 Black Friday is a loose theme for a cocktail, so this **maple espresso martini** is designed for an evening get-together after the shopping, rather than a drink to take along. It is a darker, autumn-flavored twist on the [classic espresso martini](/espresso-martini-masterclass/).
 
-![Illustrated maple espresso martini with coffee beans](/images/uploads/black-friday-maple-espresso-martini.svg)
+![Espresso martini topped with three coffee beans in a coupe glass](/images/uploads/black-friday-maple-espresso-martini.jpg)
 
 ## Ingredients
 

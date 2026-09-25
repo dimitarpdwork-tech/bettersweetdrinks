@@ -11,8 +11,8 @@ authorSlug: admin
 categories:
 - cocktails
 tags: []
-featuredImage: /images/uploads/new-years-pomegranate-champagne-cocktail.svg
-featuredImageAlt: Illustrated pomegranate sparkling wine cocktail in a flute
+featuredImage: /images/uploads/new-years-pomegranate-champagne-cocktail.jpg
+featuredImageAlt: Pomegranate sparkling wine cocktail with lemon twist in a flute
 recipeIds:
 - '164'
 draft: false
@@ -21,7 +21,7 @@ noindex: false
 
 A **pomegranate Champagne cocktail** brings color to a New Year's toast without making you run a shaker at midnight. Chill everything first and pour the sparkling wine last. Any dry sparkling wine works; use Champagne if you want Champagne specifically.
 
-![Illustrated pomegranate sparkling cocktail with citrus twist](/images/uploads/new-years-pomegranate-champagne-cocktail.svg)
+![Pomegranate sparkling wine cocktail with lemon twist in a flute](/images/uploads/new-years-pomegranate-champagne-cocktail.jpg)
 
 ## Ingredients
 

@@ -11,8 +11,8 @@ authorSlug: admin
 categories:
 - cocktails
 tags: []
-featuredImage: /images/uploads/halloween-blackberry-witch-fizz.svg
-featuredImageAlt: Illustrated dark blackberry cocktail with rosemary and blackberries
+featuredImage: /images/uploads/halloween-blackberry-witch-fizz.jpg
+featuredImageAlt: Blackberry witch fizz with rosemary and blackberries in a highball glass
 recipeIds:
 - '162'
 draft: false
@@ -21,7 +21,7 @@ noindex: false
 
 This **Halloween blackberry witch fizz** gets its deep purple color from muddled berries. Ginger beer makes it lively and a rosemary sprig gives the glass a little haunted-forest character. The recipe makes one drink; build a tray of glasses by muddling berries and lemon in each, then add the ginger beer just before serving.
 
-![Illustrated blackberry witch fizz in a tall glass](/images/uploads/halloween-blackberry-witch-fizz.svg)
+![Blackberry witch fizz with rosemary and blackberries in a highball glass](/images/uploads/halloween-blackberry-witch-fizz.jpg)
 
 ## Ingredients
 

@@ -11,8 +11,8 @@ authorSlug: admin
 categories:
 - cocktails
 tags: []
-featuredImage: /images/uploads/christmas-cranberry-rosemary-spritz.svg
-featuredImageAlt: Illustrated red cranberry spritz with rosemary and orange
+featuredImage: /images/uploads/christmas-cranberry-rosemary-spritz.jpg
+featuredImageAlt: Cranberry rosemary spritz with an orange slice in a wine glass
 recipeIds:
 - '163'
 draft: false
@@ -21,7 +21,7 @@ noindex: false
 
 This **Christmas cranberry rosemary spritz** is tart, bright and easy to assemble while guests arrive. Use unsweetened cranberry juice if you like a sharp drink; cranberry juice cocktail makes a sweeter version, so start with less syrup.
 
-![Illustrated cranberry spritz with rosemary and orange](/images/uploads/christmas-cranberry-rosemary-spritz.svg)
+![Cranberry rosemary spritz with an orange slice in a wine glass](/images/uploads/christmas-cranberry-rosemary-spritz.jpg)
 
 ## Ingredients
 
