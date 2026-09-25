@@ -11,8 +11,8 @@ authorSlug: admin
 categories:
 - cocktails
 tags: []
-featuredImage: /images/uploads/halloween-black-cherry-bourbon-smash.svg
-featuredImageAlt: Illustrated deep red cherry bourbon cocktail with cherries and lemon
+featuredImage: /images/uploads/halloween-black-cherry-bourbon-smash.jpg
+featuredImageAlt: Black cherry bourbon smash with two cherries and lemon twist over crushed ice
 recipeIds:
 - '166'
 draft: false
@@ -21,7 +21,7 @@ noindex: false
 
 The **Halloween black cherry bourbon smash** brings a deep red color to the table without food coloring or elaborate props. Cherry and maple soften the bourbon, while lemon keeps the drink from turning syrupy. It is a different kind of Halloween drink from our fizzy [blackberry witch fizz](/halloween-blackberry-witch-fizz/): shorter, stronger and served over crushed ice.
 
-![Illustrated black cherry bourbon smash with cherries and lemon](/images/uploads/halloween-black-cherry-bourbon-smash.svg)
+![Black cherry bourbon smash in a rocks glass with cherries and lemon twist](/images/uploads/halloween-black-cherry-bourbon-smash.jpg)
 
 ## Ingredients
 
