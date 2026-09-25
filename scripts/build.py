@@ -69,8 +69,15 @@ for kind in ['posts','pages']:
                 heading['id']=hid;used_ids.add(hid)
             d['toc'].append({'id':heading['id'],'title':heading.get_text(' ',strip=True)})
         d['readingMinutes']=max(1,math.ceil(len(body.get_text(' ',strip=True).split())/220))
-        for img in body.find_all('img'):
-            img['loading']='lazy';img['decoding']='async'
+        for index,img in enumerate(body.find_all('img')):
+            # The first editorial image is often visible before any scrolling.
+            # Give known WordPress derivatives intrinsic size to reserve space.
+            img['loading']='eager' if index==0 else 'lazy'
+            img['decoding']='async'
+            if index==0:img['fetchpriority']='high'
+            match=re.search(r'-(\d+)x(\d+)\.[a-z0-9]+(?:\?|$)',img.get('src',''),re.I)
+            if match and not img.has_attr('width') and not img.has_attr('height'):
+                img['width'],img['height']=match.groups()
         d['body']=str(body)
         docs.append(d)
 # Convert standalone WordPress embed URLs into useful links on the static site.
