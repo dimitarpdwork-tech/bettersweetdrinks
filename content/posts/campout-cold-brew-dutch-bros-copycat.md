@@ -43,7 +43,7 @@ The Dutch Bros Campout Cold Brew is a concoction that perfectly blends the boldn
 ### **Instructions:**
 
 1. Take those dark roast beans and grind them up nice and coarse - you're not creating fairy dust here, just setting the stage for some solid extraction.
-2. Mix your ground coffee with the water in a jar or a French press, whatever you’ve got handy. Stir it gently, like you're coaxing the flavors out, then cover it up and let it sit out of the sun’s way for about 12 to 18 hours. Yes, it’s a long wait, but all good things take time, right?
+2. Mix your ground coffee with the water in a jar or a French press, whatever you’ve got handy. Stir it gently, like you're coaxing the flavors out, then cover it up and refrigerate it while it steeps for about 12 to 18 hours. Yes, it’s a long wait, but all good things take time, right?
 3. Once the time’s up, say goodbye to the grounds by straining your brew through a coffee filter or cheesecloth. What you've got now is a cold brew concentrate - strong, smooth and ready for action.
 4. Warm a little bit of milk or cream in the microwave or on the stove - just to the point where you can stir in the chocolate syrup and toasted marshmallow syrup without a fuss. If the toasted marshmallow syrup plays hard to get at your local store, a splash of vanilla syrup mixed with a dash of brown sugar can sing the same tune, just with a different accent.
 5. Combine your glorious cold brew concentrate with the chocolate and toasted marshmallow-flavored milk. Stir it like you mean it.
@@ -52,7 +52,7 @@ The Dutch Bros Campout Cold Brew is a concoction that perfectly blends the boldn
 ### **Tips to Make Your Brew Even Better:**
 
 - **Experiment:** Play around with the syrups and the coffee-to-water ratio until you hit your sweet spot. More syrup, less syrup, stronger coffee - make it your own!
-- **Storage Smarts:** Your cold brew concentrate will keep in the fridge for up to two weeks, so you can keep the good times rolling.
+- **Storage Smarts:** Keep the strained concentrate in a clean covered container in the refrigerator and use within 3–4 days. Add milk only when serving; discard a mixed drink left unrefrigerated for more than 2 hours.
 - **Get Creative:** Swap out syrups, try different milks, toss in some spices - who knows? Your next experiment might just be your new favorite.
 
 ### **What to serve with**

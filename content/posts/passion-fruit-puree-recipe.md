@@ -52,7 +52,7 @@ Passion fruit puree is a thick, smooth liquid made by blending fresh passion fru
 ### **A Few Handy Tips:**
 
 - **Choosing Your Passion Fruits:** If you're wondering which fruits to pick, go for the ones that look a bit wrinkled. They might not win a beauty contest, but they're usually the sweetest.
-- **Storage Solutions:** Your freshly made puree can be kept in the fridge for up to a week, but for longer storage, pop it in the freezer. Ice cube trays are perfect for portioning.
+- **Storage Solutions:** Refrigerate the fresh puree promptly in a clean covered container and use within 3–4 days. Freeze in an ice cube tray for longer storage. See [FoodSafety.gov guidance on prompt chilling and leftovers](https://www.foodsafety.gov/blog/10-smart-tips-keep-your-restaurant-leftovers-safe).
 - **To Sieve or Not to Sieve:** Those seeds have a delightful crunch, adding texture to your dishes. Feel free to skip the straining step if you're all about that crunch.
 
 ### **What to serve with**

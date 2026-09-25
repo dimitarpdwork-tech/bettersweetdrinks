@@ -41,7 +41,7 @@ Strawberry Rhubarb Wine is a type of wine made from fermenting strawberries and 
 - 1 tsp of acid blend (to balance the wine's pH)
 - 1 tsp of yeast nutrient (to support yeast health)
 - 1 package of wine yeast (Montrachet or any preferred wine yeast strain)
-- Campden tablets (optional for sterilization)
+- Campden tablets (follow a tested method and product label; they do not replace sanitizing equipment)
 - Pectic enzyme (helps break down the fruit's pectin)
 
 ### Instructions:
@@ -56,23 +56,23 @@ Strawberry Rhubarb Wine is a type of wine made from fermenting strawberries and 
 2. Place the cut strawberries and rhubarb in a fermentation bag inside a primary fermentation container (a food-grade bucket works well).
 3. Pour the cooled sugar water over the fruits, ensuring they're fully submerged.
 4. Add the acid blend, yeast nutrient, and pectic enzyme according to the dosage recommended on their packages. If you're using Campden tablets, crush and add one tablet, then let the mixture sit for 24 hours to sterilize.
-5. After 24 hours (or immediately if not using Campden tablets), sprinkle the wine yeast on top of the liquid without stirring.
+5. Prepare and add the yeast according to its package. Measure and record the initial specific gravity with a hydrometer; adjust the must only according to a tested fruit-wine method.
 
 #### Primary Fermentation Continues:
 
 1. Cover the fermentation container with a clean cloth or lid fitted with an airlock. Let it sit in a cool, dark place.
-2. Stir the mixture once daily, squeezing the fermentation bag gently to extract flavors for 5 to 7 days.
+2. Stir with sanitized equipment and monitor specific gravity. Move to secondary fermentation when the hydrometer reaches the range specified by your tested method, not solely after a fixed number of days. See the [NDSU Extension winemaking guide](https://www.ndsu.edu/agriculture/sites/default/files/2022-07/fn1638.pdf).
 
 #### Secondary Fermentation:
 
 1. After the primary fermentation period, remove the fermentation bag, squeezing out any excess liquid back into the container.
 2. Transfer the liquid to a secondary fermentation vessel, like a glass carboy, using a siphon to avoid transferring sediment.
-3. Fit the carboy with an airlock and let the wine sit in a cool, dark place for about 4-6 weeks. This allows the wine to clear and mature.
+3. Fit the carboy with an airlock. Continue monitoring specific gravity and rack off sediment as directed by your tested method. Fermentation and clearing times vary.
 
 #### Bottling:
 
-1. Once the wine has cleared and no more sediments form at the bottom, it's ready to be bottled.
-2. Siphon the wine into clean bottles, leaving about an inch of headspace. Cork the bottles.
+1. Do not bottle solely because the wine looks clear or a few weeks have passed. Confirm fermentation is complete with a hydrometer and that the wine has cleared and stabilized according to your tested method.
+2. Siphon finished wine into sanitized bottles and close them according to your equipment instructions. If you cannot confirm that fermentation is finished, do not bottle this batch.
 
 #### Aging:
 
@@ -81,8 +81,8 @@ Strawberry Rhubarb Wine is a type of wine made from fermenting strawberries and 
 ### Tips for Success:
 
 - **Sanitation is Key:** Ensure all your equipment is thoroughly sanitized to prevent any unwanted bacteria from spoiling your wine.
-- **Patience Pays Off:** Resist the urge to rush the process. The longer your wine ages, the better the flavors will develop.
-- **Taste Test:** Feel free to taste your wine at different stages. This will not only be enjoyable but also give you insight into the fermentation process.
+- **Measurements matter:** Fruit sugar and acidity vary. This outline requires a hydrometer, sanitized equipment and a complete tested winemaking method; the calendar alone does not show when wine is ready to bottle.
+- **Read the full method:** Check the linked university extension guide for equipment, fermentation and bottling guidance before you begin.
 
 ### What to serve with
 

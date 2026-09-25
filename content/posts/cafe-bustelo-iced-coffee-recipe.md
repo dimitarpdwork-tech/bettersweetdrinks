@@ -47,7 +47,7 @@ To whip up a refreshing serving of Café Bustelo Iced Coffee, you'll need:
 Follow these steps to create your perfect cup of Café Bustelo Iced Coffee:
 
 1. **Brew the Coffee**: If you have an espresso maker, brew the Café Bustelo coffee according to the machine instructions. For those using a regular coffee maker, simply prepare the coffee slightly stronger than usual to compensate for the dilution caused by ice.
-2. **Cool the Coffee**: Allow the coffee to cool to room temperature after brewing. This prevents the ice from melting too quickly and diluting your coffee. For a faster cooling process, you can place the brewed coffee in the refrigerator.
+2. **Cool the Coffee**: Pour brewed coffee into a clean shallow container and refrigerate promptly until cold. Add ice when serving; keep any coffee mixed with milk refrigerated.
 3. **Prepare the Glass:** Fill your serving glass with ice cubes to the brim.
 4. **Customize Your Coffee:** If you like your coffee with milk, pour the cooled coffee over the ice first, then add the milk or creamer. Add sweetener if you prefer. Stir well to ensure everything is mixed thoroughly.
 5. **Serve**: Give the iced coffee a final stir and serve immediately. Enjoy the robust and refreshing taste of Café Bustelo.
@@ -57,7 +57,7 @@ Follow these steps to create your perfect cup of Café Bustelo Iced Coffee:
 - **Strong Brew:** Ensure that the coffee is brewed strong. This is vital as the ice will melt and dilute the coffee to some extent.
 - **Flavorings**: Experiment with different syrups or spices, such as vanilla, caramel, or cinnamon, to add a unique twist to your iced coffee.
 - **Prepared Ice:** To avoid your coffee getting too diluted, consider making ice cubes out of brewed coffee instead of water.
-- [Cold Brew](/campout-cold-brew-dutch-bros-copycat/) Method: For an even smoother taste, use the cold brew method by steeping Café Bustelo ground coffee in cold water overnight (12 hours), then strain it and use this concentrated brew to make your iced coffee.
+- [Cold Brew](/campout-cold-brew-dutch-bros-copycat/) Method: For an even smoother taste, use the cold brew method by steeping Café Bustelo ground coffee in water in the refrigerator for about 12 hours, then straining it and use this concentrated brew to make your iced coffee.
 - **Serving Suggestions:** Serve with a sprig of mint or a cinnamon stick for enhanced aroma and visual appeal.
 
 ### **What to serve with**

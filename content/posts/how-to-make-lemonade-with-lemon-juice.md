@@ -101,7 +101,7 @@ Making lemonade with lemon juice is a convenient alternative to using fresh lemo
 
 - **Granulated Sugar:** The classic sweetener for traditional lemonade. For an alternative, consider using honey, agave nectar, or maple syrup for a different flavor profile. These are all-natural sweeteners and can add unique undertones to your lemonade.
 - **Simple Syrup:** Another way to sweeten lemonade is to make a simple syrup by dissolving sugar in equal parts of hot water. This ensures that the sugar is fully integrated and does not settle at the bottom of the pitcher. For an added twist, you can infuse the simple syrup with herbs or spices like mint, basil, ginger, or lavender.
-- **Stevia or Artificial Sweeteners:** For a low-calorie or diabetic-friendly version, use stevia, erythritol, or any artificial sweetener that can be used in a beverage. These substitutes usually have a sweeter taste than sugar, so add them gradually and taste as you go.
+- **Stevia or Artificial Sweeteners:** For a different sweetness profile, choose a beverage sweetener and follow its label for a sugar equivalent. This recipe also contains lemon juice; make dietary choices based on your needs rather than assuming a sweetener makes the whole drink suitable for everyone.
 
 ### **Water**
 

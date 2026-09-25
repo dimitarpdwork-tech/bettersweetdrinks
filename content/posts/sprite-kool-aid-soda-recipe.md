@@ -37,7 +37,7 @@ Sprite Kool Aid Soda is a beverage that combines Sprite, a lemon-lime flavored s
 
 - **Sprite**: 1 liter (or enough to fill your serving container)
 - **Kool-Aid Powder**: 1 packet of your choice of flavor
-- **Sugar (optional)**: If you prefer your drink a bit sweeter (note that both Sprite and Kool-Aid contain sugar)
+- **Sugar (optional)**: If you prefer your drink a bit sweeter (check the Kool-Aid packet: unsweetened mixes may contain no sugar)
 - **Ice Cubes**: For serving
 - **Fresh Fruit (optional)**: Such as lemon slices, lime wedges, or berries for garnish and extra flavor
 
@@ -53,7 +53,7 @@ Sprite Kool Aid Soda is a beverage that combines Sprite, a lemon-lime flavored s
 
 1. **Choosing Your Flavor:** The beauty of this recipe lies in its versatility. Whether you're a fan of something classic like Cherry or something a bit bolder like Tropical Punch, any flavor of Kool-Aid will work. Feel free to mix flavors for a custom blend!
 2. **Carbonation is Key:** To maintain the fizzy quality of your soda, combine the Kool-Aid and Sprite just before serving. If you prepare the mix too far in advance, it might lose some of its effervescence.
-3. **Adjusting Sweetness:** Both Sprite and Kool-Aid contain quite a bit of sugar. Depending on your preference and dietary needs, adjust the amount of added sugar or consider using a sugar-free version of Kool-Aid.
+3. **Adjusting Sweetness:** Regular Sprite contains sugar; Kool-Aid products differ. Read your packet before adding more sweetener. Diet Sprite changes the sugar content of the finished drink.
 4. **Garnishing**: Garnishes not only add a splash of color and sophistication but can also complement the flavor of your drink. Lemon or lime slices work wonderfully with most Kool-Aid flavors. Fresh berries can add a touch of elegance and are particularly delightful with redberry or Lemonade flavors.
 5. **Serving Suggestions:** This fun drink is perfect for kid's parties, family gatherings, or as a festive addition to a weekend barbecue. It's a nostalgic beverage that guests of all ages will enjoy.
 
@@ -108,9 +108,9 @@ Whether you're looking to adapt the recipe for dietary reasons or you simply wis
 ### **Instead of Sugar:**
 
 - **Honey or Agave Syrup:** These natural sweeteners can provide additional depth of flavor. Since they are sweeter than sugar, you might need less.
-- **Artificial Sweeteners:** If you want the sweetness without the calories or the impact on blood sugar levels, consider sweeteners such as stevia, sucralose, or aspartame. Be mindful of their sweetness potency, as you'll usually need much less compared to regular sugar.
+- **Artificial Sweeteners:** Use a beverage sweetener according to its label; sweetness and calories depend on the product and the soda used.
 - **Maple Syrup:** This can add a rich, autumnal note to your soda, though it works best with compatible flavors like apple or cranberry Kool-Aid.
-- **Simple Syrup:** Make a simple [syrup by dissolving equal parts of sugar](/sugar-free-syrup-at-dutch-bros-recipe/) and water. This can blend more seamlessly into a cold liquid than granulated sugar.
+- **Simple Syrup:** For a sugar syrup, dissolve equal parts sugar and water. For a sugar-free flavoring, see the [separate recipe](/sugar-free-syrup-at-dutch-bros-recipe/). This can blend more seamlessly into a cold liquid than granulated sugar.
 
 ## **Final Thoughts**
 

@@ -31,34 +31,25 @@ Poppi Soda Recipe
 
 Poppi Soda is a brand of sparkling beverage that's known for its unique flavors and health-conscious ingredients. It's made with real fruit juice, apple cider vinegar, and sparkling water, and it comes in a variety of flavors like strawberry lemon, orange, lime, and more.
 
-### **Ingredients for Poppi Soda**
+### **Ingredients for two glasses**
 
-- **Sparkling Water:** This forms the base of your soda and gives it that satisfying fizz. Choose a high-quality sparkling water to ensure a refreshing and bubbly experience.
-- **Organic Cane Sugar**: To add a touch of sweetness, use organic cane sugar. It enhances the flavor profile of the soda without overpowering it.
-- **Apple Juice Concentrate:** Adding apple juice concentrate infuses the soda with a fruity and slightly tart taste, providing a delightful twist to the traditional soda experience.
-- **Fruit Juice Color:** This ingredient adds a burst of vibrant color to your Poppi Soda, making it visually appealing and irresistible to the eyes.
-- **Organic Apple Cider Vinegar:** Apple cider vinegar adds a tangy note. This homemade soda has no demonstrated detox effect.
-- **Organic Agave Inulin:** Agave inulin adds fiber and a little body; this recipe does not establish a gut-health benefit.
-- **Natural Flavors:** Infuse your Poppi Soda with the flavors of your choice, such as berry, citrus, or tropical, to create a truly tailor-made soda experience.
-- **Stevia:** Stevia, a plant-based sweetener, can be used to add a touch of sweetness without the calories or impact on blood sugar levels.
-- **Natural Tartaric Acid:** This ingredient helps balance the flavors in your soda, ensuring a harmonious taste profile.
-- **Green Tea Caffeine:** For those in need of an extra boost, green tea caffeine can be added to your Poppi Soda, providing a natural source of energy.
+- 2 cups chilled sparkling water
+- 1/4 cup fruit juice, such as apple or berry
+- 1 teaspoon apple cider vinegar (optional, for tartness)
+- Lemon or lime juice and sweetener to taste (optional)
+- Ice and fruit slices, to serve
+
+This is a fizzy, fruit-flavored copycat, not the commercial Poppi formula. It contains no added caffeine or powdered supplements, and it does not claim a detox or gut-health effect. Check the juice label if you are tracking sugar.
 
 ### **Instructions**
 
-1. In a mixing bowl, combine the sparkling water and organic cane sugar. Stir until the sugar is fully dissolved.
-2. Add the apple juice concentrate, fruit juice color, organic apple cider vinegar, organic agave inulin, natural flavors, stevia, natural tartaric acid, and green tea caffeine (if desired).
-3. Mix well to ensure all ingredients are thoroughly combined.
-4. Pour the mixture into individual soda bottles or a larger container if serving a crowd.
-5. Chill the soda in the refrigerator for at least 1 hour to allow the flavors to meld and the carbonation to settle.
-6. Serve your homemade Poppi Soda over ice, garnished with fresh fruit or herbs, for an extra touch of elegance.
+1. In a pitcher, combine the fruit juice, optional vinegar and a squeeze of lemon or lime. Taste and add a little sweetener only if desired.
+2. Just before serving, add chilled sparkling water and stir gently.
+3. Pour into glasses over ice and garnish with fruit slices. Serve immediately for the best fizz.
 
-### **Tips for Making Poppi Soda**
+### **Tip**
 
-- Experiment with different fruit juice colors and combinations to create unique flavor profiles. The possibilities are endless!
-- For a different flavor, use honey in place of cane sugar; it still adds sugar.
-- Add a splash of freshly squeezed citrus juice to brighten up the flavors of your Poppi Soda.
-- Don't forget to label your bottles and store them in the refrigerator to keep them fresh for longer.
+Vinegar adds tartness; use less or leave it out if you do not like the flavor.
 
 ### **What to serve with**
 
@@ -73,51 +64,9 @@ Enhance the delight of your Poppi Soda indulgence by pairing it with carefully s
 7. **Asian-Inspired Noodle Dishes**: Delight in the exotic blend of spices and textures found in Asian noodle dishes such as pad thai, ramen, or sesame noodles, offering a culinary adventure alongside your Poppi Soda.
 8. **Mediterranean Mezze Platter**: Revel in the array of Mediterranean flavors with hummus, tzatziki, falafel, and pita bread, providing a diverse and satisfying accompaniment to your soda experience.
 
-## **Ingredients Substitutes**
+## **Easy swaps**
 
-![fizzy poppi soda in a glass served with ice](/wp-content/uploads/2024/06/Poppi-Soda-1-1024x1024.png)
-
-Achieve soda nirvana by seamlessly swapping key ingredients in your **Poppi Soda** recipe. Elevate your soda craft with these intelligent ingredient alternatives:
-
-### **Sparkling Water Substitute:**
-
-- **Carbonated Mineral Water:** Infuse your Poppi Soda with added minerals and a more robust flavor profile by replacing sparkling water with carbonated mineral water.
-
-### **Organic Cane Sugar Substitute:**
-
-- **[Maple Syrup](https://en.wikipedia.org/wiki/Maple_syrup):** Transition to a darker, richer sweetness by swapping organic cane sugar for maple syrup, adding a distinctive depth of flavor to your soda blend.
-
-### **Apple Juice Concentrate Substitute:**
-
-- **White Grape Juice Concentrate:** Opt for a milder and less tart alternative with white grape juice concentrate, providing a gentle fruity essence to your Poppi Soda.
-
-### **Fruit Juice Color Substitute:**
-
-- **Beet Juice:** Infuse your soda with a natural and vibrant hue by incorporating beet juice, adding a hint of earthiness and unique visual appeal.
-
-### **Organic Apple Cider Vinegar Substitute:**
-
-- **Lemon Juice:** Brighten your soda with a citrusy zing by substituting organic apple cider vinegar with freshly squeezed lemon juice, elevating the tangy notes in your Poppi Soda.
-
-### **Organic Agave Inulin Substitute:**
-
-- **Coconut Sugar:** Embrace a subtle caramel flavor by replacing organic agave inulin with coconut sugar, offering a nuanced sweetness to your soda concoction.
-
-### **Natural Flavors Substitute:**
-
-- **Essential Oils:** Intensify your Poppi Soda with essential oils like orange, mint, or lavender for potent and aromatic flavor enhancements that elevate the sensory experience.
-
-### **Stevia Substitute:**
-
-- **Monk Fruit Extract:** Opt for a natural and zero-calorie alternative by using monk fruit extract to sweeten your soda without compromising on taste or health considerations.
-
-### **Natural Tartaric Acid Substitute:**
-
-- **Citric Acid:** Enhance the tartness of your soda with citric acid as a substitute for natural tartaric acid, adding a brighter and more pronounced acidic kick.
-
-### **Green Tea Caffeine Substitute:**
-
-- **Yerba Mate Extract:** Energize your Poppi Soda with yerba mate extract, providing a robust caffeine boost and earthy undertones for a unique twist on traditional caffeinated additives.
+Use lemon or lime juice in place of vinegar for a brighter tartness. Swap apple juice for berry or orange juice for a different fruit flavor; taste before adding sweetener. Use only food ingredients intended for drinks, not aromatherapy essential oils or unmeasured caffeine powders.
 
 ## **Final Thoughts**
 

@@ -58,7 +58,7 @@ Teavana Chai Concentrate is a pre-made beverage mix that combines tea and spices
 - **Adjust the Spices**: The beauty of homemade chai concentrate is the ability to tailor it to your exact preferences. Feel free to adjust the quantities of the spices or even add others like black pepper or allspice for a unique twist.
 - **Choosing the Tea:** The base of any chai is its tea. While Assam and Darjeeling are excellent choices for their robust flavors, don't hesitate to experiment with other black teas to discover your preferred taste.
 - **Sweetness Level:** Adjusting the level of sweetness to suit your taste is key. Honey adds a rich, floral sweetness, while sugar provides a more neutral sweetness. Maple syrup or agave can also be excellent vegan alternatives.
-- **Storage:** Your homemade Teavana Chai Concentrate can be stored in the refrigerator for up to a week, ensuring you have a delightful chai latte within reach anytime.
+- **Storage:** Strain the concentrate into a clean covered container, refrigerate promptly at 40°F/4°C or below, and use within 3–4 days. Add milk when serving; [FoodSafety.gov recommends prompt chilling](https://www.foodsafety.gov/blog/10-smart-tips-keep-your-restaurant-leftovers-safe).
 
 ### **What to serve with**
 
@@ -144,7 +144,7 @@ Creating a homemade version of **Teavana Chai Concentrate** allows flexibility a
 
 #### Substitutes:
 
-- **Agave Syrup:** A vegan and low-glycemic index sweetener.
+- **Agave Syrup:** A vegan liquid sweetener that still adds sugar; adjust to taste.
 - **Stevia or Monk Fruit Sweetener:** For a calorie-free option, though start with a smaller amount and adjust to taste, as these can be much sweeter.
 - **Coconut Sugar:** Adds a caramel-like flavor, suitable for a more nuanced sweetness.
 
