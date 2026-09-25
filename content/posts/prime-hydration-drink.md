@@ -33,17 +33,16 @@ This homemade drink takes inspiration from flavored hydration beverages, but its
 
 ### Ingredients
 
-- **Coconut Water (2 cups):** Packed with electrolytes and potassium, coconut water is a fantastic base for hydration drinks. It carries the added benefits of being low in calories and free from added sugars.
-- **Honey (1-2 tablespoons):** A natural sweetener, honey adds sweetness without artificial additives. Plus, it brings in its own set of antioxidants.
-- **Sea Salt (1/8 teaspoon)**: A pinch of sea salt enhances flavour and replenishes the sodium commonly lost through sweat.
+- **Coconut Water (2 cups):** Coconut water adds a lightly sweet flavor; check the label for added sugar.
+- **Honey (1-2 tablespoons):** Honey adds sweetness; use less or omit it if preferred.
+- **Sea Salt (1/8 teaspoon)**: A pinch of sea salt adds flavor and some sodium; it is not a measured electrolyte dose.
 - **Lemon Juice (2 tablespoons):** This citrus superstar is high in vitamin C and provides a refreshing zest to the drink.
 - **Water (2 cups):** Water is the cornerstone of hydration and will help dilute the coconut water and balance the drink's flavor.
 - **Ice (Optional):** If you prefer your drink chilled.
 
-#### Feel free to include additional electrolyte-packing ingredients like:
+#### Optional flavor additions:
 
-- **Magnesium or Calcium Powder**: These minerals further aid in hydrating the body effectively and are crucial for muscle function.
-- **[Fruit Puree](/passion-fruit-puree-recipe/) or Juice**: For a touch of natural sweetness and flavor. Great options include orange, lime, watermelon, or berry purees.
+- **[Fruit puree](/passion-fruit-puree-recipe/) or juice:** Add a little for flavor. This recipe is not a substitute for a formulated oral rehydration solution.
 
 ### Instructions
 
@@ -71,7 +70,7 @@ Serving your homemade Prime Hydration Drink is all about balancing flavors and c
 
 After a good workout, you want to replenish your body with nutrients that aid recovery:
 
-- **[Protein-Rich Snacks](https://www.healthline.com/nutrition/healthy-high-protein-snacks):** Consider pairing your hydration drink with a small portion of Greek yogurt, a protein bar, or a handful of almonds. The protein will help repair and build muscles, while the drink replenishes the fluids and electrolytes lost in sweat.
+- **[Protein-Rich Snacks](https://www.healthline.com/nutrition/healthy-high-protein-snacks):** Consider pairing your hydration drink with a small portion of Greek yogurt, a protein bar, or a handful of almonds. The protein will help repair and build muscles, while the drink provides a refreshing accompaniment.
 - **Fresh Fruit:** Choose fruits like bananas or apples, which provide carbohydrates for energy replenishment, along with additional hydration from their natural water content.
 - **Whole Grain Toast:** Topped with your favorite nut butter or avocado, whole grain toast adds complex carbs and healthy fats, making for a balanced snack.
 
@@ -117,7 +116,7 @@ Creating a homemade Prime Hydration Drink provides flexibility in terms of ingre
 
 #### Substitutes:
 
-- **Maple Syrup**: Offers a similar natural sweetness and contains some minerals and antioxidants.
+- **Maple Syrup**: Offers a similar sweetness with a maple flavor.
 - **[Agave Nectar](https://www.healthline.com/nutrition/agave-nectar-is-even-worse-than-sugar):** A vegan substitute that's sweeter than honey, meaning you may need less to achieve the same sweetness level.
 - **Stevia:** For a sugar-free option, stevia can sweeten your drink without adding calories. Adjust to taste since it's much sweeter than honey.
 
@@ -125,8 +124,8 @@ Creating a homemade Prime Hydration Drink provides flexibility in terms of ingre
 
 #### Substitutes:
 
-- **Pink Himalayan Salt:** Another mineral-rich salt, it can provide similar benefits to sea salt and often comes in a less refined form.
-- **Table Salt:** While not as rich in minerals, table salt can be used in a pinch to replenish sodium levels, though it's often more processed.
+- **Pink Himalayan Salt:** Use the same small quantity for a slightly different flavor.
+- **Table Salt:** Use the same small quantity; it also adds sodium and flavor.
 
 ### Lemon Juice
 
