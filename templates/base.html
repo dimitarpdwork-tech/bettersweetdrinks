@@ -5,7 +5,7 @@
 <meta name="theme-color" content="#b8273e"><meta name="twitter:card" content="summary_large_image">
 <meta property="og:site_name" content="Better Sweet Drinks"><meta property="og:title" content="{{ title }}"><meta property="og:description" content="{{ description }}"><meta property="og:url" content="{{ canonical }}"><meta property="og:type" content="{% if doc is defined and doc.kind=='posts' %}article{% else %}website{% endif %}">
 {% if image %}<meta property="og:image" content="{{ image if image.startswith('https://') else site.url+image }}">{% endif %}
-<link rel="stylesheet" href="{{ link('/assets/site.css') }}"><script src="{{ link('/assets/site.js') }}" defer></script>
+<link rel="stylesheet" href="{{ asset_link('/assets/site.css') }}"><script src="{{ asset_link('/assets/site.js') }}" defer></script>
 {% for schema in schemas %}<script type="application/ld+json">{{ schema|tojson }}</script>{% endfor %}</head>
 <body><a class="skip" href="#main">Skip to content</a>
 <div class="topline">FROM THE FIRST SIP TO THE LAST DROP.</div>

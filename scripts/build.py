@@ -1,5 +1,5 @@
 """Build the editable Better Sweet Drinks content into a static website."""
-import json,os,re,shutil,math,html,zipfile
+import json,os,re,shutil,math,html,zipfile,hashlib
 from pathlib import Path
 from urllib.parse import urlsplit
 from datetime import date
@@ -34,6 +34,10 @@ def image_srcset(path):
         if candidate.exists():variants.append(f"{link('/'+str(candidate.relative_to(OUT)))} {width}w")
     return ', '.join(variants)
 env.globals['image_srcset']=image_srcset
+def asset_link(path):
+    fingerprint=hashlib.sha256((OUT/path.lstrip('/')).read_bytes()).hexdigest()[:12]
+    return link(path)+'?v='+fingerprint
+env.globals['asset_link']=asset_link
 docs=[]
 for kind in ['posts','pages']:
     for p in (ROOT/'content'/kind).glob('*.md'):
