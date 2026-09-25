@@ -3,6 +3,7 @@ import json,os,re
 from pathlib import Path
 from urllib.parse import urlsplit,unquote
 from bs4 import BeautifulSoup
+import yaml
 ROOT=Path(__file__).resolve().parents[1];OUT=ROOT/'dist'
 prefix=urlsplit(os.getenv('SITE_URL','')).path.rstrip('/')
 errors=[];warnings=[];recipes=0;pages=0
@@ -41,7 +42,9 @@ for file in OUT.rglob('*.html'):
     if re.search(r'\[(?:mv_create|penci_recipe|contact-form-7)\b',soup.get_text()):errors.append(str(file.relative_to(OUT))+': leftover shortcode')
 for file in ROOT.rglob('*'):
     if file.is_file() and (file.suffix in ['.sql','.wpress'] or file.name in ['wp-config.php','tables.json']):errors.append('Private file in source '+str(file.relative_to(ROOT)))
-if recipes!=report['linkedRecipes']:errors.append(f'Expected {report["linkedRecipes"]} recipes, got {recipes}')
+published_posts=(yaml.safe_load(file.read_text().split('---',2)[1]) for file in (ROOT/'content/posts').glob('*.md'))
+expected_recipes=sum(len(post.get('recipeIds',[])) for post in published_posts if not post.get('draft'))
+if recipes!=expected_recipes:errors.append(f'Expected {expected_recipes} recipes, got {recipes}')
 result={'htmlPages':pages,'recipeSchemas':recipes,'errors':errors,'unresolvedOriginalLinks':warnings}
 (ROOT/'verification-report.json').write_text(json.dumps(result,indent=2)+'\n')
 print(json.dumps({'htmlPages':pages,'recipeSchemas':recipes,'errors':len(errors),'unresolvedOriginalLinks':len(warnings)}))
