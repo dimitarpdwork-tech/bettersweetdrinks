@@ -4,7 +4,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 from datetime import date
 import yaml,markdown
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup,NavigableString
 from jinja2 import Environment,FileSystemLoader,select_autoescape
 
 ROOT=Path(__file__).resolve().parents[1]; OUT=ROOT/'dist'
@@ -54,6 +54,11 @@ for kind in ['posts','pages']:
             matching=[h for h in body.find_all(re.compile('^h[1-6]$')) if normalize(h.get_text(' ',strip=True))==normalize(anchor.get_text(' ',strip=True))]
             if len(matching)==1:
                 marker=body.new_tag('span',id=old_id);matching[0].insert_before(marker)
+        # Separate imported bold labels that run directly into the next sentence.
+        for strong in body.find_all('strong'):
+            following=strong.next_sibling
+            if isinstance(following,NavigableString) and following and following[0].isupper() and len(strong.get_text())>5:
+                following.replace_with(' '+str(following))
         # Build a real table of contents while retaining all original heading anchors.
         d['toc']=[]
         used_ids={el.get('id') for el in body.select('[id]')}
