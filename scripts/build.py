@@ -42,6 +42,18 @@ for kind in ['posts','pages']:
                 marker=body.new_tag('span',id=old_id);matching[0].insert_before(marker)
         d['body']=str(body)
         docs.append(d)
+# Convert standalone WordPress embed URLs into useful links on the static site.
+titles={d['url']:d['title'] for d in docs}
+for d in docs:
+    body=BeautifulSoup(d['body'],'html.parser')
+    for paragraph in body.find_all('p'):
+        value=paragraph.get_text(strip=True)
+        if paragraph.find(True) or not re.fullmatch(r'https?://(?:www\.)?bettersweetdrinks\.com/[^\s]+',value):continue
+        target=urlsplit(value)
+        anchor=body.new_tag('a',href=target.path+('?' + target.query if target.query else '')+('#'+target.fragment if target.fragment else ''))
+        anchor.string=titles.get(target.path,value)
+        paragraph.clear();paragraph.append(anchor)
+    d['body']=str(body)
 posts=sorted([d for d in docs if d['kind']=='posts'],key=lambda d:(str(d['publishDate']),int(d['id'])),reverse=True)
 recipes={p.stem:json.loads(p.read_text()) for p in (ROOT/'content/recipes').glob('*.json')}
 comments=read('data/comments.json');tax=read('data/taxonomies.json');redirects=read('data/redirects.json')
