@@ -3,7 +3,7 @@ id: '715'
 title: Copycat Starbucks Iced Passion Tango Tea Recipe
 slug: starbucks-iced-passion-tango-tea
 publishDate: '2024-08-27'
-updatedDate: '2025-05-07'
+updatedDate: '2026-09-25'
 description: If you've ever sipped on a Starbucks Iced Passion Tango Tea , you know
   exactly what I'm about to go into. The refreshing blend of hibiscus, lemongrass,
   and apple, all shaken with the perfect amount of ice, isn't just a drink; it's an
@@ -135,6 +135,10 @@ Starbucks typically sweetens its iced teas with liquid cane sugar. Here are some
 Making Starbucks Iced Passion Tango Tea at home allows you to enjoy your favorite beverage anytime, and tweaking it according to your flavor preferences makes it even more special.
 
 ## More Starbucks Recipes:
+
+- [Passion Tea Lemonade](/starbucks-passion-tea-lemonade-recipe/)
+- [Iced Peach Green Tea Lemonade](/starbucks-iced-peach-green-tea-lemonade/)
+- [Strawberry Açaí Lemonade](/strawberry-acai-lemonade-starbucks/)
 
 - [Starbucks Summer Berry Lemonade Recipe](/starbucks-summer-berry-lemonade-recipe/)
 - [Summer Skies Drink (Starbucks Recipe)](/summer-skies-drink-starbucks-recipe/)

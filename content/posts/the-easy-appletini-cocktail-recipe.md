@@ -3,7 +3,7 @@ id: '999'
 title: Easy Appletini Cocktail Recipe with Just 4 Ingredients
 slug: the-easy-appletini-cocktail-recipe
 publishDate: '2025-01-28'
-updatedDate: '2025-06-08'
+updatedDate: '2026-09-25'
 description: The easy appletini cocktail recipe - a delectable vodka-based cocktail
   with a delicious sweet and sour tang that will leave you wanting more!
 seoTitle: Easy Appletini Cocktail Recipe with Just 4 Ingredients
@@ -17,7 +17,7 @@ tags:
 - martini-recipes
 - vodka-recipes
 - punch-recipes
-featuredImage: ''
+featuredImage: /wp-content/uploads/2025/01/Appletini-Image-2.jpg
 featuredImageAlt: Easy Appletini Cocktail Recipe with Just 4 Ingredients
 recipeIds:
 - '1'
@@ -37,7 +37,8 @@ If you want a fruitier flavor, use brandy or any apple liqueur. You could substi
 - 1 ounce green apple juice
 - 0.25 ounce [lemon juice](/how-to-make-lemonade-with-lemon-juice/ "How to Make Lemonade with Lemon Juice")
 - 1.5 ounces vodka
-- Ice (optional)Apple slice (for garnishing)
+- Ice
+- Apple slice (for garnish)
 
 ## Glassware You Will Need
 
@@ -48,12 +49,7 @@ If you want a fruitier flavor, use brandy or any apple liqueur. You could substi
 
 ## Easy Appletini Cocktail Recipe Instructions
 
-#### Make the Apple Juice
-
-- Take 5 cups of water, a quarter cup of white sugar, and 3 peels and cores from red apples (remove seeds).
-- Add water with apple peels and cores in a saucepan.
-- Bring to a boil, reduce the heat, and let it simmer. Keep stirring for 30 minutes.
-- Strain the juice into a mixing bowl, add sugar, mix well and let it cool.
+Use 1 ounce of chilled apple juice for one cocktail; no separate five-cup juice preparation is needed.
 
 #### Mix the Ingredients
 

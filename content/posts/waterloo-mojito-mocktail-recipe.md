@@ -3,7 +3,7 @@ id: '844'
 title: Homemade Waterloo Mojito Mocktail Recipe
 slug: waterloo-mojito-mocktail-recipe
 publishDate: '2024-09-13'
-updatedDate: '2025-05-26'
+updatedDate: '2026-09-25'
 description: Beat the heat with this crisp, citrus-forward cocktail. Featuring fresh
   grapefruit, lime, and a hint of rosemary, it's the ultimate warm-weather sip.
 seoTitle: Homemade Waterloo Mojito Mocktail Recipe
@@ -123,5 +123,7 @@ Creating a Waterloo Mojito Mocktail allows for a lot of flexibility in terms of 
 With these simple steps and tips, you can easily master creating a delightful Waterloo Mojito Mocktail, capturing the essence of a sunny day in every sip.
 
 ## More Mocktail Recipes:
+
+- [Non-Alcoholic Lime Rickey](/non-alcoholic-lime-rickey-recipe/) for another citrus-and-soda refresher
 
 - [Topo Chico Mocktail Recipe](/topo-chico-mocktail-recipe/)

@@ -3,7 +3,7 @@ id: '2064'
 title: 'Dutch Bros Copycat Recipes: Bring the Broista Magic Home'
 slug: dutch-bros-copycat-recipes
 publishDate: '2025-07-13'
-updatedDate: '2025-07-14'
+updatedDate: '2026-09-25'
 description: 5 of the best Dutch Bros Copycat Recipes - some fun, flavorful drinks
   you can whip up at home in minutes.
 seoTitle: 'Dutch Bros Copycat Recipes: Bring the Broista Magic Home'
@@ -198,7 +198,7 @@ I've made all the Dutch Bros Copycat Recipes listed here at home multiple times,
 ## Frequently Asked Questions
 
 Is Dutch Bros only on the West Coast?  
-Mostly, yes. It started in Oregon and is mainly found in western and southwestern states. But it's growing fast and opening more locations nationwide.
+No. It began in Oregon and has locations in other U.S. regions too. Use the [official location finder](https://www.dutchbros.com/locations/) to see what is near you.
 
 Do they use special ingredients?  
 Some, yes. They use proprietary syrups and energy drinks, especially for Rebels. But the good news is that similar flavors are widely available online or in grocery stores.
@@ -225,4 +225,8 @@ If you've never tried making one, now’s the time. It's easier than you think, 
 
 [Campout Cold Brew](/campout-cold-brew-dutch-bros-copycat/)
 
-[Dutch Bros Rebel Recipe](/dutch-bros-rebel-recipe/) (Energy Drink, not for Children)
+[Dutch Bros Rebel Recipe](/dutch-bros-rebel-recipe/) (energy drink)
+
+[Electric Berry Blue Rebel](/dutch-bros-blue-drink-electric-berry-rebel/) (fruity energy drink)
+
+[Snickerdoodle Coffee](/copycat-dutch-bros-snickerdoodle-recipe/) (spiced coffee)

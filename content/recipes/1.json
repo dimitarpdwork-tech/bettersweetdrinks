@@ -5,23 +5,20 @@
   "author": "Better Sweet Drinks",
   "ingredients": [
     "0.5 ounce green apple schnapps",
-    "1 ounce green apple juice",
+    "1 ounce apple juice",
     "0.25 ounce lemon juice",
     "1.5 ounces vodka",
-    "Ice (optional)Apple slice (for garnishing)"
+    "Ice",
+    "Apple slice for garnish"
   ],
-  "instructions": "<h4>Make the Apple Juice</h4><ol><li>Take 5 cups of water, a quarter cup of white sugar, and 3 peels and cores from red apples (remove seeds).</li><li>Add water with apple peels and cores in a saucepan.</li><li>Bring to a boil, reduce the heat, and let it simmer. Keep stirring for 30 minutes.</li><li>Strain the juice into a mixing bowl, add sugar, mix well and let it cool.</li></ol><h4>Mix the Ingredients</h4><ol><li>Mix the apple juice and lemon juice in the shaker. Give it a firm shake.</li><li>Add the green apple schnapps (please stick to the above mentioned measurement to achieve the desired taste), and shake again!</li><li>Pour the vodka (I use Absolut Vodka for my cocktails), fill the shaker halfway up with ice, cap it, and give a brisk shake.</li><li>Slowly pour the cocktail using a mesh strainer, into a martini glass.</li></ol><h4>Garnish</h4><ol><li>Garnish with fresh apple slices and serve.</li><li>A single cherry can be added to the drink.</li><li>A slight twist can be added with a cinnamon stick, as the strong, warm notes of the cinnamon harmonize lusciously with the fruity apple flavors.</li></ol>",
+  "instructions": "<ol><li>Add apple juice, lemon juice, schnapps and vodka to a shaker with ice.</li><li>Shake until cold and strain into a martini glass.</li><li>Garnish with an apple slice.</li></ol>",
   "notes": "<p>If you don’t want to deal with the hassle of preparing this easy appletini recipe before a party, just pre-batch it. Pour the ingredients into a bottle and refrigerate. Simply mix them in a cocktail shaker and serve.</p>",
-  "yield": "4",
-  "prepTime": "PT10M",
-  "cookTime": "PT10M",
-  "totalTime": "PT20M",
+  "yield": "1",
+  "prepTime": "PT5M",
+  "cookTime": "",
+  "totalTime": "PT5M",
   "image": "/wp-content/uploads/2025/01/Appletini-Image-2.jpg",
-  "nutrition": {
-    "@type": "NutritionInformation",
-    "calories": "190 calories",
-    "servingSize": "1"
-  },
+  "nutrition": {},
   "keywords": "easy appletini recipe, easy appletini cocktail recipe, appletini cocktail recipe",
   "category": "Cocktails",
   "cuisine": ""

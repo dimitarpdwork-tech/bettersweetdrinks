@@ -17,6 +17,8 @@ for file in OUT.rglob('*.html'):
         if fragment and not soup.find(id=fragment) and not soup.find('a',attrs={'name':fragment}):
             errors.append(str(file.relative_to(OUT))+': missing fragment '+fragment)
     for el in soup.find_all(True):
+        if el.name=='img' and urlsplit(el.get('src','')).scheme in ('http','https'):
+            errors.append(str(file.relative_to(OUT))+': externally hosted image '+el['src'])
         for attr in ['src','href','data-index']:
             value=el.get(attr,'')
             if not value.startswith('/') or value.startswith('//'):continue

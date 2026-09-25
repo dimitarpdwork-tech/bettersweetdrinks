@@ -3,7 +3,7 @@ id: '102'
 title: 'Espresso Martini Masterclass: Classic Recipe Plus 6 Great Riffs'
 slug: espresso-martini-masterclass
 publishDate: '2024-05-21'
-updatedDate: '2025-05-26'
+updatedDate: '2026-09-25'
 description: 'Espresso Martini Masterclass: classic recipe, 6 flavor riffs, foam‑hacks
   & batch tips. Shake up your next party with coffee‑cocktail perfection!'
 seoTitle: 'Espresso Martini Masterclass: Classic Recipe Plus 6 Great Riffs'
@@ -173,6 +173,9 @@ Catches fine ice shards for a silky texture and cleaner foam head.
 And there you have it, an espresso martini that's ready to steal the spotlight at any soiree. It’s peppy, it's classy, it's a little bit sassy, and it's whipped up by you.
 
 ## More Martini Recipes:
+
+- [Chili’s Inspired Espresso Martini](/copycat-chilis-espresso-martini-recipe/)
+- [Mr Black Coffee Liqueur Cocktails](/mr-black-coffee-liqueur/)
 
 - [Limoncello Lemon Drop Martini Recipe](/limoncello-lemon-drop-martini-recipe/)
 - [Lavender Martini](/lavender-martini/)

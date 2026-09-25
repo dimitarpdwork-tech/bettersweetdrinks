@@ -3,7 +3,7 @@ id: '671'
 title: Fruity Indian Yogurt Drink (Lassi) Recipe
 slug: fruity-indian-yogurt-drink-lassi-recipe
 publishDate: '2024-08-20'
-updatedDate: '2025-06-08'
+updatedDate: '2026-09-25'
 description: 'Grandma''s Fruity Indian Yogurt Drink (Lassi) recipe: ripe fruits, fresh
   yogurt, spice, and honey create a uniquely flavorful, cooling treat.'
 seoTitle: Fruity Indian Yogurt Drink (Lassi) Recipe
@@ -155,6 +155,8 @@ Creating a Fruity Indian Yogurt Drink allows for a lot of flexibility when it co
 A final tip, regardless of your ingredient choices, is to always taste as you go. Balancing the sweetness, acidity, and spice levels to your preference is key to making a delicious Fruity Indian Yogurt Drink.
 
 ## More Fruit Drinks:
+
+- [Fluffy Yogurt](/fluffy-yogurt-recipe/) for a spoonable yogurt variation
 
 - [Pineapple Mango Hennessy Recipe](/pineapple-mango-hennessy-recipe/)
 - [Pineapple Hennessy Lemonade Recipe](/pineapple-hennessy-lemonade-recipe/)

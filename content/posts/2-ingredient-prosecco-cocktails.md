@@ -3,7 +3,7 @@ id: '314'
 title: Easy 2-Ingredient Prosecco Cocktails
 slug: 2-ingredient-prosecco-cocktails
 publishDate: '2024-06-25'
-updatedDate: '2025-05-28'
+updatedDate: '2026-09-25'
 description: Easy 2-ingredient recipes for sparkling Prosecco Cocktails in minutes!
   Elegant drinks that are perfect for any occasion.
 seoTitle: Easy 2-Ingredient Prosecco Cocktails
@@ -139,6 +139,8 @@ Creating a 2-Ingredient Prosecco Cocktail is all about simplicity and elegance, 
 You can tailor your 2-Ingredient Prosecco Cocktail to suit your tastes and preferences, ensuring it's always a delightful and elegant choice for any occasion. Cheers to creativity and delicious cocktails!
 
 ## More Cocktail Recipes:
+
+- [Sparkling Sake Cocktail](/sparkling-sake-cocktail-recipe/) for a rice-based bubbly alternative
 
 - [Pistachio Martini Recipe](/pistachio-martini-recipe/)
 - [Copycat Oklahoma Martini Recipe](/oklahoma-martini/)
