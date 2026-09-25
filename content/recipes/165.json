@@ -1,0 +1,24 @@
+{
+  "id": "165",
+  "title": "Black Friday Maple Espresso Martini",
+  "description": "An espresso martini with maple syrup for a Black Friday evening gathering.",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "1 1/2 oz vodka",
+    "1 oz coffee liqueur",
+    "1 oz freshly brewed espresso, cooled",
+    "1/4 oz maple syrup",
+    "Ice and 3 coffee beans or cocoa dusting"
+  ],
+  "instructions": "<ol><li>Brew espresso, cool for a few minutes, and chill a coupe glass.</li><li>Shake vodka, coffee liqueur, espresso and maple syrup vigorously with ice for 15 seconds.</li><li>Double-strain into the chilled glass and garnish.</li></ol>",
+  "notes": "<p>Use decaf espresso for a lower-caffeine version.</p>",
+  "yield": "1 cocktail",
+  "prepTime": "PT5M",
+  "cookTime": "",
+  "totalTime": "PT5M",
+  "image": "/images/uploads/black-friday-maple-espresso-martini.svg",
+  "nutrition": {},
+  "keywords": "",
+  "category": "Cocktails",
+  "cuisine": ""
+}

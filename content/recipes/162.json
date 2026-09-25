@@ -1,0 +1,25 @@
+{
+  "id": "162",
+  "title": "Halloween Blackberry Witch Fizz",
+  "description": "A blackberry, gin and ginger beer fizz for Halloween.",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "5 ripe blackberries, plus 2 for garnish",
+    "2 oz gin",
+    "3/4 oz fresh lemon juice",
+    "1/2 oz simple syrup",
+    "3 oz chilled ginger beer",
+    "Ice and 1 rosemary sprig"
+  ],
+  "instructions": "<ol><li>Muddle five blackberries with lemon juice and syrup in a shaker.</li><li>Add gin and ice; shake for 10 seconds and double-strain into an ice-filled highball glass.</li><li>Top with ginger beer, stir once, and garnish with blackberries and rosemary.</li></ol>",
+  "notes": "<p>Prepare one serving at a time. Add sparkling ingredients only when ready to serve.</p>",
+  "yield": "1 cocktail",
+  "prepTime": "PT10M",
+  "cookTime": "",
+  "totalTime": "PT10M",
+  "image": "/images/uploads/halloween-blackberry-witch-fizz.svg",
+  "nutrition": {},
+  "keywords": "",
+  "category": "Cocktails",
+  "cuisine": ""
+}

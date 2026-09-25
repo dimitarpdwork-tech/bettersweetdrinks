@@ -1,0 +1,24 @@
+{
+  "id": "164",
+  "title": "New Year's Pomegranate Champagne Cocktail",
+  "description": "A ruby pomegranate sparkling wine cocktail for a New Year toast.",
+  "author": "Better Sweet Drinks",
+  "ingredients": [
+    "1 oz chilled pomegranate juice",
+    "1/4 oz fresh lemon juice",
+    "1/4 oz simple syrup, optional",
+    "4 oz chilled dry Champagne or other sparkling wine",
+    "Lemon twist or pomegranate arils"
+  ],
+  "instructions": "<ol><li>Add pomegranate and lemon juices to a chilled flute; sweeten to taste.</li><li>Slowly top with sparkling wine, pausing for the foam to settle.</li><li>Stir gently once and garnish with lemon or pomegranate.</li></ol>",
+  "notes": "<p>Prepare one serving at a time. Add sparkling ingredients only when ready to serve.</p>",
+  "yield": "1 cocktail",
+  "prepTime": "PT10M",
+  "cookTime": "",
+  "totalTime": "PT10M",
+  "image": "/images/uploads/new-years-pomegranate-champagne-cocktail.svg",
+  "nutrition": {},
+  "keywords": "",
+  "category": "Cocktails",
+  "cuisine": ""
+}
