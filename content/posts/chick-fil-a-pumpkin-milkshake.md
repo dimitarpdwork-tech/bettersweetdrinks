@@ -3,8 +3,8 @@ id: '801'
 title: Chick-fil-A Pumpkin Milkshake Copycat Recipe
 slug: chick-fil-a-pumpkin-milkshake
 publishDate: '2024-09-03'
-updatedDate: '2025-05-26'
-description: Chick-fil-A's seasonal pumpkin milkshake is a beloved treat. Creamy pumpkin
+updatedDate: '2026-09-25'
+description: A homemade pumpkin milkshake inspired by fall flavors. Creamy pumpkin
   flavor blended into a thick, frosty milkshake.
 seoTitle: Chick-fil-A Pumpkin Milkshake Copycat Recipe
 author: Sandra
@@ -21,13 +21,13 @@ draft: false
 noindex: false
 ---
 
-Among these seasonal treats, the ever-popular **Chick-fil-A pumpkin Milkshake** holds a special place in the hearts of many. Though this item might be a seasonal fantasy (since we're talking about their Autumn Spice Milkshake), the allure of a homemade "Pumpkin Milkshake" inspired by Chick-fil-A's festive fall offering is irresistible.
+This pumpkin milkshake is our own fall-inspired recipe. Chick-fil-A has offered seasonal shakes such as the [Autumn Spice Milkshake](https://www.chick-fil-a.com/customer-support/our-food/our-menu/when-and-where-is-the-autumn-spice-milkshake-available), but that was a different flavor. This is not an official Chick-fil-A recipe.
 
 ![Chick-fil-A Pumpkin Copycat Milkshake with whipped cream on top](/wp-content/uploads/2024/09/Dutch-Bros-Blue-Drink-4-1024x1024.png)
 
 ## **How to make Chick-fil-A pumpkin Milkshake**
 
-The Chick-fil-A Pumpkin Milkshake is a seasonal menu item that typically appears at [Chick-fil-A restaurants](https://www.chick-fil-a.com/) during the fall. It's a creamy, spiced milkshake with pumpkin flavor, often combined with fall spices like cinnamon and nutmeg. The milkshake is usually topped with whipped cream and a cherry, making it a festive and indulgent treat for pumpkin spice lovers.
+Our version blends vanilla ice cream, pumpkin puree and pumpkin pie spice. It is a homemade pumpkin shake, not a recreation of a regularly offered Chick-fil-A menu item.
 
 ### **Ingredients**
 
@@ -87,7 +87,7 @@ When pairing food with a Chick-fil-A pumpkin Milkshake—or any rich, dessert-li
 
 ![Pumpkin Milkshake](/wp-content/uploads/2024/09/Dutch-Bros-Blue-Drink-5-1024x1024.png)
 
-Creating a homemade version of Chick-fil-A's seasonal pumpkin milkshake is a delightful endeavor, especially when you want to customize it or need to substitute ingredients due to dietary restrictions or availability.
+Making a homemade pumpkin milkshake is a delightful endeavor, especially when you want to customize it or need to substitute ingredients due to dietary restrictions or availability.
 
 ### Pumpkin Puree:
 
@@ -118,4 +118,4 @@ Creating a homemade version of Chick-fil-A's seasonal pumpkin milkshake is a del
 
 ## **Final Thoughts**
 
-Creating a homemade Chick-fil-A pumpkin milkshake with ingredient substitutes allows for customization to suit dietary needs, preferences, and ingredient availability. Experimenting with different replacements broadens the pleasure of cooking and ensures everyone can enjoy this delightful autumn treat.
+Making this homemade pumpkin milkshake with ingredient substitutes allows for customization to suit dietary needs, preferences, and ingredient availability. Experimenting with different replacements broadens the pleasure of cooking and ensures everyone can enjoy this delightful autumn treat.

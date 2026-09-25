@@ -3,7 +3,7 @@ id: '239'
 title: 'Homemade Poppi Soda: Easy Recipe'
 slug: poppi-soda-recipe
 publishDate: '2024-06-04'
-updatedDate: '2025-05-28'
+updatedDate: '2026-09-25'
 description: Easily make your own Poppi Soda at home! See full recipe with substitute
   ingredients.
 seoTitle: 'Homemade Poppi Soda: Easy Recipe'
@@ -37,8 +37,8 @@ Poppi Soda is a brand of sparkling beverage that's known for its unique flavors 
 - **Organic Cane Sugar**: To add a touch of sweetness, use organic cane sugar. It enhances the flavor profile of the soda without overpowering it.
 - **Apple Juice Concentrate:** Adding apple juice concentrate infuses the soda with a fruity and slightly tart taste, providing a delightful twist to the traditional soda experience.
 - **Fruit Juice Color:** This ingredient adds a burst of vibrant color to your Poppi Soda, making it visually appealing and irresistible to the eyes.
-- **Organic Apple Cider Vinegar:** Known for its health benefits, organic apple cider vinegar adds a tangy kick to the soda while also providing a host of potential digestive and detoxifying benefits.
-- **Organic Agave Inulin:** Derived from the agave plant, organic agave inulin serves as a natural sweetener and also acts as a prebiotic, promoting optimal gut health.
+- **Organic Apple Cider Vinegar:** Apple cider vinegar adds a tangy note. This homemade soda has no demonstrated detox effect.
+- **Organic Agave Inulin:** Agave inulin adds fiber and a little body; this recipe does not establish a gut-health benefit.
 - **Natural Flavors:** Infuse your Poppi Soda with the flavors of your choice, such as berry, citrus, or tropical, to create a truly tailor-made soda experience.
 - **Stevia:** Stevia, a plant-based sweetener, can be used to add a touch of sweetness without the calories or impact on blood sugar levels.
 - **Natural Tartaric Acid:** This ingredient helps balance the flavors in your soda, ensuring a harmonious taste profile.
@@ -56,7 +56,7 @@ Poppi Soda is a brand of sparkling beverage that's known for its unique flavors 
 ### **Tips for Making Poppi Soda**
 
 - Experiment with different fruit juice colors and combinations to create unique flavor profiles. The possibilities are endless!
-- For a healthier alternative, consider using a natural sweetener like honey instead of organic cane sugar.
+- For a different flavor, use honey in place of cane sugar; it still adds sugar.
 - Add a splash of freshly squeezed citrus juice to brighten up the flavors of your Poppi Soda.
 - Don't forget to label your bottles and store them in the refrigerator to keep them fresh for longer.
 

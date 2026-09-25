@@ -3,7 +3,7 @@ id: '827'
 title: Homemade Wendy's Pineapple Frosty Recipe
 slug: wendys-pineapple-frosty-recipe
 publishDate: '2024-09-05'
-updatedDate: '2025-05-26'
+updatedDate: '2026-09-25'
 description: Craving the discontinued Wendy's Polynesian Drink? Recreate this vibrant,
   pineapple-coconut blend at home. Exact recipe inside.
 seoTitle: Homemade Wendy's Pineapple Frosty Recipe
@@ -23,7 +23,7 @@ draft: false
 noindex: false
 ---
 
-What if you're nestled far from the nearest [Wendy's](https://en.wikipedia.org/wiki/Wendy%27s), or perhaps you're yearning for this tropical treat long after its limited run disappears from the menu? Fear not, for I've embarked on an adventure to bring the essence of this Pineapple Frosty right into your home. Whether you're a die-hard "[SpongeBob](/spongebob-party-drink-recipe/)" fan, a lover of all things pineapple, or simply in search of a new dessert to dazzle your taste buds, the journey to recreating **Wendy's Pineapple Frosty** is one filled with joy, nostalgia, and the unmistakable taste of summer.
+This homemade pineapple frozen drink takes inspiration from Wendy's limited-time Pineapple Under the Sea Frosty, served during its 2024 SpongeBob promotion. Our blender recipe uses frozen pineapple and milk, so it will taste and feel different from the restaurant dessert. Whether you're a die-hard "[SpongeBob](/spongebob-party-drink-recipe/)" fan, a lover of all things pineapple, or simply in search of a new dessert to dazzle your taste buds, the journey to recreating **Wendy's Pineapple Frosty** is one filled with joy, nostalgia, and the unmistakable taste of summer.
 
 ![Wendy's Pineapple Frosty with pineapple toppings served on a coconut](/wp-content/uploads/2024/09/Dutch-Bros-Blue-Drink-14-1024x1024.png)
 
@@ -31,7 +31,7 @@ Homemade Wendy's Pineapple Frosty Recipe
 
 ## **How to make Wendy's Pineapple Frosty**
 
-Wendy's Pineapple Frosty is a limited-edition flavor of their Frosty dessert. It's a tropical twist on their classic vanilla Frosty, featuring a pineapple flavor that's designed to be refreshing and sweet. The Pineapple Frosty is typically available during the summer months or for a limited time, and it combines the creamy, smooth texture of a Frosty with a fruity, pineapple taste.
+Wendy's [Pineapple Frosty appeared in its 2024 SpongeBob promotion](https://www.wendys.com/sites/default/files/2024-10/Spongebob%20LTO.pdf), rather than being an annual summer menu item. The original paired a vanilla Frosty with pineapple-mango flavor. This simpler homemade version is pineapple-forward and does not use Wendy's proprietary Frosty base.
 
 ### **Ingredients:**
 
