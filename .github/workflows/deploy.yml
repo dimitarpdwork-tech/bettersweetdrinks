@@ -7,11 +7,11 @@ on:
       site_url:
         description: 'Full destination URL, including repository path for a preview'
         required: true
-        default: 'https://dimitarpdwork-tech.github.io/bettersweetdrinks'
+        default: 'https://bettersweetdrinks.com'
         type: string
       production:
         description: 'Live domain launch (enables indexing and custom domain)'
-        default: false
+        default: true
         type: boolean
 permissions:
   contents: read
@@ -22,8 +22,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      SITE_URL: ${{ inputs.site_url || 'https://dimitarpdwork-tech.github.io/bettersweetdrinks' }}
-      PRODUCTION: ${{ inputs.production || false }}
+      SITE_URL: ${{ inputs.site_url || 'https://bettersweetdrinks.com' }}
+      PRODUCTION: ${{ github.event_name != 'workflow_dispatch' || inputs.production }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
