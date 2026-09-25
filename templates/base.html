@@ -3,6 +3,7 @@
 <title>{{ title }} | {{ site.title }}</title><meta name="description" content="{{ description }}"><link rel="canonical" href="{{ canonical }}">
 {% if noindex %}<meta name="robots" content="noindex, {% if preview %}nofollow{% else %}follow{% endif %}">{% endif %}
 <meta name="theme-color" content="#b8273e"><meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="{{ link('/favicon.ico') }}" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="48x48" href="{{ link('/favicon-48.png') }}"><link rel="icon" type="image/svg+xml" sizes="any" href="{{ link('/favicon.svg') }}"><link rel="apple-touch-icon" sizes="180x180" href="{{ link('/apple-touch-icon.png') }}">
 <meta property="og:site_name" content="Better Sweet Drinks"><meta property="og:title" content="{{ title }}"><meta property="og:description" content="{{ description }}"><meta property="og:url" content="{{ canonical }}"><meta property="og:type" content="{% if doc is defined and doc.kind=='posts' %}article{% else %}website{% endif %}">
 {% if image %}<meta property="og:image" content="{{ image if image.startswith('https://') else site.url+image }}">{% endif %}
 <link rel="stylesheet" href="{{ asset_link('/assets/site.css') }}"><script src="{{ asset_link('/assets/site.js') }}" defer></script>
