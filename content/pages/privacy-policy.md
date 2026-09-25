@@ -21,6 +21,10 @@ noindex: false
 
 Our website address is: https://bettersweetdrinks.com.
 
+## Saved recipes
+
+When you choose Save on a recipe, this website stores the recipe address in your browser’s local storage under `bsd-saved-recipes`. These selections are not sent to us or synced across devices. You can remove a saved recipe by selecting Saved again, or remove all selections by clearing this website’s browser data. Ingredient checklists last only while the page is open.
+
 ## Comments
 
 When visitors leave comments on the site we collect the data shown in the comments form, and also the visitor’s IP address and browser user agent string to help spam detection.

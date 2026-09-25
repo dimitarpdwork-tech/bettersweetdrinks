@@ -23,7 +23,17 @@ for archive in sorted((ROOT/'assets').glob('legacy-media-*.zip')):
         z.extractall(OUT)
 shutil.copytree(ROOT/'public',OUT,dirs_exist_ok=True)
 env=Environment(loader=FileSystemLoader(ROOT/'templates'),autoescape=select_autoescape(['html']))
+site['url']=BASE
 env.globals.update(site=site,link=link,year=date.today().year,preview=not PRODUCTION)
+def image_srcset(path):
+    original=OUT/path.lstrip('/')
+    variants=[]
+    for width in (360,480,720,768,1024):
+        # Use the available square derivatives for consistently cropped listing thumbnails.
+        candidate=original.with_name(f'{original.stem}-{width}x{width}{original.suffix}')
+        if candidate.exists():variants.append(f"{link('/'+str(candidate.relative_to(OUT)))} {width}w")
+    return ', '.join(variants)
+env.globals['image_srcset']=image_srcset
 docs=[]
 for kind in ['posts','pages']:
     for p in (ROOT/'content'/kind).glob('*.md'):
@@ -40,6 +50,18 @@ for kind in ['posts','pages']:
             matching=[h for h in body.find_all(re.compile('^h[1-6]$')) if normalize(h.get_text(' ',strip=True))==normalize(anchor.get_text(' ',strip=True))]
             if len(matching)==1:
                 marker=body.new_tag('span',id=old_id);matching[0].insert_before(marker)
+        # Build a real table of contents while retaining all original heading anchors.
+        d['toc']=[]
+        used_ids={el.get('id') for el in body.select('[id]')}
+        for index,heading in enumerate(body.find_all('h2'),1):
+            if not heading.get('id'):
+                hid=f'section-{index}'
+                while hid in used_ids:hid+='-section'
+                heading['id']=hid;used_ids.add(hid)
+            d['toc'].append({'id':heading['id'],'title':heading.get_text(' ',strip=True)})
+        d['readingMinutes']=max(1,math.ceil(len(body.get_text(' ',strip=True).split())/220))
+        for img in body.find_all('img'):
+            img['loading']='lazy';img['decoding']='async'
         d['body']=str(body)
         docs.append(d)
 # Convert standalone WordPress embed URLs into useful links on the static site.
@@ -59,13 +81,25 @@ recipes={p.stem:json.loads(p.read_text()) for p in (ROOT/'content/recipes').glob
 comments=read('data/comments.json');tax=read('data/taxonomies.json');redirects=read('data/redirects.json')
 categories=[t for t in tax['category'] if any(t['slug'] in p['categories'] for p in posts)]
 env.globals['categories']=categories
+env.globals['article_count']=len(posts)
+for p in posts:
+    p['displayTitle']=re.split(r'\s*[|]\s*',p['title'])[0]
+    p['displayTitle']=re.sub(r'\s*[-–]\s*Better\s*Sweet\s*Drinks.*$','',p['displayTitle'],flags=re.I)
+    p['cardImage']=p['featuredImage']
+    original=OUT/p['featuredImage'].lstrip('/')
+    thumb=original.with_name(original.stem+'-480x480'+original.suffix)
+    if thumb.exists():p['cardImage']='/'+str(thumb.relative_to(OUT))
 urls=[]
 def render(path,template,**kw):
     target=OUT/path.strip('/')/'index.html' if path!='/' else OUT/'index.html'
     if target.exists():raise ValueError('Duplicate output: '+path)
     target.parent.mkdir(parents=True,exist_ok=True)
     canonical=kw.pop('canonical',absolute(path)); noindex=kw.pop('noindex',False) or not PRODUCTION
-    output=env.get_template(template).render(canonical=canonical,noindex=noindex,path=path,**kw)
+    raw_title=kw.pop('title',site['title'])
+    title=re.sub(r'\s*[-|–]\s*Better\s*Sweet\s*Drinks.*$','',raw_title,flags=re.I).strip()
+    description=BeautifulSoup(kw.pop('description',site['description']),'html.parser').get_text(' ',strip=True)
+    if len(description)>160:description=description[:157].rsplit(' ',1)[0]+'…'
+    output=env.get_template(template).render(canonical=canonical,noindex=noindex,path=path,title=title,description=description,**kw)
     # Rebase original WordPress root URLs for GitHub project previews.
     if PREFIX:
         output=re.sub(r'((?:href|src|action)=\")/(?!/)',lambda m:m[1]+PREFIX+'/' ,output)
@@ -88,10 +122,13 @@ for d in docs:
             if r.get(k):schema[k]=r[k]
         schemas.append(schema)
     schemas.insert(0,{'@context':'https://schema.org','@type':'BlogPosting' if d['kind']=='posts' else 'WebPage','headline':d['title'],'description':d['description'],'datePublished':str(d['publishDate']),'dateModified':str(d['updatedDate']),'author':{'@type':'Person','name':d['author']},'url':absolute(d['url'])})
+    schemas.append({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'Home','item':BASE+'/'},{'@type':'ListItem','position':2,'name':d['title'],'item':absolute(d['url'])}]})
+    if d['featuredImage']:
+        schemas[0]['image']=absolute(d['featuredImage'])
     related=[p for p in posts if p['id']!=d['id'] and set(p['categories'])&set(d['categories'])][:3]
     render(d['url'],'article.html',title=d['seoTitle'],description=d['description'],image=d['featuredImage'],canonical=d.get('canonicalUrl') or absolute(d['url']),noindex=d.get('noindex',False),doc=d,recipes=cards,comments=comments.get(str(d['id']),[]),related=related,schemas=schemas)
 def listing(path,title,items,**kwargs):
-    render(path,'listing.html',title=title,description=site['description'],items=items,schemas=[],**kwargs)
+    render(path,'listing.html',title=title,description=('Browse '+title.lower()+'. Find ingredients, step-by-step instructions and ideas for your next drink.'),items=items,schemas=[],**kwargs)
 pages=math.ceil(len(posts)/10)
 for n in range(1,pages+1):
     path='/' if n==1 else f'/page/{n}/'
@@ -111,7 +148,7 @@ for src,dst in redirects.items():
     dest=OUT/src/'index.html';dest.parent.mkdir(exist_ok=True)
     dest.write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Recipe moved</title><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url='+html.escape(link(dst+'/'))+'"><link rel="canonical" href="'+html.escape(absolute(dst+'/'))+'"></head><body><a href="'+html.escape(link(dst+'/'))+'">Continue to recipe</a></body></html>')
 (OUT/'_redirects').write_text('\n'.join('/'+s+'/ /'+d+'/ 301' for s,d in redirects.items())+'\n')
-search=[{'title':p['title'],'url':link(p['url']),'description':p['description'],'image':link(p['featuredImage']) if p['featuredImage'] else '', 'text':' '.join([p['title'],p['description'],*p['categories'],*[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']]])} for p in posts]
+search=[{'title':p['title'],'url':link(p['url']),'description':p['description'],'image':link(p['cardImage']) if p['cardImage'] else '', 'categories':p['categories'], 'date':str(p['publishDate']), 'text':' '.join([p['title'],p['description'],*p['categories'],*[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']]])} for p in posts]
 (OUT/'search-index.json').write_text(json.dumps(search,ensure_ascii=False))
 (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+html.escape(u)+'</loc></url>' for u in urls)+'</urlset>')
 (OUT/'robots.txt').write_text('User-agent: *\n'+('Disallow: /admin/\nDisallow: /search/\nSitemap: '+BASE+'/sitemap.xml\n' if PRODUCTION else 'Disallow: /\n'))
