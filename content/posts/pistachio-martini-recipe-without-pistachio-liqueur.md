@@ -19,16 +19,9 @@ recipeIds:
 - '133'
 draft: false
 noindex: false
-canonicalUrl: https://bettersweetdrinks.com/pistachio-martini-recipe/
 ---
 
 The quest for that perfect pistachio martini, smooth and rich with flavor, yet you’re stuck because you can't find pistachio liqueur or maybe you prefer not to use it—fear not! Who says you can’t achieve that creamy, nutty taste without the bottle? Let’s shake things up and get creative, whipping up a pistachio martini that might just be your new go-to cocktail.
-
----
-
-Martini lovers, those individuals who have developed a profound passion for this classic and sophisticated cocktail, will also be highly likely to appreciate the martini-shaped **[Custom Lapel P](https://www.gs-jj.com/lapel-pins/Custom-Lapel-Pins)[ins](https://www.gs-jj.com/lapel-pins/Custom-Lapel-Pins)**. Martini has long been a symbol of refinement and a favorite among connoisseurs.
-
-The martini-shaped pins, with their unique and recognizable form that mimics the shape of the martini glass, can hold a special allure for these martini enthusiasts. It could be seen as a miniature representation of their beloved drink, a wearable piece of art that showcases their love for martini. Whether it is a small, intricately detailed pin made of fine materials or a more simple yet stylish design, it has the potential to catch the eye of martini lovers and become a conversation starter, allowing them to share their passion for martini with others.
 
 ![Pistachio Martini Without Pistachio Liqueur with pistachio on the side.](/wp-content/uploads/2024/05/c4674fa2-8cc1-4c77-9174-29878424784c.png)
 

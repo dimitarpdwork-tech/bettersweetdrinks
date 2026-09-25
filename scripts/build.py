@@ -95,6 +95,21 @@ for d in docs:
 posts=sorted([d for d in docs if d['kind']=='posts'],key=lambda d:(str(d['publishDate']),int(d['id'])),reverse=True)
 recipes={p.stem:json.loads(p.read_text()) for p in (ROOT/'content/recipes').glob('*.json')}
 comments=read('data/comments.json');tax=read('data/taxonomies.json');redirects=read('data/redirects.json')
+related_stopwords={'recipe','recipes','drink','drinks','cocktail','cocktails','homemade','copycat','easy','make','with','without','how','the','and','for','from','best','iced','cold','ice','water','fresh','optional','garnish','chilled','syrup'}
+def related_words(value):return set(re.findall(r'[a-z]{4,}',value.lower()))-related_stopwords
+for p in posts:
+    p['titleWords']=related_words(p['title'])
+    p['ingredientWords']=related_words(' '.join(' '.join(recipes[str(rid)]['ingredients']) for rid in p['recipeIds']))
+def related_posts(post):
+    ranked=[]
+    for candidate in posts:
+        if candidate['id']==post['id'] or not set(candidate['categories'])&set(post['categories']):continue
+        score=(8*len(set(candidate['tags'])&set(post['tags']))
+               +4*len(candidate['titleWords']&post['titleWords'])
+               +len(candidate['ingredientWords']&post['ingredientWords']))
+        if score:ranked.append((score,candidate))
+    ranked.sort(key=lambda item:item[0],reverse=True)
+    return [candidate for _,candidate in ranked[:3]]
 categories=[t for t in tax['category'] if any(t['slug'] in p['categories'] for p in posts)]
 env.globals['categories']=categories
 env.globals['article_count']=len(posts)
@@ -133,15 +148,16 @@ for d in docs:
             step['id']=f'recipe-{rid}-step-{i}'
             instructions.append({'@type':'HowToStep','text':step.get_text(' ',strip=True),'url':absolute(d['url'])+'#'+step['id']})
         r['instructions']=str(soup);cards.append(r)
-        schema={'@context':'https://schema.org','@type':'Recipe','name':r['title'],'description':r['description'],'author':{'@type':'Person','name':r['author'] or d['author']},'recipeIngredient':r['ingredients'],'recipeInstructions':instructions,'recipeYield':r['yield'],'image':absolute(r['image']) if r['image'].startswith('/') else r['image'],'datePublished':str(d['publishDate']),'url':absolute(d['url'])+'#recipe-'+str(rid)}
+        author_name=r['author'] or d['author']
+        schema={'@context':'https://schema.org','@type':'Recipe','name':r['title'],'description':r['description'],'author':{'@type':'Organization' if author_name==site['title'] else 'Person','name':author_name},'recipeIngredient':r['ingredients'],'recipeInstructions':instructions,'recipeYield':r['yield'],'image':absolute(r['image']) if r['image'].startswith('/') else r['image'],'datePublished':str(d['publishDate']),'url':absolute(d['url'])+'#recipe-'+str(rid)}
         for k in ['prepTime','cookTime','totalTime','nutrition','keywords']:
             if r.get(k):schema[k]=r[k]
         schemas.append(schema)
-    schemas.insert(0,{'@context':'https://schema.org','@type':'BlogPosting' if d['kind']=='posts' else 'WebPage','headline':d['title'],'description':d['description'],'datePublished':str(d['publishDate']),'dateModified':str(d['updatedDate']),'author':{'@type':'Person','name':d['author']},'url':absolute(d['url'])})
+    schemas.insert(0,{'@context':'https://schema.org','@type':'BlogPosting' if d['kind']=='posts' else 'WebPage','headline':d['title'],'description':d['description'],'datePublished':str(d['publishDate']),'dateModified':str(d['updatedDate']),'author':{'@type':'Organization' if d['author']==site['title'] else 'Person','name':d['author']},'url':absolute(d['url'])})
     schemas.append({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'Home','item':BASE+'/'},{'@type':'ListItem','position':2,'name':d['title'],'item':absolute(d['url'])}]})
     if d['featuredImage']:
         schemas[0]['image']=absolute(d['featuredImage'])
-    related=[p for p in posts if p['id']!=d['id'] and set(p['categories'])&set(d['categories'])][:3]
+    related=related_posts(d)
     render(d['url'],'article.html',title=d['seoTitle'],description=d['description'],image=d['featuredImage'],canonical=d.get('canonicalUrl') or absolute(d['url']),noindex=d.get('noindex',False),doc=d,recipes=cards,comments=comments.get(str(d['id']),[]),related=related,schemas=schemas)
 def listing(path,title,items,**kwargs):
     render(path,'listing.html',title=title,description=('Browse '+title.lower()+'. Find ingredients, step-by-step instructions and ideas for your next drink.'),items=items,schemas=[],**kwargs)
