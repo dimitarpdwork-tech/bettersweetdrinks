@@ -52,7 +52,7 @@ Smoothie King Watermelon Xtreme is a smoothie blend typically featuring watermel
 
 - **Opt for Quality Ingredients:** Since this smoothie has a relatively simple ingredient list, the quality of each component really shines through. Opt for ripe, flavorful strawberries and fresh watermelon for the best taste.
 - **Strawberry Swap:** If strawberries are out of season or not to your preference, raspberries can make a good substitute, offering a similar color and tartness.
-- **Hydration Boost:** If you're making this smoothie as a post-exercise drink, the coconut water is excellent for electrolyte replenishment. To further this benefit, adding a pinch of salt can help with sodium replenishment.
+- **Flavor and texture:** Coconut water adds a light tropical flavor. This smoothie is not a measured electrolyte replacement drink; [water and regular meals generally meet everyday hydration needs](https://www.cdc.gov/niosh/mining/UserFiles/works/products/training/keepingcool/NIOSHMiningFactSheets.pdf).
 - **Whey Protein Alternatives:** For those with dairy sensitivities or preferences, switching the dairy whey blend for a plant-based protein can make this smoothie vegan-friendly. This might slightly alter the taste.
 
 ### **What to serve with**
@@ -89,7 +89,7 @@ The Smoothie King Watermelon Xtreme is a refreshing summertime favorite that fea
 
 - **Homemade Watermelon Juice:** Puree fresh watermelon chunks in a blender and strain to make homemade juice.
 - **Other Melon Juices:** Cantaloupe or honeydew juice can provide a similar sweetness and hydrating effect.
-- **Coconut Water:** Using coconut water as a base liquid for a tropical twist with added electrolytes.
+- **Coconut Water:** Using coconut water as a base liquid for a tropical twist.
 
 ### **Watermelon:**
 
@@ -102,11 +102,9 @@ The Smoothie King Watermelon Xtreme is a refreshing summertime favorite that fea
 - **Maple Syrup:** Adds sweetness with a hint of maple flavor, which can create an interesting taste combination.
 - **Stevia or Monk Fruit Sweetener:** Use a natural sugar substitute like stevia or monk fruit sweetener for a lower-calorie alternative.
 
-### **Electrolyte Blend:**
+### **Liquid substitutes:**
 
-- **DIY Electrolyte Mix:** Combine a small pinch of salt (for sodium) with a teaspoon of natural sweetener and a mix of potassium-rich fruit juices like orange or banana.
-- **Sports Drinks:** Use a low-sugar sports drink to add electrolytes without significantly altering the taste.
-- **Electrolyte Powders or Tablets:** To boost the electrolyte content of your smoothie, dissolve these in water first.
+Use plain water or a little more coconut water to adjust the texture. These swaps change flavor and do not turn the smoothie into a formulated sports drink.
 
 ## **Final Thoughts**
 

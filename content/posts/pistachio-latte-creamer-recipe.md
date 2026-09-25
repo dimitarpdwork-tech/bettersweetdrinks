@@ -53,7 +53,7 @@ Pistachio latte creamer is a flavored coffee creamer that adds a nutty, sweet ta
 
 **Step 4:** Return the strained pistachio milk to the blender. Add the sweetened condensed milk, almond extract, vanilla extract, and a pinch of salt. If you prefer your creamer a bit sweeter, this is the time to add maple syrup or honey. Blend again until all the components are well combined and the mixture is smooth.
 
-**Step 5:** Pour your homemade Pistachio Latte Creamer into a clean glass bottle or a jar. Seal tightly and store in the refrigerator for up to a week.
+**Step 5:** Pour your homemade Pistachio Latte Creamer into a clean glass bottle or a jar. Seal tightly and refrigerate promptly at 40°F/4°C or below. Use within 3–4 days; discard if left unrefrigerated for more than 2 hours. See [FoodSafety.gov storage advice](https://www.foodsafety.gov/blog/10-smart-tips-keep-your-restaurant-leftovers-safe).
 
 ### **Tips for the Perfect Pistachio Latte Creamer**
 

@@ -35,7 +35,7 @@ Copycat Tito's Blueberry Vodka Cocktail Recipe
 
 ## **How to make Tito's Blueberry Vodka Cocktail**
 
-Tito's Blueberry Vodka is a flavored variant of Tito’s Handmade Vodka, which is produced by [Tito’s Handmade Vodka](https://www.titosvodka.com/), a well-known distillery based in Austin, Texas. Tito’s is famous for its smooth, high-quality vodka made from corn, and it’s often praised for its versatility in cocktails.
+This cocktail combines Tito’s Handmade Vodka with fresh blueberries. It is a homemade blueberry infusion or muddled cocktail, not a bottled blueberry variant from Tito’s. The brand [publishes its own blueberry infusion method](https://www.titosvodka.com/recipes/blueberry-infusion).
 
 ### **Ingredients**
 
@@ -49,7 +49,7 @@ Tito's Blueberry Vodka is a flavored variant of Tito’s Handmade Vodka, which i
 
 ### **Instructions**
 
-1. **Blueberry Infusion (optional):** If you'd like to infuse your Tito's Vodka with blueberries, simply place 1/2 cup of blueberries into a glass jar and pour over the Tito's Handmade Vodka. Seal the jar and let it sit for 2-3 days in a cool, dark place, gently shaking it a few times daily. Strain out the blueberries, and your blueberry vodka is ready to use. You can skip this step if you prefer to use plain vodka.
+1. **Blueberry Infusion (optional):** If you'd like to infuse your Tito's Vodka with blueberries, simply place 1/2 cup of blueberries into a glass jar and pour over the Tito's Handmade Vodka. Seal and refrigerate the jar for 2–3 days, gently shaking it daily. Strain before using. Strain out the blueberries, and your blueberry vodka is ready to use. You can skip this step if you prefer to use plain vodka.
 2. **Making the Cocktail:** In a shaker, gently muddle about 10-15 fresh blueberries along with mint leaves to release their flavors.
 3. **Combine**: Add Tito's Handmade Vodka (blueberry-infused or not), simple syrup, and fresh lemon juice to the muddled blueberries and mint.
 4. **Shake**: Fill the shaker with ice and shake vigorously until well-chilled.

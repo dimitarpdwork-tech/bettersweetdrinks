@@ -49,14 +49,14 @@ Abuelita Coffee Creamer is a product that blends the rich, chocolatey flavor of 
 3. **Blend in Flavorings:** Once the milk is warm, whisk in the cocoa and cinnamon mixture. Add the chopped pieces of Abuelita chocolate. Stir continuously until the chocolate has completely melted and the mixture is smooth.
 4. **Sweeten the Mix:** Add the sweetened condensed milk to the saucepan, and whisk until fully incorporated. This not only adds sweetness but also contributes to the creamer's rich texture.
 5. **Final Touches:** Remove the saucepan from the heat. If you're adding vanilla extract, now is the time to do so. Stir well to ensure everything is evenly mixed.
-6. **Cool and Store:** Allow the mixture to cool to room temperature. Once cooled, transfer your homemade Abuelita coffee creamer to a glass bottle or airtight container. Store it in the refrigerator.
+6. **Cool and Store:** Transfer to a clean, shallow covered container and refrigerate promptly, within 2 hours. Chill before pouring into a clean bottle. Keep refrigerated at 40°F/4°C or below.
 
 ### **Tips for the Perfect Abuelita Coffee Creamer:**
 
 - **Adjust Sweetness and Spice:** Feel free to play around with the levels of cocoa, cinnamon, and sweetened condensed milk after your first batch. Personal customization is the beauty of DIY!
 - **Use High-Quality Ingredients:** The better the quality of your cocoa and Abuelita chocolate, the richer and more authentic the taste of your creamer.
 - **Shake Before Use:** The contents may settle or separate when stored, so give your creamer a good shake before adding it to your coffee.
-- **Expiration:** Remember, since this is a homemade creamer made from dairy, it will typically last about 7-10 days in the refrigerator. Always smell and taste a small amount if you're unsure.
+- **Expiration:** Remember, since this is a homemade creamer made from dairy, use within 3–4 days if refrigerated promptly. Do not taste a questionable creamer to decide if it is safe; discard it. See [FoodSafety.gov on leftovers](https://www.foodsafety.gov/blog/10-smart-tips-keep-your-restaurant-leftovers-safe).
 
 ### **What to serve with**
 

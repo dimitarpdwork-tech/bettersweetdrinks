@@ -91,7 +91,7 @@ Making Jolly Rancher Tequila is a fun and creative way to infuse the iconic flav
 - **Jolly Rancher Candies:** These hard candies are crucial for adding flavor and color to the tequila. If unavailable or if you're looking for a different flavor profile, here are some substitutes:
 - **Other Hard Candies:** Other fruit-flavored hard candies can be used as a direct substitute. Ensure they are of similar size to maintain the candy-to-liquor ratio.
 - **Fruit Syrups:** For a quicker infusion, fruit syrups can mimic the candy's flavor. Note that syrups will significantly sweeten the tequila and alter the texture, making it slightly thicker.
-- **Essential Oils/Extracts:** A drop or two of food-grade essential oils or natural extracts (such as lemon, orange, or mint) can offer a potent flavor without added sweetness. Start with a small amount and adjust to taste as these can be very strong.
+- **Citrus or mint:** Add a strip of lemon or orange zest, or a few fresh mint leaves. Avoid aromatherapy essential oils in drinks; [Poison Control explains why swallowing them can be harmful](https://www.poison.org/articles/essential-oils).
 
 ### **Sweetener (Optional)**
 
