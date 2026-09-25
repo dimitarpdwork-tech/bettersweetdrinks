@@ -3,7 +3,7 @@
   "pages": 3,
   "linkedRecipes": 135,
   "recipeRecords": 160,
-  "comments": 35,
+  "comments": 3,
   "mediaFiles": 1228,
   "mediaBytes": 279935208,
   "missingMedia": [],
@@ -1146,5 +1146,6 @@
     "Preview must be approved before DNS cutover."
   ],
   "publishedRecipeRecords": 135,
-  "unusedRecipeStorage": "Preserved in the original backup; excluded from the public repository."
+  "unusedRecipeStorage": "Preserved in the original backup; excluded from the public repository.",
+  "removedSpamComments": 32
 }
