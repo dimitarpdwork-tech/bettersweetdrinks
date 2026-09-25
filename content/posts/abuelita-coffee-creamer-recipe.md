@@ -4,11 +4,8 @@ title: Homemade Abuelita Coffee Creamer Recipe
 slug: abuelita-coffee-creamer-recipe
 publishDate: '2024-07-30'
 updatedDate: '2025-05-05'
-description: Being a passionate coffee lover, I have always been on the lookout for
-  ways to spice up my morning brew. Imagine my excitement when I stumbled upon the
-  Abuelita Coffee Creamer , a gem that captures the soul-warming essence of Mexican
-  Hot Chocolate. Merging the nostalgic, rich taste of chocolaty good
-seoTitle: Homemade Abuelita Coffee Creamer Recipe
+description: "Make a chocolate cinnamon coffee creamer with Abuelita chocolate, milk, condensed milk and vanilla. Stir into hot or iced coffee."
+seoTitle: "Homemade Abuelita Coffee Creamer Recipe"
 author: Sandra
 authorSlug: admin
 categories:

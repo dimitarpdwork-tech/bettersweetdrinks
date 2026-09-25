@@ -4,9 +4,8 @@ title: Homemade Waterloo Mojito Mocktail Recipe
 slug: waterloo-mojito-mocktail-recipe
 publishDate: '2024-09-13'
 updatedDate: '2026-09-25'
-description: Beat the heat with this crisp, citrus-forward cocktail. Featuring fresh
-  grapefruit, lime, and a hint of rosemary, it's the ultimate warm-weather sip.
-seoTitle: Homemade Waterloo Mojito Mocktail Recipe
+description: "Mix a nonalcoholic mojito with Waterloo Mojito sparkling water, fresh mint, lime and ice. Adjust sweetness to taste."
+seoTitle: "Waterloo Mojito Mocktail Recipe"
 author: Sandra
 authorSlug: admin
 categories:

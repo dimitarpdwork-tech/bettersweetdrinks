@@ -4,9 +4,8 @@ title: Smoothie King Watermelon Xtreme Drink Recipe
 slug: watermelon-xtreme-smoothie-king-recipe
 publishDate: '2024-08-30'
 updatedDate: '2025-05-26'
-description: Craving a Watermelon Xtreme? Discover the exact Smoothie King recipe
-  to blend at home! Refreshing & balanced, your perfect beverage awaits.
-seoTitle: Smoothie King Watermelon Xtreme Drink Recipe
+description: "Blend watermelon juice, frozen strawberries, coconut water and whey protein for a watermelon smoothie inspired by Smoothie King."
+seoTitle: "Watermelon Xtreme Smoothie King Inspired Recipe"
 author: Sandra
 authorSlug: admin
 categories:

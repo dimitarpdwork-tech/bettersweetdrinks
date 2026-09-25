@@ -4,9 +4,8 @@ title: Cafe Bustelo Iced Coffee Recipe
 slug: cafe-bustelo-iced-coffee-recipe
 publishDate: '2024-08-06'
 updatedDate: '2025-05-26'
-description: 'Café Bustelo iced coffee: a robust, flavorful summer drink. My tested
-  recipe delivers a bold, satisfying cold brew experience.'
-seoTitle: Cafe Bustelo Iced Coffee Recipe
+description: "Brew Café Bustelo coffee, cool it and pour over ice. Add milk and sweetener to taste for an easy homemade iced coffee."
+seoTitle: "Café Bustelo Iced Coffee Recipe"
 author: Sandra
 authorSlug: admin
 categories:

@@ -1,12 +1,11 @@
 ---
 id: '829'
-title: Prosecco and Orange Juice Recipe
+title: Prosecco and Orange Juice Mimosa Recipe
 slug: prosecco-and-orange-juice-recipe
 publishDate: '2024-09-05'
-updatedDate: '2025-06-14'
-description: Bubbly & bright! Discover our perfect Prosecco and Orange Juice recipe
-  (aka Bellini) for a delightful brunch or celebration. Easy to make & utterly refreshing.
-seoTitle: Prosecco and Orange Juice Recipe
+updatedDate: '2026-09-26'
+description: "Make a Prosecco mimosa with fresh orange juice and chilled sparkling wine. Includes the mixing ratio and a nonalcoholic variation."
+seoTitle: "Prosecco and Orange Juice Mimosa Recipe"
 author: Sandra
 authorSlug: admin
 categories:
@@ -30,7 +29,7 @@ Prosecco and Orange Juice Recipe
 
 ## **How to make Prosecco and Orange Juice**
 
-Prosecco and orange juice make for a delightful and refreshing cocktail known as a "**Bellini**." Originally, the Bellini was made with Prosecco and peach puree, but substituting orange juice is a popular variation, sometimes called a "Fuzzy Navel" or "Prosecco and Orange Juice."
+Prosecco and orange juice make a **mimosa**, a sparkling citrus cocktail often served at brunch. A Bellini uses peach purée instead of orange juice; the recipe below is a mimosa made with Prosecco.
 
 ### **Ingredients**
 

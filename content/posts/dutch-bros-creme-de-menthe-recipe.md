@@ -4,9 +4,8 @@ title: Dutch Bros Creme de Menthe Recipe
 slug: dutch-bros-creme-de-menthe-recipe
 publishDate: '2024-08-30'
 updatedDate: '2025-05-26'
-description: Recreate Dutch Bros' Creme de Menthe at home! Get the exact flavor profile
-  with this detailed recipe.
-seoTitle: Dutch Bros Creme de Menthe Recipe
+description: "Make a mint mocha inspired by Dutch Bros with espresso, milk, chocolate sauce and crème de menthe syrup. Finish with whipped cream."
+seoTitle: "Dutch Bros Inspired Crème de Menthe Mocha"
 author: Sandra
 authorSlug: admin
 categories:

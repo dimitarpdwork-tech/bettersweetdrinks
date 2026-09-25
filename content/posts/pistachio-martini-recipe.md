@@ -4,11 +4,8 @@ title: Pistachio Martini Recipe
 slug: pistachio-martini-recipe
 publishDate: '2024-06-18'
 updatedDate: '2025-07-13'
-description: Who's in the mood for a delightful twist on a classic martini ? If you're
-  looking to add a touch of elegance and exotic flair to your cocktail menu, then
-  you're in for a treat! Today, we're looking into the nutty, creamy, and utterly
-  irresistible Pistachio Martini recipe . But hold on a sec – why se
-seoTitle: Pistachio Martini Recipe
+description: "Shake pistachio liqueur, vodka, vanilla syrup and lime juice for a nutty pistachio martini with a crushed pistachio rim."
+seoTitle: "Pistachio Martini Recipe with Pistachio Liqueur"
 author: Sandra
 authorSlug: admin
 categories:

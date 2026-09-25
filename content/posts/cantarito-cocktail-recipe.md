@@ -4,11 +4,8 @@ title: Cantarito Cocktail Recipe
 slug: cantarito-cocktail-recipe
 publishDate: '2024-05-09'
 updatedDate: '2025-05-19'
-description: This isn't just another tequila-based concoction; it's a citrusy blast
-  of joy served in a clay pot (yep, that's what " cantarito " means) that keeps your
-  sip cool and oh-so-inviting. Whether you're lounging under the sun or spicing up
-  your evening, a Cantarito brings the party to your taste buds. Ca
-seoTitle: Cantarito Cocktail Recipe
+description: "Make a Mexican-style Cantarito with tequila, grapefruit, orange and lime juices, then top with grapefruit soda."
+seoTitle: "Cantarito Cocktail Recipe with Tequila and Citrus"
 author: Sandra
 authorSlug: admin
 categories:

@@ -4,9 +4,8 @@ title: Copycat Dunkalatte Recipe (Dunkin' Donuts Style)
 slug: dunkalatte-recipe
 publishDate: '2024-09-03'
 updatedDate: '2025-06-27'
-description: I knew I was onto something special with this dunkalatte recipe. It was
-  more than just about concocting a drink.. this is a warm hug in a mug.
-seoTitle: Easy Dunkalatte Recipe - BetterSweetDrinks
+description: "Make a Dunkalatte-inspired coffee milk latte with espresso, whole milk and coffee syrup. Includes hot and iced serving suggestions."
+seoTitle: "Dunkalatte Copycat Recipe with Coffee Milk"
 author: Sandra
 authorSlug: admin
 categories:

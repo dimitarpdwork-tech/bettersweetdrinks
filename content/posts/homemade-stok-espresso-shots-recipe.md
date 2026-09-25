@@ -4,11 +4,8 @@ title: Homemade Stok Espresso Shots Recipe
 slug: homemade-stok-espresso-shots-recipe
 publishDate: '2024-09-01'
 updatedDate: '2025-04-26'
-description: We always seek something stronger, a more concentrated punch of caffeine
-  to fuel our productivity and creativity. That's where my latest obsession comes
-  in— Stok Espresso Shots . Imagine amplifying your coffee experience with just a
-  simple pour, transforming any ordinary cup into an extraordinary re
-seoTitle: Homemade Stok Espresso Shots Recipe
+description: "Brew concentrated espresso shots with ground coffee and water. Includes espresso machine and moka pot methods and optional sweetener."
+seoTitle: "Homemade Espresso Shots (Stok Inspired)"
 author: Sandra
 authorSlug: admin
 categories:

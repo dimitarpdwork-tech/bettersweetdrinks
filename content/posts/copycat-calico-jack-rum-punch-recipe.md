@@ -4,11 +4,8 @@ title: Copycat Calico Jack Rum Punch Recipe
 slug: copycat-calico-jack-rum-punch-recipe
 publishDate: '2024-06-13'
 updatedDate: '2025-05-20'
-description: Making the Calico Jack Rum Punch is akin to weaving together the vibrant
-  tapestry of Caribbean culture, blending bold flavors with a dash of history and
-  a splash of mystery. It's not just a cocktail; it's an invitation to explore the
-  untamed beauty of the tropics, immerse yourself in the sun's warmt
-seoTitle: Copycat Calico Jack Rum Punch Recipe
+description: "Mix dark rum, coconut rum, orange and pineapple juices, lime and grenadine into a tropical rum punch. Finish with soda if desired."
+seoTitle: "Calico Jack Inspired Rum Punch Recipe"
 author: Sandra
 authorSlug: admin
 categories:

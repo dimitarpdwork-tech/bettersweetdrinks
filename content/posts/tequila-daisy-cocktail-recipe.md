@@ -4,9 +4,8 @@ title: Tequila Daisy Cocktail Recipe
 slug: tequila-daisy-cocktail-recipe
 publishDate: '2024-05-17'
 updatedDate: '2025-05-26'
-description: This vibrant drink blends Aperol, Prosecco, and soda for a bright, Italian-inspired
-  aperitivo. Perfect for warm weather gatherings or a delightful personal treat.
-seoTitle: Tequila Daisy Cocktail Recipe
+description: "Mix a Tequila Daisy with tequila, fresh lemon juice, simple syrup and a splash of club soda. A citrusy cocktail served over ice."
+seoTitle: "Tequila Daisy Cocktail Recipe"
 author: Sandra
 authorSlug: admin
 categories:

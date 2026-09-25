@@ -4,11 +4,8 @@ title: Fluffy Yogurt Recipe
 slug: fluffy-yogurt-recipe
 publishDate: '2024-09-13'
 updatedDate: '2025-05-10'
-description: 'This isn''t your ordinary yogurt. Oh no, this is yogurt reimagined—yogurt
-  that''s undergone a magical transformation to become lighter, airier, and yes, fluffier,
-  making each spoonful feel like a cloud melting in your mouth. The beauty of fluffy
-  yogurt lies not just in its ethereal texture but in the '
-seoTitle: Fluffy Yogurt Recipe
+description: "Whip Greek yogurt with instant pudding mix and a little sweetener for a light, fluffy yogurt dessert. Add fruit or granola to serve."
+seoTitle: "Fluffy Yogurt Recipe with Greek Yogurt"
 author: Sandra
 authorSlug: admin
 categories:

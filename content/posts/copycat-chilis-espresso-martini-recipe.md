@@ -4,9 +4,8 @@ title: Copycat Chili's Espresso Martini Recipe
 slug: copycat-chilis-espresso-martini-recipe
 publishDate: '2024-08-02'
 updatedDate: '2025-05-26'
-description: Craving a vibrant cocktail? Discover the copycat Chili’s Espresso Martini
-  recipe! This zesty tequila & spiced rum twist on a classic is pure refreshment.
-seoTitle: Copycat Chili's Espresso Martini Recipe
+description: "Shake espresso, tequila, spiced rum and agave over ice for a coffee cocktail inspired by Chili’s. Garnish with espresso beans."
+seoTitle: "Chili's Inspired Espresso Martini Recipe"
 author: Sandra
 authorSlug: admin
 categories:

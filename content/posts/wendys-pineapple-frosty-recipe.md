@@ -4,9 +4,8 @@ title: Homemade Wendy's Pineapple Frosty Recipe
 slug: wendys-pineapple-frosty-recipe
 publishDate: '2024-09-05'
 updatedDate: '2026-09-25'
-description: Craving the discontinued Wendy's Polynesian Drink? Recreate this vibrant,
-  pineapple-coconut blend at home. Exact recipe inside.
-seoTitle: Homemade Wendy's Pineapple Frosty Recipe
+description: "Blend frozen pineapple, milk, sweetened condensed milk and vanilla into a creamy pineapple Frosty inspired by the Wendy’s frozen dessert style."
+seoTitle: "Pineapple Frosty Recipe (Wendy's Inspired)"
 author: Sandra
 authorSlug: admin
 categories:

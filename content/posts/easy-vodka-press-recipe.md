@@ -4,11 +4,8 @@ title: Easy Vodka Press Recipe
 slug: easy-vodka-press-recipe
 publishDate: '2024-07-09'
 updatedDate: '2025-07-14'
-description: 'Sip by sip; there''s something about the smooth, crisp blend of a well-crafted
-  vodka press that can turn even the most mundane evening into a celebration of simplicity
-  and flavor. Whether you''re waving goodbye to a long work week or toasting to a
-  weekend well begun, this refreshing highball cocktail '
-seoTitle: Easy Vodka Press Recipe
+description: "Make a Vodka Press with equal parts club soda and lemon-lime soda over ice, plus vodka and a citrus wedge."
+seoTitle: "Vodka Press Recipe with Club Soda and Lemon-Lime Soda"
 author: Sandra
 authorSlug: admin
 categories:

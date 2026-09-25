@@ -4,11 +4,8 @@ title: Trader Joe's Espresso Martini Recipe
 slug: trader-joes-espresso-martini-recipe
 publishDate: '2024-08-06'
 updatedDate: '2025-05-05'
-description: When it comes to crafting the perfect Espresso Martini , Trader Joe’s
-  isn’t just your grocery store—it's your treasure chest of unique ingredients. From
-  their signature coffees to their indulgent liqueurs, there’s something about a Trader
-  Joe’s twist that turns this classic cocktail into an extraord
-seoTitle: Trader Joe's Espresso Martini Recipe
+description: "Make an espresso martini with Trader Joe’s cold brew concentrate, vodka, cocoa cream liqueur and a little simple syrup."
+seoTitle: "Trader Joe's Espresso Martini Recipe"
 author: Sandra
 authorSlug: admin
 categories:

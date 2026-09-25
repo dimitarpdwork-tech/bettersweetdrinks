@@ -4,11 +4,8 @@ title: Frozen Limoncello Cocktail
 slug: frozen-limoncello-cocktail
 publishDate: '2024-06-28'
 updatedDate: '2025-05-05'
-description: 'As summer rays stretch their golden fingers into every corner of our
-  lives, the quest for the perfect chill-out companion becomes paramount. Amongst
-  the myriad of refreshments, one stands out, not just for its zesty charisma but
-  for its embodiment of Italian summer—yes, I''m talking about the Frozen '
-seoTitle: Frozen Limoncello Cocktail
+description: "Blend limoncello, vodka, fresh lemon juice and ice into a frozen lemon cocktail. Adjust simple syrup to taste."
+seoTitle: "Frozen Limoncello Cocktail Recipe"
 author: Sandra
 authorSlug: admin
 categories:
