@@ -58,7 +58,11 @@ for file in OUT.rglob('*.html'):
                 if anchor and not soup.find(id=anchor):errors.append('Missing recipe step anchor '+anchor)
     if re.search(r'\[(?:mv_create|penci_recipe|contact-form-7)\b',soup.get_text()):errors.append(str(file.relative_to(OUT))+': leftover shortcode')
 for file in ROOT.rglob('*'):
-    if file.is_file() and (file.suffix in ['.sql','.wpress'] or file.name in ['wp-config.php','tables.json']):errors.append('Private file in source '+str(file.relative_to(ROOT)))
+    rel=file.relative_to(ROOT)
+    # Legacy WordPress/database dumps are private migration artifacts. The feedback
+    # service's checked-in schema.sql is intentional application source code.
+    forbidden=(file.suffix=='.wpress' or file.name in ['wp-config.php','tables.json'] or (file.suffix=='.sql' and (not rel.parts or rel.parts[0] != 'feedback')))
+    if file.is_file() and forbidden:errors.append('Private file in source '+str(rel))
 published_posts=(yaml.safe_load(file.read_text().split('---',2)[1]) for file in (ROOT/'content/posts').glob('*.md'))
 expected_recipes=sum(len(post.get('recipeIds',[])) for post in published_posts if not post.get('draft'))
 if recipes!=expected_recipes:errors.append(f'Expected {expected_recipes} recipes, got {recipes}')
