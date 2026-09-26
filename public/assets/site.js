@@ -44,24 +44,158 @@ document.addEventListener('click', event => {
   if (document.querySelector('#saved-filter')?.getAttribute('aria-pressed') === 'true') renderSearch?.();
 });
 updateSaveButtons();
-const focusButton = document.querySelector('[data-focus]');
-if (focusButton) {
-  focusButton.hidden = false;
-  focusButton.addEventListener('click', () => {
-    const active = document.body.classList.toggle('recipe-focus');
-    focusButton.setAttribute('aria-pressed', String(active));
-    focusButton.textContent = active ? 'Show full article' : 'Recipe mode';
-  });
+
+const quantityFractions = {
+  '½':0.5,'¼':0.25,'¾':0.75,'⅓':1/3,'⅔':2/3,'⅛':0.125,'⅜':0.375,'⅝':0.625,'⅞':0.875
+};
+const unitMl = {
+  ml:1, milliliter:1, milliliters:1, cl:10,
+  oz:29.5735, ounce:29.5735, ounces:29.5735,
+  cup:240, cups:240,
+  tbsp:15, tablespoon:15, tablespoons:15,
+  tsp:5, teaspoon:5, teaspoons:5,
+  shot:44, shots:44
+};
+const unitPattern = '(ml|milliliters?|cl|oz|ounces?|cups?|tbsp|tablespoons?|tsp|teaspoons?|shots?)';
+const amountUnitRe = new RegExp('(\\d+\\s+\\d+\\/\\d+|\\d+\\/\\d+|\\d+(?:\\.\\d+)?|[½¼¾⅓⅔⅛⅜⅝⅞])\\s*' + unitPattern, 'gi');
+const amountRe = /(\d+\s+\d+\/\d+|\d+\/\d+|\d+(?:\.\d+)?|[½¼¾⅓⅔⅛⅜⅝⅞])/g;
+
+function parseAmount(value) {
+  const text = String(value).trim();
+  if (quantityFractions[text] !== undefined) return quantityFractions[text];
+  if (text.includes(' ') && text.includes('/')) {
+    const [whole, fraction] = text.split(/\s+/, 2);
+    return Number(whole) + parseAmount(fraction);
+  }
+  if (text.includes('/')) {
+    const [a,b] = text.split('/');
+    return Number(a) / Number(b);
+  }
+  return Number(text);
 }
+function fractionLabel(value) {
+  if (!Number.isFinite(value)) return '';
+  const rounded = Math.round(value * 8) / 8;
+  const whole = Math.floor(rounded + 1e-8);
+  const fraction = Math.round((rounded - whole) * 8);
+  const labels = {1:'1/8',2:'1/4',3:'3/8',4:'1/2',5:'5/8',6:'3/4',7:'7/8'};
+  if (!fraction) return String(whole);
+  return (whole ? whole + ' ' : '') + labels[fraction];
+}
+function metricLabel(ml) {
+  if (ml >= 1000) {
+    const liters = ml / 1000;
+    return \`\${Number(liters.toFixed(liters >= 10 ? 0 : 2))} L\`;
+  }
+  const rounded = ml >= 100 ? Math.round(ml / 5) * 5 : ml >= 20 ? Math.round(ml) : Math.round(ml * 2) / 2;
+  return \`\${Number(rounded.toFixed(rounded < 10 && !Number.isInteger(rounded) ? 1 : 0))} ml\`;
+}
+function scaleIngredient(original, ratio, units) {
+  let protectedIndex = 0;
+  const protectedValues = [];
+  let text = original.replace(amountUnitRe, (match, amount, unit) => {
+    const scaled = parseAmount(amount) * ratio;
+    let replacement;
+    if (units === 'metric') {
+      replacement = metricLabel(scaled * (unitMl[unit.toLowerCase()] || 1));
+    } else {
+      replacement = \`\${fractionLabel(scaled)} \${unit}\`;
+    }
+    const token = \`__BSDQ\${protectedIndex++}__\`;
+    protectedValues.push(replacement);
+    return token;
+  });
+  text = text.replace(amountRe, (match, amount, offset, full) => {
+    const after = full.slice(offset + match.length);
+    if (/^\s*(?:%|proof\b|abv\b)/i.test(after)) return match;
+    const value = parseAmount(amount);
+    if (!Number.isFinite(value)) return match;
+    return fractionLabel(value * ratio);
+  });
+  protectedValues.forEach((value, index) => { text = text.replace(\`__BSDQ\${index}__\`, value); });
+  return text;
+}
+function servingLabel(baseText, servings) {
+  const base = String(baseText || '').trim();
+  const countMatch = base.match(/\d+(?:\.\d+)?/);
+  let noun = countMatch ? base.replace(countMatch[0], '').trim() : 'serving';
+  if (!noun) noun = 'serving';
+  if (servings === 1) noun = noun.replace(/s\b/i, '');
+  else if (!/s\b/i.test(noun)) noun += 's';
+  return \`\${Number(servings.toFixed(Number.isInteger(servings) ? 0 : 1))} \${noun}\`;
+}
+let preferredUnits = 'us';
+try {
+  const storedUnits = localStorage.getItem('bsd-unit-system');
+  if (storedUnits === 'metric' || storedUnits === 'us') preferredUnits = storedUnits;
+} catch {}
+
 document.querySelectorAll('.recipe').forEach(recipe => {
   const boxes = [...recipe.querySelectorAll('.ingredients input')];
   const counter = recipe.querySelector('.ingredient-count');
   const reset = recipe.querySelector('[data-reset]');
-  const update = () => { counter.textContent = `${boxes.filter(box => box.checked).length} of ${boxes.length} ready`; };
-  boxes.forEach(box => box.addEventListener('change', update));
-  reset.hidden = false;
-  reset.addEventListener('click', () => { boxes.forEach(box => { box.checked = false; }); update(); });
-  update();
+  const recipeId = recipe.dataset.recipeId || recipe.id || location.pathname;
+  const checklistKey = \`bsd-checklist:\${recipeId}\`;
+  let checked = [];
+  try {
+    const stored = JSON.parse(localStorage.getItem(checklistKey) || '[]');
+    if (Array.isArray(stored)) checked = stored.filter(Number.isInteger);
+  } catch {}
+  boxes.forEach((box, index) => { box.checked = checked.includes(index); });
+
+  const updateChecklist = () => {
+    const active = boxes.map((box,index) => box.checked ? index : null).filter(index => index !== null);
+    if (counter) counter.textContent = \`\${active.length} of \${boxes.length} ready\`;
+    if (reset) reset.hidden = active.length === 0;
+    try { localStorage.setItem(checklistKey, JSON.stringify(active)); } catch {}
+  };
+  boxes.forEach(box => box.addEventListener('change', updateChecklist));
+  if (reset) reset.addEventListener('click', () => {
+    boxes.forEach(box => { box.checked = false; });
+    try { localStorage.removeItem(checklistKey); } catch {}
+    updateChecklist();
+  });
+  updateChecklist();
+
+  const ingredientNodes = [...recipe.querySelectorAll('[data-ingredient-original]')];
+  const servingValue = recipe.querySelector('[data-servings-value]');
+  const minus = recipe.querySelector('[data-servings-minus]');
+  const plus = recipe.querySelector('[data-servings-plus]');
+  const unitButtons = [...recipe.querySelectorAll('[data-unit-system]')];
+  const summaries = [...recipe.querySelectorAll('[data-serving-summary]')];
+  const baseServings = Math.max(1, Number(recipe.dataset.baseServings || 1));
+  let servings = baseServings;
+  let unitSystem = preferredUnits;
+  const renderQuantities = () => {
+    const ratio = servings / baseServings;
+    ingredientNodes.forEach(node => {
+      node.textContent = scaleIngredient(node.dataset.ingredientOriginal || node.textContent, ratio, unitSystem);
+    });
+    if (servingValue) servingValue.textContent = Number(servings.toFixed(Number.isInteger(servings) ? 0 : 1));
+    summaries.forEach(node => { node.textContent = servingLabel(recipe.dataset.yieldText, servings); });
+    if (minus) minus.disabled = servings <= 1;
+    unitButtons.forEach(button => {
+      const active = button.dataset.unitSystem === unitSystem;
+      button.classList.toggle('selected', active);
+      button.setAttribute('aria-pressed', String(active));
+    });
+  };
+  minus?.addEventListener('click', () => { servings = Math.max(1, servings - 1); renderQuantities(); });
+  plus?.addEventListener('click', () => { servings = Math.min(24, servings + 1); renderQuantities(); });
+  unitButtons.forEach(button => button.addEventListener('click', () => {
+    unitSystem = button.dataset.unitSystem;
+    preferredUnits = unitSystem;
+    try { localStorage.setItem('bsd-unit-system', unitSystem); } catch {}
+    document.querySelectorAll('[data-unit-system]').forEach(item => {
+      const active = item.dataset.unitSystem === unitSystem;
+      item.classList.toggle('selected', active);
+      item.setAttribute('aria-pressed', String(active));
+    });
+    ingredientNodes.forEach(node => {
+      node.textContent = scaleIngredient(node.dataset.ingredientOriginal || node.textContent, servings/baseServings, unitSystem);
+    });
+  }));
+  renderQuantities();
 });
 document.querySelectorAll('[data-sortable-listing]').forEach(section => {
   const grid = section.querySelector('.grid');
