@@ -13,6 +13,7 @@ jobs:
       - run: pip install -r requirements.txt
       - run: python scripts/build.py
       - run: python scripts/verify.py
+      - run: node --check public/assets/site.js
       - uses: actions/upload-artifact@v4
         with:
           name: website-preview
