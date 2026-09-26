@@ -60,3 +60,8 @@
 /* Collection discovery and progressive loading. */
 .listing-tools{row-gap:10px}.listing-tools label{min-width:150px}.listing-tools select{min-width:150px}.load-more-wrap{display:flex;justify-content:center;margin:30px 0 8px}.load-more{min-width:210px}.search-page .search-controls{row-gap:12px}.search-page .search-controls label{min-width:150px}.search-page .search-controls select{min-width:150px}
 @media(max-width:700px){.listing-tools label,.search-page .search-controls label{min-width:calc(50% - 8px);flex:1 1 calc(50% - 8px)}.listing-tools select,.search-page .search-controls select{width:100%;min-width:0}.listing-tools .listing-filter-status{flex-basis:100%}}
+
+
+/* Homepage intent shortcuts. */
+.mood-picker{max-width:var(--width);margin:0 auto 54px;padding:28px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);display:grid;grid-template-columns:minmax(250px,.7fr) 1.8fr;gap:34px;align-items:start}.mood-picker h2{font-family:var(--display);font-size:34px;line-height:1.02;margin:4px 0 0}.mood-links{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.mood-links a{display:grid;gap:3px;padding:14px 15px;border:1px solid var(--line);background:#fff;text-decoration:none;min-height:72px}.mood-links a:hover{border-color:var(--accent);background:var(--blush)}.mood-links strong{font-size:14px;color:var(--ink)}.mood-links span{font-size:11px;color:var(--muted)}
+@media(max-width:1300px){.mood-picker{margin-left:28px;margin-right:28px}}@media(max-width:800px){.mood-picker{grid-template-columns:1fr}.mood-links{grid-template-columns:repeat(3,1fr)}}@media(max-width:600px){.mood-picker{margin-left:18px;margin-right:18px}.mood-links{grid-template-columns:repeat(2,1fr)}}
