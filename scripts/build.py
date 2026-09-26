@@ -252,7 +252,34 @@ def prepare_recipe_editorial(doc):
 
     ingredient_heading=None
     method_heading=None
-    for heading in list(body.find_all(re.compile('^h[2-4]{'recipe','recipes','drink','drinks','cocktail','cocktails','homemade','copycat','easy','make','with','without','how','the','and','for','from','best','iced','cold','ice','water','fresh','optional','garnish','chilled','syrup'}
+    for heading in list(body.find_all(re.compile(r'^h[2-4]$'))):
+        key=heading_key(heading.get_text(' ',strip=True))
+        if ingredient_heading is None and (key=='ingredients' or key.startswith('ingredients ')):
+            ingredient_heading=heading
+        if method_heading is None and (key in {'instructions','directions','method','steps'} or key.startswith('how to make')):
+            method_heading=heading
+
+    if ingredient_heading is not None:remove_heading_section(ingredient_heading)
+    method_html=remove_heading_section(method_heading,keep_html=True) if method_heading is not None else ''
+    doc['recipeMethod']=method_html or primary.get('instructions','')
+    doc['recipeMethodFromArticle']=bool(method_html)
+
+    # Rebuild the TOC from only the remaining editorial material. Ingredients and the
+    # method now have dedicated, prominent UI and should not appear twice in navigation.
+    doc['toc']=[]
+    used_ids={el.get('id') for el in body.select('[id]')}
+    for index,heading in enumerate(body.find_all('h2'),1):
+        if not heading.get('id'):
+            hid=f'editorial-section-{index}'
+            while hid in used_ids:hid+='-section'
+            heading['id']=hid;used_ids.add(hid)
+        doc['toc'].append({'id':heading['id'],'title':heading.get_text(' ',strip=True)})
+    doc['body']=str(body).strip()
+    doc['hasEditorialBody']=bool(body.get_text(' ',strip=True) or body.find(['img','table','ul','ol','blockquote']))
+
+for doc in docs:prepare_recipe_editorial(doc)
+
+related_stopwords={'recipe','recipes','drink','drinks','cocktail','cocktails','homemade','copycat','easy','make','with','without','how','the','and','for','from','best','iced','cold','ice','water','fresh','optional','garnish','chilled','syrup'}
 def related_words(value):return set(re.findall(r'[a-z]{4,}',value.lower()))-related_stopwords
 for p in posts:
     p['titleWords']=related_words(p['title'])
