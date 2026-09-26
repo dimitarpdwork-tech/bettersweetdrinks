@@ -46,7 +46,18 @@ def responsive_srcset(path):
     if not path or not str(path).startswith('/'):return ''
     original=OUT/str(path).lstrip('/')
     if not original.exists():return ''
-    base_stem=re.sub(r'-\d+x\d+
+    base_stem=re.sub(r'-\\d+x\\d+$','',original.stem)
+    variants={}
+    for candidate in original.parent.glob(base_stem+'-*x*'+original.suffix):
+        match=re.search(r'-(\\d+)x(\\d+)$',candidate.stem)
+        if not match:continue
+        width=int(match.group(1))
+        if 180<=width<=1800:variants[width]=link('/'+str(candidate.relative_to(OUT)))
+    current=re.search(r'-(\\d+)x(\\d+)$',original.stem)
+    if current:variants[int(current.group(1))]=link(path)
+    return ', '.join(f'{variants[w]} {w}w' for w in sorted(variants))
+env.globals['responsive_srcset']=responsive_srcset
+def asset_link(path):
     fingerprint=hashlib.sha256((OUT/path.lstrip('/')).read_bytes()).hexdigest()[:12]
     return link(path)+'?v='+fingerprint
 env.globals['asset_link']=asset_link
