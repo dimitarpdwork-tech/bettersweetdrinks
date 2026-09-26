@@ -272,8 +272,11 @@ if (input) {
   const sort = document.querySelector('#sort-filter');
   const savedFilter = document.querySelector('#saved-filter');
   const searchMore = document.querySelector('#search-more');
+  const pantryInput = document.querySelector('#pantry-input');
+  const pantryFind = document.querySelector('#pantry-find');
   const params = new URLSearchParams(location.search);
   input.value = params.get('q') || '';
+  if (pantryInput) pantryInput.value = params.get('pantry') || '';
   if ([...category.options].some(option => option.value === params.get('category'))) category.value = params.get('category');
   if ([...calorie.options].some(option => option.value === params.get('calories'))) calorie.value = params.get('calories');
   if ([...alcohol.options].some(option => option.value === params.get('alcohol'))) alcohol.value = params.get('alcohol');
@@ -285,6 +288,18 @@ if (input) {
   let entries = null;
   const searchPageSize = 24;
   let searchLimit = searchPageSize;
+  const pantryBasics = /^(?:ice\b|water\b|sparkling water\b|club soda\b|salt\b|pepper\b|garnish\b|optional\b)/i;
+  const pantryTerms = () => (pantryInput?.value || '').split(',').map(value => value.trim().toLowerCase()).filter(value => value.length >= 2);
+  const pantryScore = (recipe, terms) => {
+    const lines = (recipe.ingredients || []).map(value => String(value).toLowerCase()).filter(value => !pantryBasics.test(value));
+    let matched = 0;
+    const matchedTerms = new Set();
+    for (const line of lines) {
+      const hit = terms.find(term => line.includes(term) || term.includes(line.replace(/^[^a-z]+|[^a-z]+$/g,'')));
+      if (hit) { matched += 1; matchedTerms.add(hit); }
+    }
+    return {matched, missing:Math.max(0, lines.length - matched), pantryHits:matchedTerms.size};
+  };
   const metricSort = (key, direction) => (a, b) => {
     const av = Number.isFinite(Number(a[key])) && a[key] !== null ? Number(a[key]) : null;
     const bv = Number.isFinite(Number(b[key])) && b[key] !== null ? Number(b[key]) : null;
@@ -298,6 +313,7 @@ if (input) {
     if (resetLimit) searchLimit = searchPageSize;
     const words = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
     const onlySaved = savedFilter.getAttribute('aria-pressed') === 'true';
+    const pantry = pantryTerms();
     const found = entries.filter(p => {
       if (!words.every(word => p.text.toLowerCase().includes(word))) return false;
       if (category.value && !p.categories.includes(category.value)) return false;
@@ -307,17 +323,31 @@ if (input) {
       if (spirit.value && p.baseSpirit !== spirit.value) return false;
       if (flavor.value && !(p.flavors || []).includes(flavor.value)) return false;
       if (onlySaved && !saved.has(p.url)) return false;
+      if (pantry.length) {
+        p._pantry = pantryScore(p, pantry);
+        if (!p._pantry.pantryHits) return false;
+      } else {
+        p._pantry = null;
+      }
       return true;
     });
-    if (sort.value === 'title') found.sort((a, b) => a.title.localeCompare(b.title));
+    if (pantry.length) {
+      found.sort((a,b) => a._pantry.missing - b._pantry.missing || b._pantry.matched - a._pantry.matched);
+    } else if (sort.value === 'title') found.sort((a, b) => a.title.localeCompare(b.title));
     else if (sort.value === 'calories-asc') found.sort(metricSort('calories', 1));
     else if (sort.value === 'calories-desc') found.sort(metricSort('calories', -1));
     else if (sort.value === 'abv-asc') found.sort(metricSort('abv', 1));
     else if (sort.value === 'abv-desc') found.sort(metricSort('abv', -1));
     const visible = found.slice(0, searchLimit);
-    status.textContent = found.length
-      ? \`Showing \${visible.length} of \${found.length} \${onlySaved ? 'saved ' : ''}recipe\${found.length === 1 ? '' : 's'}.\`
-      : (onlySaved ? 'No saved recipes match these filters.' : 'No recipes match these filters.');
+    if (found.length) {
+      status.textContent = pantry.length
+        ? \`Showing \${visible.length} of \${found.length} best matches for what you have.\`
+        : \`Showing \${visible.length} of \${found.length} \${onlySaved ? 'saved ' : ''}recipe\${found.length === 1 ? '' : 's'}.\`;
+    } else {
+      status.textContent = pantry.length
+        ? 'No good pantry matches yet. Try fewer or broader ingredient names.'
+        : (onlySaved ? 'No saved recipes match these filters.' : 'No recipes match these filters.');
+    }
     const fragment = document.createDocumentFragment();
     for (const p of visible) {
       const card = document.createElement('article'); card.className = 'card';
@@ -338,38 +368,46 @@ if (input) {
       const facts = document.createElement('p'); facts.className = 'card-facts';
       if (p.calories != null) { const kcal = document.createElement('span'); kcal.textContent = \`≈ \${p.calories} kcal\`; facts.append(kcal); }
       if (p.abv != null) { const abv = document.createElement('span'); abv.textContent = \`≈ \${p.abv}% ABV\`; facts.append(abv); }
+      let pantryFit = null;
+      if (pantry.length && p._pantry) {
+        pantryFit = document.createElement('p'); pantryFit.className = 'pantry-fit';
+        pantryFit.textContent = p._pantry.missing === 0 ? 'You have everything you need' : \`Missing \${p._pantry.missing} ingredient\${p._pantry.missing === 1 ? '' : 's'}\`;
+      }
       const desc = document.createElement('p'); desc.textContent = p.description.length > 155 ? p.description.slice(0, 152) + '…' : p.description;
       const cta = document.createElement('a'); cta.className = 'read-more'; cta.href = p.url; cta.append('Make this drink ', Object.assign(document.createElement('span'), {textContent:'↗'}));
-      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); parts.push(desc, cta);
+      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); if (pantryFit) parts.push(pantryFit); parts.push(desc, cta);
       card.append(...parts); fragment.append(card);
     }
     if (!found.length) {
       const message = document.createElement('p'); message.className = 'empty-state';
-      message.textContent = onlySaved ? 'No saved recipes match. Save a drink from the collection, or clear your filters.' : 'No matches yet. Try fewer filters or a different ingredient.';
+      message.textContent = pantry.length ? 'Try broader names such as “rum”, “lemon” or “coffee”, or remove one ingredient.' : (onlySaved ? 'No saved recipes match. Save a drink from the collection, or clear your filters.' : 'No matches yet. Try fewer filters or a different ingredient.');
       fragment.append(message);
     }
     results.replaceChildren(fragment); updateSaveButtons();
     if (searchMore) searchMore.hidden = visible.length >= found.length;
     const state = new URLSearchParams();
     if (input.value.trim()) state.set('q', input.value.trim());
+    if (pantry.length && pantryInput?.value.trim()) state.set('pantry', pantryInput.value.trim());
     if (category.value) state.set('category', category.value);
     if (calorie.value) state.set('calories', calorie.value);
     if (alcohol.value) state.set('alcohol', alcohol.value);
     if (time.value) state.set('time', time.value);
     if (spirit.value) state.set('spirit', spirit.value);
     if (flavor.value) state.set('style', flavor.value);
-    if (sort.value !== 'newest') state.set('sort', sort.value);
+    if (sort.value !== 'newest' && !pantry.length) state.set('sort', sort.value);
     if (onlySaved) state.set('saved', '1');
     history.replaceState(null, '', location.pathname + (state.size ? '?' + state : ''));
   }
   renderSearch = () => display(false);
   let debounce;
   input.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(() => display(true), 120); });
+  pantryInput?.addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); display(true); } });
+  pantryFind?.addEventListener('click', () => display(true));
   [category, calorie, alcohol, time, spirit, flavor, sort].forEach(control => control.addEventListener('change', () => display(true)));
   savedFilter.addEventListener('click', () => { savedFilter.setAttribute('aria-pressed', String(savedFilter.getAttribute('aria-pressed') !== 'true')); display(true); });
   searchMore?.addEventListener('click', () => { searchLimit += searchPageSize; display(false); });
   document.querySelector('#clear-filters').addEventListener('click', () => {
-    input.value = ''; category.value = ''; calorie.value = ''; alcohol.value = ''; time.value = ''; spirit.value = ''; flavor.value = ''; sort.value = 'newest';
+    input.value = ''; if (pantryInput) pantryInput.value = ''; category.value = ''; calorie.value = ''; alcohol.value = ''; time.value = ''; spirit.value = ''; flavor.value = ''; sort.value = 'newest';
     savedFilter.setAttribute('aria-pressed', 'false'); display(true); input.focus();
   });
   fetch(input.dataset.index).then(response => { if (!response.ok) throw Error('Search unavailable'); return response.json(); }).then(data => { entries = data; display(true); }).catch(() => {
