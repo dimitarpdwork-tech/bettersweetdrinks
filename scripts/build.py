@@ -343,4 +343,4 @@ if repo:
     (admin/'config.yml').write_text(yaml.safe_dump(config,sort_keys=False))
     shutil.copy2(ROOT/'cms/index.html',admin/'index.html')
 else:(admin/'index.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Editor setup pending</title><h1>Editor setup pending</h1><p>The editor will be enabled when this website is connected to its GitHub repository.</p></html>')
-print(json.dumps({'articles':len(posts),'pages':len(docs)-len(posts),'recipeCards':sum(len(d['recipeIds']) for d in docs),'htmlPages':len(list(OUT.rglob('*.html'))),'production':PRODUCTION,'base':BASE}))
+print(json.dumps({'articles':len(posts),'pages':len(docs)-len(posts),'recipeCards':sum(len(d['recipeIds']) for d in docs),'recipesWithCalories':sum(1 for r in recipes.values() if r.get('estimatedCalories') is not None),'recipesWithAbv':sum(1 for r in recipes.values() if r.get('estimatedAbv') is not None),'htmlPages':len(list(OUT.rglob('*.html'))),'production':PRODUCTION,'base':BASE}))
