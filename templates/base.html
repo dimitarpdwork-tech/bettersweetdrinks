@@ -10,9 +10,19 @@
   gtag('config', 'G-BYKVYM6D9L');
 </script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+(function(){
+  try{
+    var preference=localStorage.getItem('bsd-theme')||'system';
+    var dark=preference==='dark'||(preference==='system'&&window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.dataset.theme=dark?'dark':'light';
+    document.documentElement.dataset.themePreference=preference;
+  }catch(e){}
+})();
+</script>
 <title>{{ title }} | {{ site.title }}</title><meta name="description" content="{{ description }}"><link rel="canonical" href="{{ canonical }}">
 {% if noindex %}<meta name="robots" content="noindex, {% if preview %}nofollow{% else %}follow{% endif %}">{% endif %}
-<meta name="theme-color" content="#b8273e"><meta name="twitter:card" content="summary_large_image">
+<meta name="theme-color" id="theme-color-meta" content="#b8273e"><meta name="twitter:card" content="summary_large_image">
 <link rel="icon" href="{{ link('/favicon.ico') }}" sizes="16x16 32x32 48x48"><link rel="icon" type="image/png" sizes="48x48" href="{{ link('/favicon-48.png') }}"><link rel="icon" type="image/svg+xml" sizes="any" href="{{ link('/favicon.svg') }}"><link rel="apple-touch-icon" sizes="180x180" href="{{ link('/apple-touch-icon.png') }}">
 <meta property="og:site_name" content="Better Sweet Drinks"><meta property="og:title" content="{{ title }}"><meta property="og:description" content="{{ description }}"><meta property="og:url" content="{{ canonical }}"><meta property="og:type" content="{% if doc is defined and doc.kind=='posts' %}article{% else %}website{% endif %}">
 {% if image %}<meta property="og:image" content="{{ image if image.startswith('https://') else site.url+image }}">{% endif %}
@@ -22,6 +32,13 @@
 <body><a class="skip" href="#main">Skip to content</a>
 <div class="topline">FROM THE FIRST SIP TO THE LAST DROP.</div>
 <header class="site-header"><div class="header-inner"><a class="wordmark" href="{{ link('/') }}" aria-label="Better Sweet Drinks home">BETTER<span>SWEET</span>DRINKS<span class="brand-dot" aria-hidden="true">.</span></a>
-<button class="menu-button" aria-expanded="false" aria-controls="navigation">Menu</button><nav id="navigation" aria-label="Main navigation"><a href="{{ link('/recipes/') }}">The recipe collection</a><a href="{{ link('/seasonal-drinks/') }}">Seasonal drinks</a><a href="{{ link('/mocktails/') }}">Mocktails</a><a href="{{ link('/about-us/') }}">Our story</a><a href="{{ link('/my-bar/') }}">My Bar</a><a class="nav-search" href="{{ link('/search/') }}">Find a drink <span aria-hidden="true">↗</span></a></nav></div></header>
+<button class="menu-button" aria-expanded="false" aria-controls="navigation">Menu</button><nav id="navigation" aria-label="Main navigation"><a href="{{ link('/recipes/') }}">The recipe collection</a><a href="{{ link('/seasonal-drinks/') }}">Seasonal drinks</a><a href="{{ link('/mocktails/') }}">Mocktails</a><a href="{{ link('/about-us/') }}">Our story</a><a class="nav-my-bar" href="{{ link('/my-bar/') }}" data-nav-my-bar>My Bar <span class="nav-badge" data-nav-bar-count hidden></span></a><button type="button" class="theme-toggle" data-theme-toggle aria-label="Theme: system. Activate to change theme."><span aria-hidden="true" data-theme-icon>◐</span><span data-theme-label>System</span></button><a class="nav-search" href="{{ link('/search/') }}">Find a drink <span aria-hidden="true">↗</span></a></nav></div></header>
 <main id="main">{% block content %}{% endblock %}</main>
-<footer><div><a class="footer-brand" href="{{ link('/') }}">BETTER SWEET DRINKS.</a><p>Something good in every glass.</p></div><nav aria-label="Footer"><a href="{{ link('/recipes/') }}">All recipes</a><a href="{{ link('/about-us/') }}">About us</a><a href="{{ link('/contact-us/') }}">Contact</a><a href="{{ link('/privacy-policy/') }}">Privacy</a></nav><p>© {{ year }} Better Sweet Drinks</p></footer><p class="save-status sr-only" role="status" aria-live="polite"></p></body></html>
+<footer><div><a class="footer-brand" href="{{ link('/') }}">BETTER SWEET DRINKS.</a><p>Something good in every glass.</p></div><nav aria-label="Footer"><a href="{{ link('/recipes/') }}">All recipes</a><a href="{{ link('/about-us/') }}">About us</a><a href="{{ link('/contact-us/') }}">Contact</a><a href="{{ link('/privacy-policy/') }}">Privacy</a></nav><p>© {{ year }} Better Sweet Drinks</p></footer>
+<nav class="mobile-app-nav" aria-label="Quick navigation">
+  <a href="{{ link('/') }}"{% if path=='/' %} aria-current="page"{% endif %}><span aria-hidden="true">⌂</span><span>Home</span></a>
+  <a href="{{ link('/search/') }}"{% if path=='/search/' %} aria-current="page"{% endif %}><span aria-hidden="true">⌕</span><span>Find</span></a>
+  <a href="{{ link('/my-bar/') }}" data-mobile-my-bar{% if path=='/my-bar/' %} aria-current="page"{% endif %}><span aria-hidden="true">▣</span><span>My Bar</span><b class="mobile-nav-badge" data-nav-bar-count hidden></b></a>
+</nav>
+<div class="toast-region" data-toast-region role="status" aria-live="polite" aria-atomic="true"></div>
+<p class="save-status sr-only" role="status" aria-live="polite"></p></body></html>
