@@ -277,7 +277,9 @@ def prepare_recipe_editorial(doc):
             anchors=node.find_all('a',href=re.compile(r'^#'))
             if len(anchors)>=2:node.decompose()
 
-    # Extract the complete method section first so nested headings/tips stay together.
+    # Split legacy "How to make" sections into the actual method and useful editorial
+    # extras. Older imports often put ingredients, bottle comparisons, serving ideas and
+    # pro tips under one giant heading; those should not all live in the Method panel.
     method_heading=None
     for heading in list(body.find_all(re.compile(r'^h[2-4]$'))):
         key=heading_key(heading.get_text(' ',strip=True))
@@ -289,14 +291,44 @@ def prepare_recipe_editorial(doc):
     doc['recipeIngredientAnchor']=''
     if method_heading is not None:
         doc['recipeMethodAnchor']=method_heading.get('id','')
-        method_html=remove_heading_section(method_heading,keep_html=True)
-        method_soup=BeautifulSoup(method_html,'html.parser')
+        marker=body.new_tag('span')
+        marker['data-recipe-method-remainder']=''
+        method_heading.insert_before(marker)
+        method_section_html=remove_heading_section(method_heading,keep_html=True)
+        method_soup=BeautifulSoup(method_section_html,'html.parser')
+
         for heading in list(method_soup.find_all(re.compile(r'^h[2-5]$'))):
             key=heading_key(heading.get_text(' ',strip=True))
             if key=='ingredients' or key.startswith('ingredients '):
                 doc['recipeIngredientAnchor']=remove_ingredient_block(heading)
                 break
-        method_html=str(method_soup).strip()
+
+        explicit_method=None
+        for heading in list(method_soup.find_all(re.compile(r'^h[3-5]$'))):
+            key=heading_key(heading.get_text(' ',strip=True))
+            if key in {'instructions','directions','method','steps','step by step instructions'} or 'step by step' in key:
+                explicit_method=heading;break
+        if explicit_method is not None:
+            method_html=remove_heading_section(explicit_method,keep_html=True)
+
+        if not method_html:
+            ordered=method_soup.find('ol')
+            if ordered is not None and len(ordered.find_all('li',recursive=False))>=2:
+                method_html=str(ordered);ordered.decompose()
+
+        if not method_html:
+            # Short modern articles sometimes keep the whole method as direct prose.
+            # In that case use it once as the method and leave no duplicate remainder.
+            method_html=str(method_soup).strip()
+            method_soup=BeautifulSoup('','html.parser')
+
+        for empty in list(method_soup.find_all(['blockquote','div','p'])):
+            if not empty.get_text(' ',strip=True) and not empty.find(['img','table','ul','ol']):empty.decompose()
+        remainder=str(method_soup).strip()
+        if remainder and (method_soup.get_text(' ',strip=True) or method_soup.find(['img','table','ul','ol'])):
+            fragment=BeautifulSoup('<h2>Tips, variations & serving ideas</h2>'+remainder,'html.parser')
+            for node in list(fragment.contents):marker.insert_before(node.extract())
+        marker.decompose()
 
     # Some shorter recipes put Ingredients before How-to as a separate top-level block.
     # Remove only that ingredient block, leaving the rest of the editorial article intact.
