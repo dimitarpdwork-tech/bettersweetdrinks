@@ -15,7 +15,8 @@
           <div class="recipe-intro">{{ doc.recipeIntro|safe }}</div>
           <p class="recipe-meta-line"><strong>{{ r.yield }}</strong>{% if r.totalTime %}<span>·</span><strong>{{ r.totalTime|replace('PT','')|replace('H',' hr ')|replace('M',' min ')|replace('S',' sec') }}</strong>{% endif %}</p>
           <p class="tested-inline">Tested by Better Sweet Drinks. <a href="{{ link('/about-us/') }}#how-we-test">How we test recipes</a>.</p>
-          <div class="hero-actions"><button data-print>Print recipe</button><button class="quiet-button" data-save="{{ link(doc.url) }}" aria-pressed="false" hidden>Save</button></div>
+          <div class="hero-actions"><button data-print>Print recipe</button><button class="quiet-button" data-save="{{ link(doc.url) }}" aria-pressed="false" hidden>Save</button><button type="button" class="quiet-button shopping-recipe-button" data-add-recipe-missing hidden>Add missing ingredients</button></div>
+          <script type="application/json" data-recipe-pantry>{{ r.pantryIngredients|tojson }}</script>
         </div>
       </div>
 
