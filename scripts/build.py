@@ -336,7 +336,7 @@ for d in docs:
             step['id']=f'recipe-{rid}-step-{i}'
             text_value=step.get_text(' ',strip=True)
             if not text_value:continue
-            instructions.append({'@type':'HowToStep','name':f'Step {i}','text':text_value,'url':absolute(d['url'])+'#'+step['id']})
+            instructions.append({'@type':'HowToStep','name':f'Step {i}','text':text_value})
         # Keep only meaningful ingredient strings. Empty/one-character values trigger
         # Recipe rich-result validation warnings and are not useful to readers.
         clean_ingredients=[' '.join(str(v).split()) for v in r.get('ingredients',[]) if len(' '.join(str(v).split()))>=2]
