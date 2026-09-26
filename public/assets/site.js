@@ -143,6 +143,25 @@ document.querySelectorAll('[data-feedback]').forEach(async panel => {
     summary.textContent = count
       ? `${average.toFixed(1)} out of 5 from ${count} rating${count === 1 ? '' : 's'}.`
       : 'No ratings yet. Be the first to rate it.';
+    // Keep Recipe structured data aligned with the live, visible reader rating.
+    // Google can process JS-generated JSON-LD, and we only expose real ratings.
+    document.querySelectorAll('script[data-recipe-schema]').forEach(node => {
+      try {
+        const schema = JSON.parse(node.textContent);
+        if (count > 0) {
+          schema.aggregateRating = {
+            '@type':'AggregateRating',
+            ratingValue:Number(average.toFixed(2)),
+            ratingCount:count,
+            bestRating:5,
+            worstRating:1
+          };
+        } else {
+          delete schema.aggregateRating;
+        }
+        node.textContent = JSON.stringify(schema);
+      } catch {}
+    });
   };
   const renderComments = data => {
     const comments = Array.isArray(data.comments) ? data.comments : [];

@@ -154,11 +154,23 @@ for d in docs:
         instructions=[]
         for i,step in enumerate(steps,1):
             step['id']=f'recipe-{rid}-step-{i}'
-            instructions.append({'@type':'HowToStep','text':step.get_text(' ',strip=True),'url':absolute(d['url'])+'#'+step['id']})
+            text_value=step.get_text(' ',strip=True)
+            if not text_value:continue
+            instructions.append({'@type':'HowToStep','name':f'Step {i}','text':text_value,'url':absolute(d['url'])+'#'+step['id']})
+        # Keep only meaningful ingredient strings. Empty/one-character values trigger
+        # Recipe rich-result validation warnings and are not useful to readers.
+        clean_ingredients=[' '.join(str(v).split()) for v in r.get('ingredients',[]) if len(' '.join(str(v).split()))>=2]
+        r['ingredients']=clean_ingredients
         r['instructions']=str(soup);cards.append(r)
         author_name=r['author'] or d['author']
-        schema={'@context':'https://schema.org','@type':'Recipe','name':r['title'],'description':r['description'],'author':{'@type':'Organization' if author_name==site['title'] else 'Person','name':author_name},'recipeIngredient':r['ingredients'],'recipeInstructions':instructions,'recipeYield':r['yield'],'image':absolute(r['image']) if r['image'].startswith('/') else r['image'],'datePublished':str(d['publishDate']),'dateModified':str(d['updatedDate']),'mainEntityOfPage':absolute(d['url']),'recipeCategory':', '.join(d.get('categories',[])),'keywords':', '.join(d.get('tags',[])) or r.get('keywords'),'url':absolute(d['url'])+'#recipe-'+str(rid)}
-        for k in ['prepTime','cookTime','totalTime','nutrition','keywords']:
+        recipe_category=(r.get('category') or ', '.join(d.get('categories',[]))).strip()
+        tag_keywords=[str(v).replace('-',' ').strip() for v in d.get('tags',[]) if str(v).strip()]
+        recipe_keywords=[v.strip() for v in str(r.get('keywords') or '').split(',') if v.strip()]
+        combined_keywords=', '.join(dict.fromkeys(recipe_keywords+tag_keywords))
+        schema={'@context':'https://schema.org','@type':'Recipe','name':r['title'],'description':r['description'],'author':{'@type':'Organization' if author_name==site['title'] else 'Person','name':author_name},'recipeIngredient':clean_ingredients,'recipeInstructions':instructions,'recipeYield':r['yield'],'image':absolute(r['image']) if r['image'].startswith('/') else r['image'],'datePublished':str(d['publishDate']),'dateModified':str(d['updatedDate']),'mainEntityOfPage':absolute(d['url']),'recipeCategory':recipe_category,'url':absolute(d['url'])+'#recipe-'+str(rid)}
+        if combined_keywords:schema['keywords']=combined_keywords
+        if r.get('cuisine'):schema['recipeCuisine']=r['cuisine']
+        for k in ['prepTime','cookTime','totalTime','nutrition']:
             if r.get(k):schema[k]=r[k]
         schemas.append(schema)
     schemas.insert(0,{'@context':'https://schema.org','@type':'BlogPosting' if d['kind']=='posts' else 'WebPage','headline':d['title'],'description':d['description'],'datePublished':str(d['publishDate']),'dateModified':str(d['updatedDate']),'author':{'@type':'Organization' if d['author']==site['title'] else 'Person','name':d['author']},'publisher':{'@type':'Organization','name':site['title']},'mainEntityOfPage':{'@type':'WebPage','@id':absolute(d['url'])},'url':absolute(d['url'])})

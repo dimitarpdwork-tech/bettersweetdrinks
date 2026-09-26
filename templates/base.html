@@ -7,7 +7,7 @@
 <meta property="og:site_name" content="Better Sweet Drinks"><meta property="og:title" content="{{ title }}"><meta property="og:description" content="{{ description }}"><meta property="og:url" content="{{ canonical }}"><meta property="og:type" content="{% if doc is defined and doc.kind=='posts' %}article{% else %}website{% endif %}">
 {% if image %}<meta property="og:image" content="{{ image if image.startswith('https://') else site.url+image }}">{% endif %}
 <link rel="stylesheet" href="{{ asset_link('/assets/site.css') }}"><script src="{{ asset_link('/assets/site.js') }}" defer></script>
-{% for schema in global_schemas %}<script type="application/ld+json">{{ schema|tojson }}</script>{% endfor %}{% for schema in schemas %}<script type="application/ld+json">{{ schema|tojson }}</script>{% endfor %}
+{% for schema in global_schemas %}<script type="application/ld+json">{{ schema|tojson }}</script>{% endfor %}{% for schema in schemas %}<script type="application/ld+json"{% if schema['@type']=='Recipe' %} data-recipe-schema{% endif %}>{{ schema|tojson }}</script>{% endfor %}
 {% if doc is defined and doc.kind=='posts' %}<meta property="article:published_time" content="{{ doc.publishDate }}"><meta property="article:modified_time" content="{{ doc.updatedDate }}">{% endif %}</head>
 <body><a class="skip" href="#main">Skip to content</a>
 <div class="topline">FROM THE FIRST SIP TO THE LAST DROP.</div>
