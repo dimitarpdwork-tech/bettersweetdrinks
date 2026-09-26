@@ -397,6 +397,7 @@ for d in docs:
             nutrition['@type']='NutritionInformation'
             nutrition['calories']=str(r['estimatedCalories'])+' kcal'
         r['nutrition']=nutrition
+        r['yieldCount']=recipe_yield_count(r.get('yield'))
         cards.append(r)
         author_name=r['author'] or d['author']
         recipe_category=(r.get('category') or ', '.join(d.get('categories',[]))).strip()
