@@ -36,9 +36,9 @@ env.globals['global_schemas']=global_schemas
 def image_srcset(path):
     original=OUT/path.lstrip('/')
     variants={}
-    base_stem=re.sub(r'-\\d+x\\d+$','',original.stem)
+    base_stem=re.sub(r'-\d+x\d+$','',original.stem)
     for candidate in original.parent.glob(base_stem+'-*x*'+original.suffix):
-        match=re.search(r'-(\\d+)x(\\d+)$',candidate.stem)
+        match=re.search(r'-(\d+)x(\d+)$',candidate.stem)
         if not match:continue
         width=int(match.group(1))
         if 240<=width<=1600:variants[width]=candidate
@@ -204,7 +204,7 @@ for recipe in recipes.values():
     recipe['servingCount']=recipe_yield_count(recipe.get('yield'))
 
 def duration_minutes(value):
-    match=re.fullmatch(r'PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?',str(value or '').upper())
+    match=re.fullmatch(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?',str(value or '').upper())
     if not match:return None
     hours,minutes,seconds=(int(v or 0) for v in match.groups())
     return hours*60+minutes+(1 if seconds>=30 else 0)
@@ -215,13 +215,13 @@ SPIRIT_GROUPS=[
     ('brandy',['brandy','cognac']),('wine',['prosecco','champagne','wine','vermouth']),
     ('liqueur',['liqueur','aperol','campari','amaretto','schnapps','curacao','curaçao'])
 ]
-PANTRY_STOP={'fresh','chilled','optional','garnish','garnishes','ice','water','to','taste','for','and','or','plus','of','the','a','an'}
+PANTRY_STOP={'fresh','chilled','optional','garnish','garnishes','ice','water','to','taste','for','and','or','plus','of','the','a','an','oz','ounce','ounces','ml','milliliter','milliliters','cup','cups','tbsp','tablespoon','tablespoons','tsp','teaspoon','teaspoons'}
 
 def recipe_discovery_meta(recipe):
     ingredient_text=' '.join(str(v).lower() for v in recipe.get('ingredients',[]))
     spirit='none'
     for name,terms in SPIRIT_GROUPS:
-        if any(re.search(r'(?<!\\w)'+re.escape(term)+r'(?!\\w)',ingredient_text) for term in terms):
+        if any(re.search(r'(?<!\w)'+re.escape(term)+r'(?!\w)',ingredient_text) for term in terms):
             spirit=name;break
     abv=recipe.get('estimatedAbv')
     alcohol_type='non-alcoholic' if abv is not None and float(abv)==0 else 'alcoholic' if abv is not None and float(abv)>0 else ('alcoholic' if ALCOHOL_HINT_RE.search(ingredient_text) else 'unknown')
@@ -240,14 +240,13 @@ def recipe_discovery_meta(recipe):
     for raw in recipe.get('ingredients',[]):
         raw_lower=str(raw).lower()
         if 'for garnish' in raw_lower or raw_lower.startswith(('garnish','optional','ice ')) or raw_lower in {'ice','ice cubes'}:continue
-        text=re.sub(r'^\\s*(?:\\d+(?:[./]\\d+)?|\\d+\\s+\\d+/\\d+|[½¼¾⅓⅔⅛⅜⅝⅞])\\s*(?:oz|ounce|ounces|ml|milliliters?|cl|cups?|tbsp|tablespoons?|tsp|teaspoons?|shots?|parts?|dashes?|scoops?)?\\s*','',raw_lower)
-        text=re.sub(r'\\([^)]*\\)',' ',text)
+        text=re.sub(r'^\s*(?:\d+(?:[./]\d+)?|\d+\s+\d+/\d+|[½¼¾⅓⅔⅛⅜⅝⅞])\s*(?:oz|ounce|ounces|ml|milliliters?|cl|cups?|tbsp|tablespoons?|tsp|teaspoons?|shots?|parts?|dashes?|scoops?)?\s*','',raw_lower)
+        text=re.sub(r'\([^)]*\)',' ',text)
         words=[w for w in re.findall(r"[a-zA-ZÀ-ÿ][a-zA-ZÀ-ÿ'-]+",text) if w not in PANTRY_STOP]
         phrase=' '.join(words[:4]).strip()
         if phrase:pantry.append(phrase)
     return {'timeMinutes':duration_minutes(recipe.get('totalTime') or recipe.get('prepTime')),
             'alcoholType':alcohol_type,'baseSpirit':spirit,'flavorTags':flavors,'pantryIngredients':pantry}
-
 for recipe in recipes.values():recipe.update(recipe_discovery_meta(recipe))
 
 def heading_key(value):
@@ -356,7 +355,7 @@ def prepare_recipe_editorial(doc):
             method_html=str(method_core)
             method_core.decompose()
         else:
-            step_nodes=[p for p in method_soup.find_all('p',recursive=True) if re.match(r'^\\s*step\\s*\\d+',p.get_text(' ',strip=True),re.I)]
+            step_nodes=[p for p in method_soup.find_all('p',recursive=True) if re.match(r'^\s*step\s*\d+',p.get_text(' ',strip=True),re.I)]
             if step_nodes:
                 method_html=''.join(str(node) for node in step_nodes)
                 for node in step_nodes:node.decompose()
