@@ -235,7 +235,7 @@ def remove_ingredient_block(heading):
         # Legacy imports sometimes wrap later sub-sections inside blockquotes/divs.
         # Stop before any container that already contains another heading so we only
         # remove the ingredient list/table itself.
-        if hasattr(current,'find_all') and current.find(re.compile(r'^h[1-6]
+        if hasattr(current,'find_all') and current.find(['h1','h2','h3','h4','h5','h6']):break
         try:current.extract()
         except AttributeError:pass
         current=next_node
