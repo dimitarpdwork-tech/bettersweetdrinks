@@ -12,6 +12,11 @@ document.addEventListener('keydown', event => {
   }
 });
 document.querySelectorAll('[data-print]').forEach(button => button.addEventListener('click', () => window.print()));
+
+document.querySelectorAll('[data-open-comments]').forEach(link => link.addEventListener('click', () => {
+  const comments = document.querySelector('#reader-comments');
+  if (comments) comments.open = true;
+}));
 const saveStatus = document.querySelector('.save-status');
 let saved = new Set();
 try {
