@@ -44,24 +44,73 @@ document.addEventListener('click', event => {
   if (document.querySelector('#saved-filter')?.getAttribute('aria-pressed') === 'true') renderSearch?.();
 });
 updateSaveButtons();
-const focusButton = document.querySelector('[data-focus]');
-if (focusButton) {
-  focusButton.hidden = false;
-  focusButton.addEventListener('click', () => {
-    const active = document.body.classList.toggle('recipe-focus');
-    focusButton.setAttribute('aria-pressed', String(active));
-    focusButton.textContent = active ? 'Show full article' : 'Recipe mode';
-  });
-}
+const FRACTION_VALUE = {'½':0.5,'¼':0.25,'¾':0.75,'⅓':1/3,'⅔':2/3,'⅛':0.125,'⅜':0.375,'⅝':0.625,'⅞':0.875};
+const VOLUME_ML = {oz:29.5735,ounce:29.5735,ounces:29.5735,ml:1,milliliter:1,milliliters:1,cl:10,cup:240,cups:240,tbsp:15,tablespoon:15,tablespoons:15,tsp:5,teaspoon:5,teaspoons:5,shot:44,shots:44,dash:0.9,dashes:0.9};
+const UNIT_RE = /^(oz|ounce|ounces|ml|milliliter|milliliters|cl|cup|cups|tbsp|tablespoon|tablespoons|tsp|teaspoon|teaspoons|shot|shots|dash|dashes)\b/i;
+const parseNumber = raw => {
+  raw = raw.trim();
+  if (FRACTION_VALUE[raw] !== undefined) return FRACTION_VALUE[raw];
+  if (/^\d+\s+\d+\/\d+$/.test(raw)) { const parts=raw.split(/\s+/); const frac=parts[1].split('/').map(Number); return Number(parts[0]) + frac[0]/frac[1]; }
+  if (/^\d+\/\d+$/.test(raw)) { const parts=raw.split('/').map(Number); return parts[0]/parts[1]; }
+  const value=Number(raw); return Number.isFinite(value)?value:null;
+};
+const formatAmount = value => {
+  if (!Number.isFinite(value)) return '';
+  if (Math.abs(value-Math.round(value))<0.03) return String(Math.round(value));
+  const whole=Math.floor(value), fraction=value-whole;
+  const options=[[0.125,'⅛'],[0.25,'¼'],[1/3,'⅓'],[0.375,'⅜'],[0.5,'½'],[0.625,'⅝'],[2/3,'⅔'],[0.75,'¾'],[0.875,'⅞']];
+  const best=options.reduce((a,b)=>Math.abs(b[0]-fraction)<Math.abs(a[0]-fraction)?b:a);
+  if (Math.abs(best[0]-fraction)<0.055) return (whole?whole+' ':'')+best[1];
+  return value<10?value.toFixed(1).replace(/\.0$/,''):String(Math.round(value));
+};
+const parseIngredient = text => {
+  const match=text.match(/^\s*((?:\d+\s+\d+\/\d+)|(?:\d+\/\d+)|(?:\d+(?:\.\d+)?)|[½¼¾⅓⅔⅛⅜⅝⅞])\s*/);
+  if(!match) return null; const amount=parseNumber(match[1]); if(amount===null) return null;
+  const rest=text.slice(match[0].length), unitMatch=rest.match(UNIT_RE);
+  const unit=unitMatch?unitMatch[1].toLowerCase():'', tail=(unitMatch?rest.slice(unitMatch[0].length):rest).replace(/^\s+/,'');
+  return {amount,unit,tail};
+};
+const transformIngredient = (original,multiplier,units) => {
+  const parsed=parseIngredient(original); if(!parsed) return original;
+  let amount=parsed.amount*multiplier, unit=parsed.unit;
+  if(units==='metric' && unit && VOLUME_ML[unit]) { amount*=VOLUME_ML[unit]; unit='ml'; if(amount>=1000){amount/=1000;unit='L';} }
+  const amountText=(units==='metric'&&unit==='ml')?(amount<10?amount.toFixed(1).replace(/\.0$/,''):String(Math.round(amount))):formatAmount(amount);
+  return [amountText,unit,parsed.tail].filter(Boolean).join(' ');
+};
+
 document.querySelectorAll('.recipe').forEach(recipe => {
-  const boxes = [...recipe.querySelectorAll('.ingredients input')];
-  const counter = recipe.querySelector('.ingredient-count');
-  const reset = recipe.querySelector('[data-reset]');
-  const update = () => { counter.textContent = `${boxes.filter(box => box.checked).length} of ${boxes.length} ready`; };
-  boxes.forEach(box => box.addEventListener('change', update));
-  reset.hidden = false;
-  reset.addEventListener('click', () => { boxes.forEach(box => { box.checked = false; }); update(); });
-  update();
+  const boxes=[...recipe.querySelectorAll('.ingredients input[type="checkbox"]')];
+  const counter=recipe.querySelector('.ingredient-count'), reset=recipe.querySelector('[data-reset]'), tools=recipe.querySelector('[data-recipe-tools]');
+  const recipeId=(tools&&tools.dataset.recipeId)||recipe.id||location.pathname, checkKey='bsd-recipe-checks:'+recipeId;
+  let checked=new Set();
+  try { const stored=JSON.parse(localStorage.getItem(checkKey)||'[]'); if(Array.isArray(stored)) checked=new Set(stored.map(Number)); } catch {}
+  boxes.forEach((box,index)=>{if(checked.has(index)) box.checked=true;});
+  const updateChecklist=()=>{
+    const completed=boxes.filter(box=>box.checked).length;
+    if(counter) counter.textContent=completed+' of '+boxes.length+' ready';
+    if(reset) reset.hidden=completed===0;
+    try { localStorage.setItem(checkKey,JSON.stringify(boxes.map((box,index)=>box.checked?index:null).filter(v=>v!==null))); } catch {}
+  };
+  boxes.forEach(box=>box.addEventListener('change',updateChecklist));
+  if(reset) reset.addEventListener('click',()=>{boxes.forEach(box=>{box.checked=false;});updateChecklist();});
+  updateChecklist();
+  if(!tools) return;
+  const ingredientTexts=[...recipe.querySelectorAll('[data-ingredient-text]')], minus=tools.querySelector('[data-serving-minus]'), plus=tools.querySelector('[data-serving-plus]'), servingCount=tools.querySelector('[data-serving-count]'), servingLabel=recipe.querySelector('[data-serving-label]'), unitButtons=[...tools.querySelectorAll('[data-unit]')];
+  const base=Math.max(1,Number(tools.dataset.baseServings)||1); let servings=base, units='us';
+  try { units=localStorage.getItem('bsd-unit-system')==='metric'?'metric':'us'; } catch {}
+  const originalServingLabel=servingLabel?servingLabel.textContent:'';
+  const renderIngredients=()=>{
+    const multiplier=servings/base;
+    ingredientTexts.forEach(span=>{span.textContent=transformIngredient(span.dataset.original||span.textContent,multiplier,units);});
+    if(servingCount) servingCount.textContent=String(servings);
+    if(servingLabel) servingLabel.textContent=originalServingLabel.replace(/^\d+(?:\.\d+)?/,String(servings));
+    unitButtons.forEach(button=>{const selected=button.dataset.unit===units;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));});
+    if(minus) minus.disabled=servings<=1; if(plus) plus.disabled=servings>=24;
+  };
+  if(minus) minus.addEventListener('click',()=>{servings=Math.max(1,servings-1);renderIngredients();});
+  if(plus) plus.addEventListener('click',()=>{servings=Math.min(24,servings+1);renderIngredients();});
+  unitButtons.forEach(button=>button.addEventListener('click',()=>{units=button.dataset.unit;try{localStorage.setItem('bsd-unit-system',units);}catch{}renderIngredients();}));
+  renderIngredients();
 });
 document.querySelectorAll('[data-sortable-listing]').forEach(section => {
   const grid = section.querySelector('.grid');
@@ -152,7 +201,8 @@ if (input) {
       if (p.calories != null) { const kcal = document.createElement('span'); kcal.textContent = `≈ ${p.calories} kcal`; facts.append(kcal); }
       if (p.abv != null) { const abv = document.createElement('span'); abv.textContent = `≈ ${p.abv}% ABV`; facts.append(abv); }
       const desc = document.createElement('p'); desc.textContent = p.description.length > 155 ? p.description.slice(0, 152) + '…' : p.description;
-      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); parts.push(desc);
+      const more = document.createElement('a'); more.className = 'read-more'; more.href = p.url; more.textContent = 'Make this drink ↗';
+      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); parts.push(desc, more);
       card.append(...parts); fragment.append(card);
     }
     if (!found.length) { const message = document.createElement('p'); message.className = 'empty-state'; message.textContent = onlySaved ? 'No saved recipes match. Save a drink from the collection, or clear your filters.' : 'No matches yet. Try a different ingredient or choose All drinks.'; fragment.append(message); }
@@ -189,6 +239,14 @@ document.querySelectorAll('[data-feedback]').forEach(async panel => {
   const commentForm = panel.querySelector('[data-comment-form]');
   const commentStatus = panel.querySelector('[data-comment-status]');
   const commentFormWrap = panel.querySelector('[data-comment-form]');
+  const commentToggle = panel.querySelector('[data-comment-toggle]');
+  const commentCount = panel.querySelector('[data-comment-count]');
+  commentToggle?.addEventListener('click', () => {
+    if (!commentFormWrap) return;
+    commentFormWrap.hidden = !commentFormWrap.hidden;
+    commentToggle.textContent = commentFormWrap.hidden ? 'Leave a comment' : 'Hide comment form';
+    if (!commentFormWrap.hidden) commentFormWrap.querySelector('input[name="name"]')?.focus({preventScroll:true});
+  });
   const api = endpoint + '/api/recipes/' + encodeURIComponent(slug);
 
   let ratedRecipes = new Set();
@@ -227,6 +285,7 @@ document.querySelectorAll('[data-feedback]').forEach(async panel => {
   };
   const renderComments = data => {
     const comments = Array.isArray(data.comments) ? data.comments : [];
+    if (commentCount) commentCount.textContent = comments.length ? '(' + comments.length + ')' : '';
     const fragment = document.createDocumentFragment();
     if (!comments.length) {
       const p = document.createElement('p');
