@@ -223,6 +223,24 @@ def remove_heading_section(heading,keep_html=False):
         except AttributeError:pass
     return content
 
+def remove_ingredient_block(heading):
+    anchor=heading.get('id','')
+    level=int(heading.name[1])
+    current=heading.next_sibling
+    heading.decompose()
+    while current is not None:
+        next_node=current.next_sibling
+        name=getattr(current,'name',None)
+        if name and re.fullmatch(r'h[1-6]',name) and int(name[1])<=level:break
+        # Legacy imports sometimes wrap later sub-sections inside blockquotes/divs.
+        # Stop before any container that already contains another heading so we only
+        # remove the ingredient list/table itself.
+        if hasattr(current,'find') and current.find(re.compile(r'^h[1-6]$')):break
+        try:current.extract()
+        except AttributeError:pass
+        current=next_node
+    return anchor
+
 def prepare_recipe_editorial(doc):
     if not doc.get('recipeIds'):return
     primary=recipes.get(str(doc['recipeIds'][0]))
@@ -250,17 +268,47 @@ def prepare_recipe_editorial(doc):
         else:img.decompose()
         break
 
-    ingredient_heading=None
+    # Remove imported hand-written tables of contents near the top. The site creates
+    # its own TOC later, and keeping both creates broken links when recipe sections move.
+    for node in list(body.contents):
+        name=getattr(node,'name',None)
+        if name and re.fullmatch(r'h[1-6]',name):break
+        if name in ('ol','ul'):
+            anchors=node.find_all('a',href=re.compile(r'^#'))
+            if len(anchors)>=2:node.decompose()
+
+    # Extract the complete method section first so nested headings/tips stay together.
     method_heading=None
     for heading in list(body.find_all(re.compile(r'^h[2-4]$'))):
         key=heading_key(heading.get_text(' ',strip=True))
-        if ingredient_heading is None and (key=='ingredients' or key.startswith('ingredients ')):
-            ingredient_heading=heading
-        if method_heading is None and (key in {'instructions','directions','method','steps'} or key.startswith('how to make')):
-            method_heading=heading
+        if key in {'instructions','directions','method','steps'} or key.startswith('how to make'):
+            method_heading=heading;break
 
-    if ingredient_heading is not None:remove_heading_section(ingredient_heading)
-    method_html=remove_heading_section(method_heading,keep_html=True) if method_heading is not None else ''
+    method_html=''
+    doc['recipeMethodAnchor']=''
+    doc['recipeIngredientAnchor']=''
+    if method_heading is not None:
+        doc['recipeMethodAnchor']=method_heading.get('id','')
+        method_html=remove_heading_section(method_heading,keep_html=True)
+        method_soup=BeautifulSoup(method_html,'html.parser')
+        for heading in list(method_soup.find_all(re.compile(r'^h[2-5]$'))):
+            key=heading_key(heading.get_text(' ',strip=True))
+            if key=='ingredients' or key.startswith('ingredients '):
+                doc['recipeIngredientAnchor']=remove_ingredient_block(heading)
+                break
+        method_html=str(method_soup).strip()
+
+    # Some shorter recipes put Ingredients before How-to as a separate top-level block.
+    # Remove only that ingredient block, leaving the rest of the editorial article intact.
+    ingredient_heading=None
+    for heading in list(body.find_all(re.compile(r'^h[2-4]$'))):
+        key=heading_key(heading.get_text(' ',strip=True))
+        if key=='ingredients' or key.startswith('ingredients '):
+            ingredient_heading=heading;break
+    if ingredient_heading is not None:
+        anchor=remove_ingredient_block(ingredient_heading)
+        if anchor:doc['recipeIngredientAnchor']=anchor
+
     doc['recipeMethod']=method_html or primary.get('instructions','')
     doc['recipeMethodFromArticle']=bool(method_html)
 
