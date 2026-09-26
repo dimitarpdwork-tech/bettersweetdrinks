@@ -8,17 +8,8 @@
   "contactEmail": "",
   "preview": true,
   "feedback": {
-    "comments": {
-      "enabled": false,
-      "provider": "giscus",
-      "repo": "dimitarpdwork-tech/bettersweetdrinks",
-      "repoId": "",
-      "category": "Recipe comments",
-      "categoryId": ""
-    },
-    "ratings": {
-      "enabled": false,
-      "endpoint": ""
-    }
+    "enabled": false,
+    "provider": "cloudflare-worker-d1",
+    "endpoint": "https://feedback.bettersweetdrinks.com"
   }
 }
