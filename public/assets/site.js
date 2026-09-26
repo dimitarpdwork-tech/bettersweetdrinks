@@ -201,10 +201,17 @@ document.querySelectorAll('[data-sortable-listing]').forEach(section => {
   const grid = section.querySelector('.grid');
   const sort = section.querySelector('[data-listing-sort]');
   const calorieFilter = section.querySelector('[data-calorie-filter]');
+  const alcoholFilter = section.querySelector('[data-alcohol-filter]');
+  const timeFilter = section.querySelector('[data-time-filter]');
+  const spiritFilter = section.querySelector('[data-spirit-filter]');
+  const flavorFilter = section.querySelector('[data-flavor-filter]');
   const status = section.querySelector('[data-listing-status]');
+  const loadMore = section.querySelector('[data-listing-more]');
   if (!grid || !sort || !calorieFilter) return;
   const original = [...grid.querySelectorAll('.card')];
   const originalOrder = new Map(original.map((card, index) => [card, index]));
+  const pageSize = Math.max(1, Number(section.dataset.pageSize || original.length));
+  let shownLimit = pageSize;
   const metric = (card, key) => {
     const raw = card.dataset[key];
     if (raw === undefined || raw === '') return null;
@@ -218,20 +225,37 @@ document.querySelectorAll('[data-sortable-listing]').forEach(section => {
     if (bv === null) return -1;
     return direction * (av - bv) || originalOrder.get(a) - originalOrder.get(b);
   };
-  const render = () => {
-    const visible = original.filter(card => !calorieFilter.value || card.dataset.calorieBand === calorieFilter.value);
-    if (sort.value === 'calories-asc') visible.sort(compareMetric('calories', 1));
-    else if (sort.value === 'calories-desc') visible.sort(compareMetric('calories', -1));
-    else if (sort.value === 'abv-asc') visible.sort(compareMetric('abv', 1));
-    else if (sort.value === 'abv-desc') visible.sort(compareMetric('abv', -1));
-    else visible.sort((a, b) => originalOrder.get(a) - originalOrder.get(b));
+  const matchesFilters = card => {
+    if (calorieFilter.value && card.dataset.calorieBand !== calorieFilter.value) return false;
+    if (alcoholFilter?.value && card.dataset.alcohol !== alcoholFilter.value) return false;
+    if (timeFilter?.value) {
+      const minutes = metric(card, 'time');
+      if (minutes === null || minutes > Number(timeFilter.value)) return false;
+    }
+    if (spiritFilter?.value && card.dataset.spirit !== spiritFilter.value) return false;
+    if (flavorFilter?.value && !(card.dataset.flavors || '').split(/\s+/).includes(flavorFilter.value)) return false;
+    return true;
+  };
+  const render = (resetLimit = false) => {
+    if (resetLimit) shownLimit = pageSize;
+    const matched = original.filter(matchesFilters);
+    if (sort.value === 'calories-asc') matched.sort(compareMetric('calories', 1));
+    else if (sort.value === 'calories-desc') matched.sort(compareMetric('calories', -1));
+    else if (sort.value === 'abv-asc') matched.sort(compareMetric('abv', 1));
+    else if (sort.value === 'abv-desc') matched.sort(compareMetric('abv', -1));
+    else matched.sort((a, b) => originalOrder.get(a) - originalOrder.get(b));
+    const visible = matched.slice(0, shownLimit);
     const visibleSet = new Set(visible);
     original.forEach(card => { card.hidden = !visibleSet.has(card); });
-    [...visible, ...original.filter(card => !visibleSet.has(card))].forEach(card => grid.append(card));
-    if (status) status.textContent = `${visible.length} recipe${visible.length === 1 ? '' : 's'} shown.`;
+    [...matched, ...original.filter(card => !matched.includes(card))].forEach(card => grid.append(card));
+    if (status) status.textContent = matched.length
+      ? \`\${visible.length} of \${matched.length} recipe\${matched.length === 1 ? '' : 's'} shown.\`
+      : 'No recipes match these filters.';
+    if (loadMore) loadMore.hidden = visible.length >= matched.length;
   };
-  sort.addEventListener('change', render);
-  calorieFilter.addEventListener('change', render);
+  const resetAndRender = () => render(true);
+  [calorieFilter, alcoholFilter, timeFilter, spiritFilter, flavorFilter, sort].filter(Boolean).forEach(control => control.addEventListener('change', resetAndRender));
+  loadMore?.addEventListener('click', () => { shownLimit += pageSize; render(false); });
   render();
 });
 
@@ -241,71 +265,116 @@ if (input) {
   const results = document.querySelector('#search-results');
   const category = document.querySelector('#category-filter');
   const calorie = document.querySelector('#calorie-filter');
+  const alcohol = document.querySelector('#alcohol-filter');
+  const time = document.querySelector('#time-filter');
+  const spirit = document.querySelector('#spirit-filter');
+  const flavor = document.querySelector('#flavor-filter');
   const sort = document.querySelector('#sort-filter');
   const savedFilter = document.querySelector('#saved-filter');
+  const searchMore = document.querySelector('#search-more');
   const params = new URLSearchParams(location.search);
   input.value = params.get('q') || '';
   if ([...category.options].some(option => option.value === params.get('category'))) category.value = params.get('category');
   if ([...calorie.options].some(option => option.value === params.get('calories'))) calorie.value = params.get('calories');
+  if ([...alcohol.options].some(option => option.value === params.get('alcohol'))) alcohol.value = params.get('alcohol');
+  if ([...time.options].some(option => option.value === params.get('time'))) time.value = params.get('time');
+  if ([...spirit.options].some(option => option.value === params.get('spirit'))) spirit.value = params.get('spirit');
+  if ([...flavor.options].some(option => option.value === params.get('style'))) flavor.value = params.get('style');
   if ([...sort.options].some(option => option.value === params.get('sort'))) sort.value = params.get('sort');
   savedFilter.setAttribute('aria-pressed', String(params.get('saved') === '1'));
   let entries = null;
-  function display() {
+  const searchPageSize = 24;
+  let searchLimit = searchPageSize;
+  const metricSort = (key, direction) => (a, b) => {
+    const av = Number.isFinite(Number(a[key])) && a[key] !== null ? Number(a[key]) : null;
+    const bv = Number.isFinite(Number(b[key])) && b[key] !== null ? Number(b[key]) : null;
+    if (av === null && bv === null) return 0;
+    if (av === null) return 1;
+    if (bv === null) return -1;
+    return direction * (av - bv);
+  };
+  function display(resetLimit = false) {
     if (!entries) return;
+    if (resetLimit) searchLimit = searchPageSize;
     const words = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
     const onlySaved = savedFilter.getAttribute('aria-pressed') === 'true';
-    const found = entries.filter(p => words.every(word => p.text.toLowerCase().includes(word)) && (!category.value || p.categories.includes(category.value)) && (!calorie.value || p.calorieBand === calorie.value) && (!onlySaved || saved.has(p.url)));
-    const metricSort = (key, direction) => (a, b) => {
-      const av = Number.isFinite(Number(a[key])) && a[key] !== null ? Number(a[key]) : null;
-      const bv = Number.isFinite(Number(b[key])) && b[key] !== null ? Number(b[key]) : null;
-      if (av === null && bv === null) return 0;
-      if (av === null) return 1;
-      if (bv === null) return -1;
-      return direction * (av - bv);
-    };
+    const found = entries.filter(p => {
+      if (!words.every(word => p.text.toLowerCase().includes(word))) return false;
+      if (category.value && !p.categories.includes(category.value)) return false;
+      if (calorie.value && p.calorieBand !== calorie.value) return false;
+      if (alcohol.value && p.alcoholType !== alcohol.value) return false;
+      if (time.value && (p.timeMinutes == null || Number(p.timeMinutes) > Number(time.value))) return false;
+      if (spirit.value && p.baseSpirit !== spirit.value) return false;
+      if (flavor.value && !(p.flavors || []).includes(flavor.value)) return false;
+      if (onlySaved && !saved.has(p.url)) return false;
+      return true;
+    });
     if (sort.value === 'title') found.sort((a, b) => a.title.localeCompare(b.title));
     else if (sort.value === 'calories-asc') found.sort(metricSort('calories', 1));
     else if (sort.value === 'calories-desc') found.sort(metricSort('calories', -1));
     else if (sort.value === 'abv-asc') found.sort(metricSort('abv', 1));
     else if (sort.value === 'abv-desc') found.sort(metricSort('abv', -1));
-    status.textContent = `${found.length} ${onlySaved ? 'saved ' : ''}recipe${found.length === 1 ? '' : 's'} found.`;
+    const visible = found.slice(0, searchLimit);
+    status.textContent = found.length
+      ? \`Showing \${visible.length} of \${found.length} \${onlySaved ? 'saved ' : ''}recipe\${found.length === 1 ? '' : 's'}.\`
+      : (onlySaved ? 'No saved recipes match these filters.' : 'No recipes match these filters.');
     const fragment = document.createDocumentFragment();
-    for (const p of found) {
+    for (const p of visible) {
       const card = document.createElement('article'); card.className = 'card';
       card.dataset.calories = p.calories ?? '';
       card.dataset.abv = p.abv ?? '';
       card.dataset.calorieBand = p.calorieBand ?? '';
+      card.dataset.alcohol = p.alcoholType ?? '';
+      card.dataset.time = p.timeMinutes ?? '';
+      card.dataset.spirit = p.baseSpirit ?? '';
+      card.dataset.flavors = (p.flavors || []).join(' ');
       const photo = document.createElement('div'); photo.className = 'card-photo';
       const imageLink = document.createElement('a'); imageLink.href = p.url; imageLink.tabIndex = -1; imageLink.setAttribute('aria-hidden', 'true');
-      if (p.image) { const img = document.createElement('img'); Object.assign(img, {src:p.image, alt:p.title, loading:'lazy', width:480, height:480}); imageLink.append(img); }
-      const save = document.createElement('button'); save.className = 'save-button'; save.dataset.save = p.url; save.setAttribute('aria-label', `Save ${p.title}`);
+      if (p.image) { const img = document.createElement('img'); Object.assign(img, {src:p.image, alt:p.title, loading:'lazy', decoding:'async', width:480, height:480}); imageLink.append(img); }
+      const save = document.createElement('button'); save.className = 'save-button'; save.dataset.save = p.url; save.setAttribute('aria-label', \`Save \${p.title}\`);
       photo.append(imageLink, save);
       const label = document.createElement('p'); label.className = 'eyebrow card-category'; label.textContent = (p.categories[0] || 'Drinks').replaceAll('-', ' ');
       const heading = document.createElement('h2'); const a = document.createElement('a'); a.href = p.url; a.textContent = p.title.split('|')[0].trim(); heading.append(a);
       const facts = document.createElement('p'); facts.className = 'card-facts';
-      if (p.calories != null) { const kcal = document.createElement('span'); kcal.textContent = `≈ ${p.calories} kcal`; facts.append(kcal); }
-      if (p.abv != null) { const abv = document.createElement('span'); abv.textContent = `≈ ${p.abv}% ABV`; facts.append(abv); }
+      if (p.calories != null) { const kcal = document.createElement('span'); kcal.textContent = \`≈ \${p.calories} kcal\`; facts.append(kcal); }
+      if (p.abv != null) { const abv = document.createElement('span'); abv.textContent = \`≈ \${p.abv}% ABV\`; facts.append(abv); }
       const desc = document.createElement('p'); desc.textContent = p.description.length > 155 ? p.description.slice(0, 152) + '…' : p.description;
-      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); parts.push(desc);
+      const cta = document.createElement('a'); cta.className = 'read-more'; cta.href = p.url; cta.append('Make this drink ', Object.assign(document.createElement('span'), {textContent:'↗'}));
+      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); parts.push(desc, cta);
       card.append(...parts); fragment.append(card);
     }
-    if (!found.length) { const message = document.createElement('p'); message.className = 'empty-state'; message.textContent = onlySaved ? 'No saved recipes match. Save a drink from the collection, or clear your filters.' : 'No matches yet. Try a different ingredient or choose All drinks.'; fragment.append(message); }
+    if (!found.length) {
+      const message = document.createElement('p'); message.className = 'empty-state';
+      message.textContent = onlySaved ? 'No saved recipes match. Save a drink from the collection, or clear your filters.' : 'No matches yet. Try fewer filters or a different ingredient.';
+      fragment.append(message);
+    }
     results.replaceChildren(fragment); updateSaveButtons();
+    if (searchMore) searchMore.hidden = visible.length >= found.length;
     const state = new URLSearchParams();
     if (input.value.trim()) state.set('q', input.value.trim());
     if (category.value) state.set('category', category.value);
     if (calorie.value) state.set('calories', calorie.value);
+    if (alcohol.value) state.set('alcohol', alcohol.value);
+    if (time.value) state.set('time', time.value);
+    if (spirit.value) state.set('spirit', spirit.value);
+    if (flavor.value) state.set('style', flavor.value);
     if (sort.value !== 'newest') state.set('sort', sort.value);
     if (onlySaved) state.set('saved', '1');
     history.replaceState(null, '', location.pathname + (state.size ? '?' + state : ''));
   }
-  renderSearch = display;
+  renderSearch = () => display(false);
   let debounce;
-  input.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(display, 120); });
-  category.addEventListener('change', display); calorie.addEventListener('change', display); sort.addEventListener('change', display);
-  savedFilter.addEventListener('click', () => { savedFilter.setAttribute('aria-pressed', String(savedFilter.getAttribute('aria-pressed') !== 'true')); display(); });
-  document.querySelector('#clear-filters').addEventListener('click', () => { input.value = ''; category.value = ''; calorie.value = ''; sort.value = 'newest'; savedFilter.setAttribute('aria-pressed', 'false'); display(); input.focus(); });
-  fetch(input.dataset.index).then(response => { if (!response.ok) throw Error('Search unavailable'); return response.json(); }).then(data => { entries = data; display(); }).catch(() => { status.textContent = 'Search could not load. Refresh to retry, or browse All recipes in the footer.'; });
+  input.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(() => display(true), 120); });
+  [category, calorie, alcohol, time, spirit, flavor, sort].forEach(control => control.addEventListener('change', () => display(true)));
+  savedFilter.addEventListener('click', () => { savedFilter.setAttribute('aria-pressed', String(savedFilter.getAttribute('aria-pressed') !== 'true')); display(true); });
+  searchMore?.addEventListener('click', () => { searchLimit += searchPageSize; display(false); });
+  document.querySelector('#clear-filters').addEventListener('click', () => {
+    input.value = ''; category.value = ''; calorie.value = ''; alcohol.value = ''; time.value = ''; spirit.value = ''; flavor.value = ''; sort.value = 'newest';
+    savedFilter.setAttribute('aria-pressed', 'false'); display(true); input.focus();
+  });
+  fetch(input.dataset.index).then(response => { if (!response.ok) throw Error('Search unavailable'); return response.json(); }).then(data => { entries = data; display(true); }).catch(() => {
+    status.textContent = 'Search could not load. Refresh to retry, or browse All recipes in the footer.';
+  });
 }
 
 
