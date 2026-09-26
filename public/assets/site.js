@@ -108,41 +108,124 @@ if (input) {
 }
 
 
-// Community ratings are enabled only when data/site.json supplies a persistent API endpoint.
-document.querySelectorAll('[data-rating]').forEach(async panel => {
-  const endpoint = panel.dataset.endpoint;
+// Reader comments and ratings use the external feedback API so they keep working
+// even if the website repository is private.
+document.querySelectorAll('[data-feedback]').forEach(async panel => {
+  const endpoint = (panel.dataset.endpoint || '').replace(/\/$/, '');
   const slug = panel.dataset.slug;
-  const summary = panel.querySelector('[data-rating-summary]');
-  const status = panel.querySelector('[data-rating-status]');
-  const buttons = [...panel.querySelectorAll('[data-rating-value]')];
   if (!endpoint || !slug) return;
-  const render = data => {
-    const average = Number(data.average || 0);
-    const count = Number(data.count || 0);
-    summary.textContent = count ? `${average.toFixed(1)} out of 5 from ${count} rating${count === 1 ? '' : 's'}.` : 'No ratings yet. Be the first to rate it.';
+
+  const summary = panel.querySelector('[data-rating-summary]');
+  const ratingStatus = panel.querySelector('[data-rating-status]');
+  const ratingButtons = [...panel.querySelectorAll('[data-rating-value]')];
+  const commentsBox = panel.querySelector('[data-comments]');
+  const commentForm = panel.querySelector('[data-comment-form]');
+  const commentStatus = panel.querySelector('[data-comment-status]');
+  const api = endpoint + '/api/recipes/' + encodeURIComponent(slug);
+
+  const safeText = value => typeof value === 'string' ? value : '';
+  const renderRating = data => {
+    const average = Number(data.rating?.average || 0);
+    const count = Number(data.rating?.count || 0);
+    summary.textContent = count
+      ? `${average.toFixed(1)} out of 5 from ${count} rating${count === 1 ? '' : 's'}.`
+      : 'No ratings yet. Be the first to rate it.';
   };
+  const renderComments = data => {
+    const comments = Array.isArray(data.comments) ? data.comments : [];
+    const fragment = document.createDocumentFragment();
+    if (!comments.length) {
+      const p = document.createElement('p');
+      p.className = 'comment-empty';
+      p.textContent = 'No approved comments yet.';
+      fragment.append(p);
+    } else {
+      for (const item of comments) {
+        const article = document.createElement('article');
+        article.className = 'reader-comment';
+        const meta = document.createElement('p');
+        meta.className = 'reader-comment-meta';
+        const strong = document.createElement('strong');
+        strong.textContent = safeText(item.name) || 'Reader';
+        const time = document.createElement('time');
+        time.dateTime = safeText(item.createdAt);
+        const date = new Date(item.createdAt);
+        time.textContent = Number.isNaN(date.getTime()) ? '' : date.toLocaleDateString(undefined, {year:'numeric',month:'short',day:'numeric'});
+        meta.append(strong);
+        if (time.textContent) meta.append(' · ', time);
+        const body = document.createElement('p');
+        body.textContent = safeText(item.body);
+        article.append(meta, body);
+        fragment.append(article);
+      }
+    }
+    commentsBox.replaceChildren(fragment);
+  };
+  const load = async () => {
+    const response = await fetch(api + '/feedback', {headers:{'Accept':'application/json'}});
+    if (!response.ok) throw Error('Feedback service unavailable');
+    const data = await response.json();
+    renderRating(data);
+    renderComments(data);
+  };
+
   try {
-    const response = await fetch(endpoint + '?slug=' + encodeURIComponent(slug), {headers:{'Accept':'application/json'}});
-    if (!response.ok) throw Error('Rating service unavailable');
-    render(await response.json());
+    await load();
   } catch {
-    summary.textContent = 'Ratings are temporarily unavailable.';
-    buttons.forEach(button => button.disabled = true);
+    summary.textContent = 'Reader feedback is temporarily unavailable.';
+    commentsBox.innerHTML = '<p class="comment-empty">Comments are temporarily unavailable.</p>';
+    ratingButtons.forEach(button => button.disabled = true);
+    commentForm.querySelectorAll('input,textarea,button').forEach(el => el.disabled = true);
     return;
   }
-  buttons.forEach(button => button.addEventListener('click', async () => {
+
+  ratingButtons.forEach(button => button.addEventListener('click', async () => {
     const rating = Number(button.dataset.ratingValue);
-    buttons.forEach(item => item.disabled = true);
-    status.textContent = 'Saving your rating…';
+    ratingButtons.forEach(item => item.disabled = true);
+    ratingStatus.textContent = 'Saving your rating…';
     try {
-      const response = await fetch(endpoint, {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({slug,rating})});
+      const response = await fetch(api + '/rating', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify({rating})
+      });
       if (!response.ok) throw Error('Could not save rating');
-      render(await response.json());
-      status.textContent = 'Thanks — your rating has been recorded.';
-      buttons.forEach(item => item.classList.toggle('selected', Number(item.dataset.ratingValue) <= rating));
+      const data = await response.json();
+      renderRating({rating:data});
+      ratingStatus.textContent = 'Thanks — your rating has been recorded.';
+      ratingButtons.forEach(item => item.classList.toggle('selected', Number(item.dataset.ratingValue) <= rating));
     } catch {
-      status.textContent = 'Your rating could not be saved. Please try again later.';
-      buttons.forEach(item => item.disabled = false);
+      ratingStatus.textContent = 'Your rating could not be saved. Please try again later.';
+    } finally {
+      ratingButtons.forEach(item => item.disabled = false);
     }
   }));
+
+  commentForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const submit = commentForm.querySelector('button[type="submit"]');
+    submit.disabled = true;
+    commentStatus.textContent = 'Submitting your comment…';
+    const form = new FormData(commentForm);
+    const payload = {
+      name:String(form.get('name') || '').trim(),
+      body:String(form.get('body') || '').trim(),
+      website:String(form.get('website') || '').trim()
+    };
+    try {
+      const response = await fetch(api + '/comments', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body:JSON.stringify(payload)
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw Error(data.error || 'Could not submit comment');
+      commentForm.reset();
+      commentStatus.textContent = 'Thanks — your comment was submitted for review.';
+    } catch (error) {
+      commentStatus.textContent = error.message || 'Your comment could not be submitted. Please try again later.';
+    } finally {
+      submit.disabled = false;
+    }
+  });
 });

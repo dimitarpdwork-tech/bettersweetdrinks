@@ -1,0 +1,14 @@
+{
+  "name": "better-sweet-drinks-feedback",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "db:local": "wrangler d1 execute better-sweet-drinks-feedback --local --file=schema.sql",
+    "db:remote": "wrangler d1 execute better-sweet-drinks-feedback --remote --file=schema.sql"
+  },
+  "devDependencies": {
+    "wrangler": "^4.40.0"
+  }
+}
