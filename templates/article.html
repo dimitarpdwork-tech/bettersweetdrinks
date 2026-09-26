@@ -7,7 +7,7 @@
   <section class="recipe recipe-hero" id="recipe-{{ r.id }}">
     <div class="recipe-hero-main">
       <div class="recipe-overview">
-        {% if r.image %}<img class="recipe-hero-image" src="{{ link(r.image) if r.image.startswith('/') else r.image }}" alt="{{ doc.featuredImageAlt or r.title }}" width="360" height="360" fetchpriority="high">{% endif %}
+        {% if r.image %}<img class="recipe-hero-image" src="{{ link(r.image) if r.image.startswith('/') else r.image }}" {% if r.image.startswith('/') and image_srcset(r.image) %}srcset="{{ image_srcset(r.image) }}" sizes="(max-width: 700px) 92vw, (max-width: 980px) 190px, 230px"{% endif %} alt="{{ doc.featuredImageAlt or r.title }}" width="360" height="360" fetchpriority="high" decoding="async">{% endif %}
         <div class="recipe-overview-copy">
           <p class="eyebrow">{{ r.category or (doc.categories[0]|replace('-',' ') if doc.categories else 'Drink recipe') }}</p>
           <h1>{{ doc.displayTitle or doc.title }}</h1>
@@ -15,13 +15,18 @@
           <div class="recipe-intro">{{ doc.recipeIntro|safe }}</div>
           <p class="recipe-meta-line"><strong>{{ r.yield }}</strong>{% if r.totalTime %}<span>·</span><strong>{{ r.totalTime|replace('PT','')|replace('H',' hr ')|replace('M',' min ')|replace('S',' sec') }}</strong>{% endif %}</p>
           <p class="tested-inline">Tested by Better Sweet Drinks. <a href="{{ link('/about-us/') }}#how-we-test">How we test recipes</a>.</p>
-          <div class="hero-actions"><button data-print>Print recipe</button><button class="quiet-button" data-save="{{ link(doc.url) }}" aria-pressed="false" hidden>Save</button><button class="quiet-button" data-focus aria-pressed="false" hidden>Recipe mode</button></div>
+          <div class="hero-actions"><button data-print>Print recipe</button><button class="quiet-button" data-save="{{ link(doc.url) }}" aria-pressed="false" hidden>Save</button></div>
         </div>
       </div>
 
       <div class="hero-ingredients" id="ingredients">{% if doc.recipeIngredientAnchor and doc.recipeIngredientAnchor != 'ingredients' %}<span id="{{ doc.recipeIngredientAnchor }}" class="anchor-alias" aria-hidden="true"></span>{% endif %}
-        <div class="ingredient-heading"><div><p class="eyebrow">WHAT YOU NEED</p><h2>Ingredients</h2></div><span class="ingredient-count" role="status"></span><button class="quiet-button" data-reset hidden>Reset checklist</button></div>
-        <ul class="ingredients">{% for ingredient in r.ingredients %}<li><label><input type="checkbox"> <span>{{ ingredient }}</span></label></li>{% endfor %}</ul>
+        <div class="ingredient-heading"><div><p class="eyebrow">WHAT YOU NEED</p><h2>Ingredients</h2></div><span class="ingredient-count" role="status"></span></div>
+        <div class="ingredient-tools" data-recipe-tools data-base-servings="{{ r.servingCount }}" data-recipe-id="{{ r.id }}">
+          <div class="serving-control" aria-label="Adjust servings"><span>Servings</span><button type="button" class="quiet-button" data-serving-minus aria-label="Decrease servings">−</button><strong data-serving-count>{{ r.servingCount|int if r.servingCount == r.servingCount|int else r.servingCount }}</strong><button type="button" class="quiet-button" data-serving-plus aria-label="Increase servings">+</button></div>
+          <div class="unit-toggle" role="group" aria-label="Ingredient units"><button type="button" class="quiet-button selected" data-unit="us" aria-pressed="true">US</button><button type="button" class="quiet-button" data-unit="metric" aria-pressed="false">Metric</button></div>
+          <button class="quiet-button reset-checklist" data-reset hidden>Reset checklist</button>
+        </div>
+        <ul class="ingredients">{% for ingredient in r.ingredients %}<li><label><input type="checkbox" data-ingredient-check="{{ loop.index0 }}"> <span data-ingredient-text data-original="{{ ingredient|e }}">{{ ingredient }}</span></label></li>{% endfor %}</ul>
       </div>
     </div>
 
@@ -30,7 +35,7 @@
         <p class="eyebrow">AT A GLANCE</p>
         <h2>Nutrition & strength</h2>
         <div class="fact-grid">
-          <div><span>Serving</span><strong>{{ r.yield }}</strong></div>
+          <div><span>Serving</span><strong data-serving-label>{{ r.yield }}</strong></div>
           {% if r.totalTime %}<div><span>Total time</span><strong>{{ r.totalTime|replace('PT','')|replace('H',' hr ')|replace('M',' min ')|replace('S',' sec') }}</strong></div>{% endif %}
           {% if r.estimatedCalories is not none %}<div><span>Calories</span><strong>{% if r.caloriesEstimated %}≈ {% endif %}{{ r.estimatedCalories }} kcal</strong></div>{% endif %}
           {% if r.estimatedAbv is not none %}<div><span>Alcohol</span><strong>{% if r.abvEstimated %}≈ {% endif %}{{ r.estimatedAbv }}% ABV</strong></div>{% endif %}
@@ -53,6 +58,7 @@
           <p class="rating-status" data-rating-status role="status" aria-live="polite"></p>
         </div>
 
+        <button type="button" class="quiet-button comment-toggle" data-comment-toggle>Leave a comment</button>
         <form class="comment-form rating-followup" data-comment-form hidden>
           <div class="comment-prompt"><p class="eyebrow">ADD YOUR TAKE</p><h3>Leave a comment</h3></div>
           <div class="comment-fields">
@@ -66,7 +72,7 @@
         </form>
 
         <details id="reader-comments" class="community-comments">
-          <summary>Check comments</summary>
+          <summary>Check comments <span data-comment-count></span></summary>
           <div data-comments><p class="comment-empty">Loading comments…</p></div>
         </details>
       </section>
@@ -86,10 +92,11 @@
 
   {% if recipes|length > 1 %}
   <section class="additional-recipes"><h2>More recipes in this guide</h2>
-    {% for extra in recipes[1:] %}<section class="recipe secondary-recipe" id="recipe-{{ extra.id }}"><h3>{{ extra.title }}</h3><p>{{ extra.description }}</p><div class="ingredient-heading"><h4>Ingredients</h4><span class="ingredient-count" role="status"></span><button class="quiet-button" data-reset hidden>Reset checklist</button></div><ul class="ingredients">{% for ingredient in extra.ingredients %}<li><label><input type="checkbox"> <span>{{ ingredient }}</span></label></li>{% endfor %}</ul><h4>Instructions</h4><div class="prose recipe-steps">{{ extra.instructions|safe }}</div></section>{% endfor %}
+    {% for extra in recipes[1:] %}<section class="recipe secondary-recipe" id="recipe-{{ extra.id }}"><h3>{{ extra.title }}</h3><p>{{ extra.description }}</p><div class="ingredient-heading"><h4>Ingredients</h4><span class="ingredient-count" role="status"></span><button class="quiet-button" data-reset hidden>Reset checklist</button></div><ul class="ingredients">{% for ingredient in extra.ingredients %}<li><label><input type="checkbox" data-ingredient-check="{{ loop.index0 }}"> <span>{{ ingredient }}</span></label></li>{% endfor %}</ul><h4>Instructions</h4><div class="prose recipe-steps">{{ extra.instructions|safe }}</div></section>{% endfor %}
   </section>
   {% endif %}
 
+  <nav class="recipe-mobile-nav" aria-label="Recipe shortcuts"><a href="#ingredients">Ingredients</a><a href="#how-to-make-it">Method</a><button type="button" data-save="{{ link(doc.url) }}" aria-pressed="false">Save</button></nav>
   {% if comments %}<section class="comments"><h2>Reader comments</h2>{% for c in comments %}<article><p><strong>{{ c.author }}</strong> · <time>{{ c.date }}</time></p><div>{{ c.body|safe }}</div></article>{% endfor %}</section>{% endif %}
 </article>
 {% else %}
