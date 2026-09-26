@@ -562,6 +562,100 @@
       "kcalPer100ml": 34,
       "abv": 0,
       "liquid": false
+    },
+    {
+      "name": "cachaca",
+      "match": [
+        "cachaça",
+        "cachaca",
+        "ypióca",
+        "ypioca"
+      ],
+      "kcalPer100ml": 231,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "sake",
+      "match": [
+        "sake"
+      ],
+      "kcalPer100ml": 134,
+      "abv": 15,
+      "liquid": true
+    },
+    {
+      "name": "sherry",
+      "match": [
+        "sherry"
+      ],
+      "kcalPer100ml": 116,
+      "abv": 17,
+      "liquid": true
+    },
+    {
+      "name": "absinthe",
+      "match": [
+        "absinthe"
+      ],
+      "kcalPer100ml": 295,
+      "abv": 55,
+      "liquid": true
+    },
+    {
+      "name": "hard cider",
+      "match": [
+        "hard cider",
+        "cider"
+      ],
+      "kcalPer100ml": 50,
+      "abv": 5,
+      "liquid": true
+    },
+    {
+      "name": "sour mix",
+      "match": [
+        "sour mix"
+      ],
+      "kcalPer100ml": 85,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "ginger beer",
+      "match": [
+        "ginger beer"
+      ],
+      "kcalPer100ml": 42,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "ginger ale",
+      "match": [
+        "ginger ale"
+      ],
+      "kcalPer100ml": 34,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "coconut cream",
+      "match": [
+        "coconut cream"
+      ],
+      "kcalPer100ml": 330,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "coconut milk",
+      "match": [
+        "coconut milk"
+      ],
+      "kcalPer100ml": 180,
+      "abv": 0,
+      "liquid": true
     }
   ]
 }
