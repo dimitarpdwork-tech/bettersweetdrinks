@@ -55,3 +55,8 @@
   .recipe-mobile-nav{display:grid;grid-template-columns:1fr 1fr 1fr;position:fixed;left:10px;right:10px;bottom:10px;z-index:25;background:#fff;border:1px solid var(--line);box-shadow:0 8px 28px rgba(35,22,25,.16);border-radius:5px;overflow:hidden}
   .recipe-mobile-nav a,.recipe-mobile-nav button{display:flex;align-items:center;justify-content:center;min-height:46px;padding:8px 6px;background:#fff;color:var(--ink);border:0;border-right:1px solid var(--line);font-size:12px;font-weight:bold;text-decoration:none}.recipe-mobile-nav>*:last-child{border-right:0}.recipe-mobile-nav button[aria-pressed="true"]{background:var(--blush);color:var(--accent)}
 }
+
+
+/* Collection discovery and progressive loading. */
+.listing-tools{row-gap:10px}.listing-tools label{min-width:150px}.listing-tools select{min-width:150px}.load-more-wrap{display:flex;justify-content:center;margin:30px 0 8px}.load-more{min-width:210px}.search-page .search-controls{row-gap:12px}.search-page .search-controls label{min-width:150px}.search-page .search-controls select{min-width:150px}
+@media(max-width:700px){.listing-tools label,.search-page .search-controls label{min-width:calc(50% - 8px);flex:1 1 calc(50% - 8px)}.listing-tools select,.search-page .search-controls select{width:100%;min-width:0}.listing-tools .listing-filter-status{flex-basis:100%}}
