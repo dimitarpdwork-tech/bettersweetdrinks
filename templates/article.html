@@ -19,7 +19,7 @@
         </div>
       </div>
 
-      <div class="hero-ingredients">
+      <div class="hero-ingredients" id="ingredients">{% if doc.recipeIngredientAnchor and doc.recipeIngredientAnchor != 'ingredients' %}<span id="{{ doc.recipeIngredientAnchor }}" class="anchor-alias" aria-hidden="true"></span>{% endif %}
         <div class="ingredient-heading"><div><p class="eyebrow">WHAT YOU NEED</p><h2>Ingredients</h2></div><span class="ingredient-count" role="status"></span><button class="quiet-button" data-reset hidden>Reset checklist</button></div>
         <ul class="ingredients">{% for ingredient in r.ingredients %}<li><label><input type="checkbox"> <span>{{ ingredient }}</span></label></li>{% endfor %}</ul>
       </div>
@@ -74,7 +74,7 @@
     </aside>
   </section>
 
-  <section class="recipe-method" id="how-to-make-it">
+  <section class="recipe-method" id="how-to-make-it">{% if doc.recipeMethodAnchor and doc.recipeMethodAnchor != 'how-to-make-it' %}<span id="{{ doc.recipeMethodAnchor }}" class="anchor-alias" aria-hidden="true"></span>{% endif %}
     <p class="eyebrow">METHOD</p>
     <h2>How to make it</h2>
     <div class="prose recipe-steps">{{ doc.recipeMethod|safe }}</div>
@@ -97,6 +97,14 @@
   <p class="breadcrumb"><a href="{{ link('/') }}">Home</a> / {% if doc.categories %}<a href="{{ link('/'+doc.categories[0]+'/') }}">{{ doc.categories[0]|replace('-',' ')|title }}</a>{% endif %}</p>
   <h1>{{ doc.displayTitle or doc.title }}</h1>
   <p class="byline">By <a href="{{ link('/author/'+doc.authorSlug+'/') }}">{{ doc.author }}</a> · <time datetime="{{ doc.publishDate }}">{{ doc.publishDate }}</time>{% if doc.updatedDate and doc.updatedDate != doc.publishDate %} · Updated <time datetime="{{ doc.updatedDate }}">{{ doc.updatedDate }}</time>{% endif %}{% if doc.kind=='posts' %} · {{ doc.readingMinutes }} min read{% endif %}</p>
+  {% if doc.kind=='posts' and site.feedback is defined and site.feedback.enabled %}
+  <section id="reader-feedback" class="reader-feedback feedback-panel feedback-top" data-feedback data-endpoint="{{ site.feedback.endpoint }}" data-slug="{{ doc.slug }}">
+    <div class="feedback-top-copy"><p class="eyebrow">TASTED OR TRIED THIS?</p><h2>Rate this drink</h2><p class="rating-summary" data-rating-summary>Loading reader ratings…</p></div>
+    <div class="feedback-rating"><div class="rating-stars" role="group" aria-label="Rate this page from 1 to 5 stars">{% for n in range(1,6) %}<button type="button" class="rating-star" data-rating-value="{{ n }}" aria-label="{{ n }} star{% if n != 1 %}s{% endif %}">★</button>{% endfor %}</div><p class="rating-status" data-rating-status role="status" aria-live="polite"></p></div>
+    <form class="comment-form rating-followup" data-comment-form hidden><div class="comment-prompt"><p class="eyebrow">ADD YOUR TAKE</p><h3>Leave a comment</h3></div><div class="comment-fields"><label>Your name <input name="name" maxlength="60" autocomplete="name" required></label><label class="comment-wide">Comment <textarea name="body" maxlength="1200" rows="4" required></textarea></label><label class="feedback-honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label></div><button type="submit">Submit comment</button><p class="comment-note">Comments are reviewed before they appear publicly.</p><p class="comment-status" data-comment-status role="status" aria-live="polite"></p></form>
+    <details id="reader-comments" class="community-comments"><summary>Check comments</summary><div data-comments><p class="comment-empty">Loading comments…</p></div></details>
+  </section>
+  {% endif %}
   {% if doc.toc|length > 2 %}<details class="article-toc"><summary>In this article <span>{{ doc.toc|length }} sections</span></summary><ol>{% for entry in doc.toc %}<li><a href="#{{ entry.id }}">{{ entry.title }}</a></li>{% endfor %}</ol></details>{% endif %}
   <div class="prose">{{ doc.body|safe }}</div>
 </article>
