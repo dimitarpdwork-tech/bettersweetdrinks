@@ -1,28 +1,26 @@
 {% extends 'base.html' %}{% block content %}<article class="article"><p class="breadcrumb"><a href="{{ link('/') }}">Home</a> / {% if doc.categories %}<a href="{{ link('/'+doc.categories[0]+'/') }}">{{ doc.categories[0]|replace('-',' ')|title }}</a>{% endif %}</p><h1>{{ doc.displayTitle or doc.title }}</h1><p class="byline">By <a href="{{ link('/author/'+doc.authorSlug+'/') }}">{{ doc.author }}</a> · <time datetime="{{ doc.publishDate }}">{{ doc.publishDate }}</time>{% if doc.updatedDate and doc.updatedDate != doc.publishDate %} · Updated <time datetime="{{ doc.updatedDate }}">{{ doc.updatedDate }}</time>{% endif %}{% if doc.kind=='posts' %} · {{ doc.readingMinutes }} min read{% endif %}</p>{% if doc.kind=='posts' %}<p class="tested-note">Recipe tested by Better Sweet Drinks before publication. <a href="{{ link('/about-us/') }}#how-we-test">How we test recipes</a>.</p>{% endif %}
-{% if recipes %}<div class="recipe-actions"><a class="button" href="#recipe-{{ recipes[0].id }}">Jump to Recipe</a><button data-print>Print recipe</button><button class="quiet-button" data-focus aria-pressed="false" hidden>Recipe mode</button><button class="quiet-button" data-save="{{ link(doc.url) }}" aria-pressed="false" hidden>Save</button></div>{% endif %}
-{% if doc.toc|length > 2 %}<details class="article-toc"><summary>In this article <span>{{ doc.toc|length }} sections</span></summary><ol>{% for entry in doc.toc %}<li><a href="#{{ entry.id }}">{{ entry.title }}</a></li>{% endfor %}</ol></details>{% endif %}
-<div class="prose">{{ doc.body|safe }}</div>
-{% for r in recipes %}<section class="recipe" id="recipe-{{ r.id }}"><div class="recipe-heading">{% if r.image %}<img src="{{ link(r.image) if r.image.startswith('/') else r.image }}" alt="{{ r.title }}" width="220" height="220" loading="lazy">{% endif %}<div><h2>{{ r.title }}</h2><p>{{ r.description }}</p><p>Yield: {{ r.yield }}{% if r.totalTime %} · Total time: {{ r.totalTime|replace('PT','')|replace('M',' min ')|replace('S',' sec') }}{% endif %}</p><button data-print>Print Recipe</button></div></div><div class="ingredient-heading"><h3>Ingredients</h3><span class="ingredient-count" role="status"></span><button class="quiet-button" data-reset hidden>Reset checklist</button></div><ul class="ingredients">{% for ingredient in r.ingredients %}<li><label><input type="checkbox"> <span>{{ ingredient }}</span></label></li>{% endfor %}</ul><h3>Instructions</h3><div class="prose recipe-steps">{{ r.instructions|safe }}</div>{% if r.notes %}<h3>Notes</h3><div class="prose">{{ r.notes|safe }}</div>{% endif %}{% if r.nutrition %}<details class="nutrition"><summary>Nutrition information</summary><dl>{% for k,v in r.nutrition.items() if k!='@type' %}<dt>{{ k|replace('Content','') }}</dt><dd>{{ v }}</dd>{% endfor %}</dl></details>{% endif %}</section>{% endfor %}
-{% if comments %}<section class="comments"><h2>Reader comments</h2>{% for c in comments %}<article><p><strong>{{ c.author }}</strong> · <time>{{ c.date }}</time></p><div>{{ c.body|safe }}</div></article>{% endfor %}</section>{% endif %}</article>
-{% if seasonal_links %}<aside class="seasonal-links" aria-label="Seasonal collections"><p class="eyebrow">Part of our seasonal collection</p>{% for hub in seasonal_links %}<a href="{{ link('/'+hub.slug+'/') }}">{{ hub.title }} <span aria-hidden="true">→</span></a>{% endfor %}</aside>{% endif %}
-{% if related %}<section class="related"><h2>More drink recipes</h2>{% with items=related %}{% include 'cards.html' %}{% endwith %}</section>{% endif %}
 {% if doc.kind=='posts' and site.feedback is defined and site.feedback.enabled %}
-<section class="reader-feedback feedback-panel" data-feedback data-endpoint="{{ site.feedback.endpoint }}" data-slug="{{ doc.slug }}">
-  <p class="eyebrow">READER FEEDBACK</p>
-  <h2>Made it? Rate it and tell us how it went.</h2>
-  <div class="feedback-rating">
+<section class="reader-feedback feedback-panel feedback-top" data-feedback data-endpoint="{{ site.feedback.endpoint }}" data-slug="{{ doc.slug }}">
+  <div class="feedback-top-copy">
+    <p class="eyebrow">TASTED THIS RECIPE?</p>
+    <h2>Rate this drink</h2>
     <p class="rating-summary" data-rating-summary>Loading reader ratings…</p>
+  </div>
+  <div class="feedback-rating">
     <div class="rating-stars" role="group" aria-label="Rate this recipe from 1 to 5 stars">
       {% for n in range(1,6) %}<button type="button" class="rating-star" data-rating-value="{{ n }}" aria-label="{{ n }} star{% if n != 1 %}s{% endif %}">★</button>{% endfor %}
     </div>
     <p class="rating-status" data-rating-status role="status" aria-live="polite"></p>
   </div>
 
-  <form class="comment-form" data-comment-form>
-    <h3>Leave a comment</h3>
+  <form class="comment-form rating-followup" data-comment-form hidden>
+    <div class="comment-prompt">
+      <p class="eyebrow">THANKS FOR RATING IT</p>
+      <h3>Want to tell other readers how it went?</h3>
+    </div>
     <div class="comment-fields">
       <label>Your name <input name="name" maxlength="60" autocomplete="name" required></label>
-      <label class="comment-wide">Comment <textarea name="body" maxlength="1200" rows="5" required placeholder="What did you change? Would you make it again?"></textarea></label>
+      <label class="comment-wide">Comment <textarea name="body" maxlength="1200" rows="4" required placeholder="What did you change? Would you make it again?"></textarea></label>
       <label class="feedback-honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
     </div>
     <button type="submit">Submit comment</button>
@@ -30,9 +28,17 @@
     <p class="comment-status" data-comment-status role="status" aria-live="polite"></p>
   </form>
 
-  <div class="community-comments">
-    <h3>Reader comments</h3>
+  <details class="community-comments">
+    <summary>Read reader comments</summary>
     <div data-comments><p class="comment-empty">Loading comments…</p></div>
-  </div>
+  </details>
 </section>
-{% endif %}{% endblock %}
+{% endif %}
+{% if recipes %}<div class="recipe-actions"><a class="button" href="#recipe-{{ recipes[0].id }}">Jump to Recipe</a><button data-print>Print recipe</button><button class="quiet-button" data-focus aria-pressed="false" hidden>Recipe mode</button><button class="quiet-button" data-save="{{ link(doc.url) }}" aria-pressed="false" hidden>Save</button></div>{% endif %}
+{% if doc.toc|length > 2 %}<details class="article-toc"><summary>In this article <span>{{ doc.toc|length }} sections</span></summary><ol>{% for entry in doc.toc %}<li><a href="#{{ entry.id }}">{{ entry.title }}</a></li>{% endfor %}</ol></details>{% endif %}
+<div class="prose">{{ doc.body|safe }}</div>
+{% for r in recipes %}<section class="recipe" id="recipe-{{ r.id }}"><div class="recipe-heading">{% if r.image %}<img src="{{ link(r.image) if r.image.startswith('/') else r.image }}" alt="{{ r.title }}" width="220" height="220" loading="lazy">{% endif %}<div><h2>{{ r.title }}</h2><p>{{ r.description }}</p><p>Yield: {{ r.yield }}{% if r.totalTime %} · Total time: {{ r.totalTime|replace('PT','')|replace('M',' min ')|replace('S',' sec') }}{% endif %}</p><button data-print>Print Recipe</button></div></div><div class="ingredient-heading"><h3>Ingredients</h3><span class="ingredient-count" role="status"></span><button class="quiet-button" data-reset hidden>Reset checklist</button></div><ul class="ingredients">{% for ingredient in r.ingredients %}<li><label><input type="checkbox"> <span>{{ ingredient }}</span></label></li>{% endfor %}</ul><h3>Instructions</h3><div class="prose recipe-steps">{{ r.instructions|safe }}</div>{% if r.notes %}<h3>Notes</h3><div class="prose">{{ r.notes|safe }}</div>{% endif %}{% if r.nutrition %}<details class="nutrition"><summary>Nutrition information</summary><dl>{% for k,v in r.nutrition.items() if k!='@type' %}<dt>{{ k|replace('Content','') }}</dt><dd>{{ v }}</dd>{% endfor %}</dl></details>{% endif %}</section>{% endfor %}
+{% if comments %}<section class="comments"><h2>Reader comments</h2>{% for c in comments %}<article><p><strong>{{ c.author }}</strong> · <time>{{ c.date }}</time></p><div>{{ c.body|safe }}</div></article>{% endfor %}</section>{% endif %}</article>
+{% if seasonal_links %}<aside class="seasonal-links" aria-label="Seasonal collections"><p class="eyebrow">Part of our seasonal collection</p>{% for hub in seasonal_links %}<a href="{{ link('/'+hub.slug+'/') }}">{{ hub.title }} <span aria-hidden="true">→</span></a>{% endfor %}</aside>{% endif %}
+{% if related %}<section class="related"><h2>More drink recipes</h2>{% with items=related %}{% include 'cards.html' %}{% endwith %}</section>{% endif %}
+{% endblock %}
