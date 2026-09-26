@@ -10,7 +10,9 @@ author: Better Sweet Drinks
 authorSlug: admin
 categories:
 - cocktails
-tags: []
+tags:
+- themed-drinks
+- new-years-eve-drinks
 featuredImage: /images/uploads/new-years-pomegranate-champagne-cocktail.jpg
 featuredImageAlt: Pomegranate sparkling wine cocktail with lemon twist in a flute
 recipeIds:
