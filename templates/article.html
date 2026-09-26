@@ -7,7 +7,7 @@
   <section class="recipe recipe-hero" id="recipe-{{ r.id }}" data-recipe-id="{{ r.id }}" data-base-servings="{{ r.yieldCount }}" data-yield-text="{{ r.yield }}">
     <div class="recipe-hero-main">
       <div class="recipe-overview">
-        {% if r.image %}<img class="recipe-hero-image" src="{{ link(r.image) if r.image.startswith('/') else r.image }}" alt="{{ doc.featuredImageAlt or r.title }}" width="360" height="360" fetchpriority="high">{% endif %}
+        {% if r.image %}<img class="recipe-hero-image" src="{{ link(r.image) if r.image.startswith('/') else r.image }}" {% if r.image.startswith('/') and responsive_srcset(r.image) %}srcset="{{ responsive_srcset(r.image) }}" sizes="(max-width:700px) 92vw, (max-width:980px) 190px, 230px"{% endif %} alt="{{ doc.featuredImageAlt or r.title }}" width="360" height="360" fetchpriority="high" decoding="async">{% endif %}
         <div class="recipe-overview-copy">
           <p class="eyebrow">{{ r.category or (doc.categories[0]|replace('-',' ') if doc.categories else 'Drink recipe') }}</p>
           <h1>{{ doc.displayTitle or doc.title }}</h1>
