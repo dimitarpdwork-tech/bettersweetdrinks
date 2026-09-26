@@ -42,3 +42,16 @@
 @media print{.recipe-page{max-width:none;margin:0}.recipe-page>.breadcrumb,.recipe-hero-side,.hero-actions,.tested-inline,.ingredient-count,.recipe-toc,.article-continuation,.additional-recipes,.recipe-page>.comments{display:none!important}.recipe-page .recipe-hero.recipe{display:block}.recipe-hero-main{border:0;padding:0}.recipe-overview{grid-template-columns:120px 1fr}.recipe-hero-image{width:120px;height:120px}.hero-ingredients .ingredients{display:block}.recipe-method{max-width:none;border-top:1px solid #bbb;margin-top:18px;padding-top:18px}.recipe-method .recipe-steps{display:block!important}}
 
 .anchor-alias{display:block;height:0;position:relative;top:-18px;visibility:hidden}
+
+
+/* Recipe usability controls: scaling, units, persistent checklist and mobile shortcuts. */
+.ingredient-tools{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin:12px 0 4px;padding:10px 12px;border:1px solid var(--line);background:var(--blush)}
+.serving-control,.unit-control{display:flex;align-items:center;gap:7px;font-size:12px;font-weight:bold}.serving-control>span:first-child,.unit-control>span:first-child{margin-right:2px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;font-size:10px}
+.serving-control button,.unit-control button{min-width:34px;padding:5px 8px;font-size:12px}.serving-control output{min-width:30px;text-align:center;font-size:14px;color:var(--ink)}.unit-control button.selected{background:var(--accent);border-color:var(--accent);color:#fff}.unit-control button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#fff}
+.recipe-mobile-nav{display:none}.comment-composer{margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}.comment-composer>summary{cursor:pointer;font-weight:bold;color:var(--accent);font-size:13px}.comment-composer[open]>summary{margin-bottom:10px}.comment-composer .comment-form{margin:0;padding:0;border:0}.community-comments summary span{font-weight:normal;color:var(--muted)}
+@media(max-width:700px){
+  body:has(.recipe-page){padding-bottom:64px}
+  .ingredient-tools{align-items:stretch}.serving-control,.unit-control{flex:1 1 auto;justify-content:center}
+  .recipe-mobile-nav{display:grid;grid-template-columns:1fr 1fr 1fr;position:fixed;left:10px;right:10px;bottom:10px;z-index:25;background:#fff;border:1px solid var(--line);box-shadow:0 8px 28px rgba(35,22,25,.16);border-radius:5px;overflow:hidden}
+  .recipe-mobile-nav a,.recipe-mobile-nav button{display:flex;align-items:center;justify-content:center;min-height:46px;padding:8px 6px;background:#fff;color:var(--ink);border:0;border-right:1px solid var(--line);font-size:12px;font-weight:bold;text-decoration:none}.recipe-mobile-nav>*:last-child{border-right:0}.recipe-mobile-nav button[aria-pressed="true"]{background:var(--blush);color:var(--accent)}
+}
