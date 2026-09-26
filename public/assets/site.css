@@ -70,3 +70,5 @@
 /* Pantry finder. */
 .pantry-finder{display:grid;grid-template-columns:minmax(220px,.8fr) 1.2fr;gap:24px;align-items:end;margin:26px 0 28px;padding:22px;border:1px solid var(--line);border-left:6px solid var(--accent);background:var(--blush)}.pantry-finder h2{font-family:var(--display);font-size:30px;line-height:1.05;margin:3px 0 7px}.pantry-finder p{margin:0;color:var(--muted);font-size:13px;line-height:1.5}.pantry-finder label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}.pantry-row{display:flex;gap:8px}.pantry-row input{flex:1;min-width:0;border:1px solid var(--line);padding:11px;background:#fff}.pantry-row button{white-space:nowrap}.pantry-note{margin-top:7px!important;font-size:11px!important}.pantry-fit{display:inline-block;width:max-content;max-width:100%;margin:4px 0 2px!important;padding:5px 8px;background:var(--blush);border-left:3px solid var(--accent);font-size:11px!important;font-weight:bold;color:var(--ink)!important}
 @media(max-width:700px){.pantry-finder{grid-template-columns:1fr;padding:18px}.pantry-row{flex-direction:column}.pantry-row button{width:100%}}
+
+.feedback-top .comment-composer{grid-column:1/-1}
