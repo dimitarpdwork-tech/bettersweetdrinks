@@ -33,6 +33,38 @@ const readPantry = () => {
 const writePantry = pantry => {
   try { localStorage.setItem(PANTRY_KEY, JSON.stringify([...pantry])); return true; } catch { return false; }
 };
+const SHOPPING_KEY = 'bsd-shopping-items';
+const SHOPPING_CHECKED_KEY = 'bsd-shopping-checked';
+const readShopping = () => {
+  try {
+    const data=JSON.parse(localStorage.getItem(SHOPPING_KEY) || '[]');
+    return new Set(Array.isArray(data) ? data.filter(value=>typeof value==='string' && value.trim()).map(value=>value.trim().toLowerCase()) : []);
+  } catch { return new Set(); }
+};
+const writeShopping = shopping => {
+  try { localStorage.setItem(SHOPPING_KEY, JSON.stringify([...shopping])); return true; } catch { return false; }
+};
+const readShoppingChecked = () => {
+  try {
+    const data=JSON.parse(localStorage.getItem(SHOPPING_CHECKED_KEY) || '[]');
+    return new Set(Array.isArray(data) ? data.filter(value=>typeof value==='string') : []);
+  } catch { return new Set(); }
+};
+const writeShoppingChecked = checked => {
+  try { localStorage.setItem(SHOPPING_CHECKED_KEY, JSON.stringify([...checked])); } catch {}
+};
+const pantryCovers = (ingredient, pantry) => [...pantry].some(term=>ingredient.includes(term)||term.includes(ingredient));
+const shoppingHas = (ingredient, shopping) => [...shopping].some(term=>ingredient.includes(term)||term.includes(ingredient));
+const addShoppingItems = items => {
+  const pantry=readPantry(), shopping=readShopping();
+  let added=0;
+  items.map(value=>String(value).trim().toLowerCase()).filter(Boolean).forEach(item=>{
+    if(pantryCovers(item,pantry) || shoppingHas(item,shopping)) return;
+    shopping.add(item);added+=1;
+  });
+  writeShopping(shopping);
+  return added;
+};
 const pantryScore = (recipe, pantry) => {
   const terms=[...pantry].map(value=>value.toLowerCase());
   const ingredients=(recipe.pantryIngredients||[]).map(value=>value.toLowerCase());
@@ -50,6 +82,7 @@ function updateSaveButtons() {
 }
 let renderSearch = null;
 let renderMyBar = null;
+let renderRecipeShoppingButtons = null;
 document.addEventListener('click', event => {
   const button = event.target.closest('[data-save]');
   if (!button) return;
@@ -169,11 +202,35 @@ function createRecipeCard(p, options={}) {
   const parts=[photo,label,heading];
   if(facts.children.length) parts.push(facts);
   if(options.status){const status=document.createElement('p');status.className='pantry-match';status.textContent=options.status;parts.push(status);}
+  if(options.shoppingItems?.length){
+    const shopping=readShopping();
+    const pantry=readPantry();
+    const pending=options.shoppingItems.filter(item=>!pantryCovers(String(item).toLowerCase(),pantry)&&!shoppingHas(String(item).toLowerCase(),shopping));
+    const shop=document.createElement('button');shop.type='button';shop.className='quiet-button card-shopping-button';
+    if(pending.length){
+      shop.dataset.addShopping=JSON.stringify(pending);
+      shop.textContent=options.shoppingLabel || (pending.length===1 ? 'Add missing item to list' : 'Add '+pending.length+' missing items');
+    }else{
+      shop.disabled=true;shop.textContent='Missing items already listed';
+    }
+    parts.push(shop);
+  }
   const desc=document.createElement('p');desc.textContent=p.description.length>155?p.description.slice(0,152)+'…':p.description;parts.push(desc);
   const more=document.createElement('a');more.className='read-more';more.href=p.url;more.textContent='Make this drink ↗';parts.push(more);
   card.append(...parts);
   return card;
 }
+
+document.addEventListener('click',event=>{
+  const button=event.target.closest('[data-add-shopping]');
+  if(!button)return;
+  let items=[];
+  try{items=JSON.parse(button.dataset.addShopping||'[]');}catch{}
+  if(!Array.isArray(items)||!items.length)return;
+  const added=addShoppingItems(items);
+  if(saveStatus) saveStatus.textContent=added ? (added===1?'Added 1 ingredient to your shopping list.':'Added '+added+' ingredients to your shopping list.') : 'Those ingredients are already in My Bar or on your shopping list.';
+  renderMyBar?.();renderRecipeShoppingButtons?.();
+});
 
 const input = document.querySelector('#recipe-search');
 if (input) {
@@ -234,7 +291,7 @@ if (input) {
     const fragment = document.createDocumentFragment();
     for (const p of found) {
       const pantryStatus=pantryMode ? (p.pantryMissing===0 ? 'You can make this now' : 'Missing 1 ingredient') : '';
-      fragment.append(createRecipeCard(p,{status:pantryStatus}));
+      fragment.append(createRecipeCard(p,{status:pantryStatus,shoppingItems:pantryMode&&p.pantryMissing===1 ? pantryScore(p,new Set(pantryTerms())).missing : []}));
     }
     if (!found.length) { const message = document.createElement('p'); message.className = 'empty-state'; message.textContent = onlySaved ? 'No saved recipes match. Save a drink from the collection, or clear your filters.' : 'No matches yet. Try a different ingredient or choose All drinks.'; fragment.append(message); }
     results.replaceChildren(fragment); updateSaveButtons();
@@ -263,6 +320,28 @@ if (input) {
 }
 
 
+renderRecipeShoppingButtons=()=>{
+  document.querySelectorAll('[data-add-recipe-missing]').forEach(button=>{
+    const recipe=button.closest('.recipe');
+    const data=recipe?.querySelector('[data-recipe-pantry]');
+    if(!data){button.hidden=true;return;}
+    let required=[];
+    try{required=JSON.parse(data.textContent||'[]');}catch{}
+    const pantry=readPantry(), shopping=readShopping();
+    const missing=required.map(value=>String(value).trim().toLowerCase()).filter(Boolean).filter(item=>!pantryCovers(item,pantry));
+    const pending=missing.filter(item=>!shoppingHas(item,shopping));
+    button.hidden=false;
+    if(!missing.length){button.disabled=true;button.textContent='Everything is in My Bar';delete button.dataset.addShopping;}
+    else if(!pending.length){button.disabled=true;button.textContent='Missing ingredients are on your list';delete button.dataset.addShopping;}
+    else{
+      button.disabled=false;
+      button.textContent=pending.length===1?'Add 1 missing ingredient':'Add '+pending.length+' missing ingredients';
+      button.dataset.addShopping=JSON.stringify(pending);
+    }
+  });
+};
+renderRecipeShoppingButtons();
+
 const myBar=document.querySelector('[data-my-bar]');
 if(myBar){
   const indexUrl=myBar.dataset.index;
@@ -277,6 +356,14 @@ if(myBar){
   const pantryCount=myBar.querySelector('[data-bar-pantry-count]');
   const readyCount=myBar.querySelector('[data-bar-ready-count]');
   const readyStatus=myBar.querySelector('[data-bar-ready-status]');
+  const shoppingList=myBar.querySelector('[data-shopping-list]');
+  const shoppingActions=myBar.querySelector('[data-shopping-actions]');
+  const shoppingForm=myBar.querySelector('[data-shopping-add-form]');
+  const shoppingInput=myBar.querySelector('#shopping-add-input');
+  const shoppingToPantry=myBar.querySelector('[data-shopping-to-pantry]');
+  const shoppingRemoveChecked=myBar.querySelector('[data-shopping-remove-checked]');
+  const shoppingClear=myBar.querySelector('[data-shopping-clear]');
+  const shoppingCount=myBar.querySelector('[data-bar-shopping-count]');
   let entries=[];
 
   const renderEmpty=(grid,message)=>{const p=document.createElement('p');p.className='empty-state';p.textContent=message;grid.replaceChildren(p);};
@@ -289,6 +376,23 @@ if(myBar){
     pantryList.replaceChildren(fragment);
     clearPantry.hidden=pantry.size===0;
   };
+  const renderShopping=()=>{
+    const shopping=readShopping(), checked=readShoppingChecked();
+    const fragment=document.createDocumentFragment();
+    [...shopping].sort().forEach(item=>{
+      const row=document.createElement('div');row.className='shopping-item';
+      const label=document.createElement('label');
+      const box=document.createElement('input');box.type='checkbox';box.dataset.shoppingCheck=item;box.checked=checked.has(item);
+      const text=document.createElement('span');text.textContent=item;
+      label.append(box,text);
+      const remove=document.createElement('button');remove.type='button';remove.className='quiet-button';remove.dataset.removeShopping=item;remove.textContent='Remove';
+      row.append(label,remove);fragment.append(row);
+    });
+    if(shopping.size) shoppingList.replaceChildren(fragment);
+    else {const empty=document.createElement('p');empty.className='shopping-empty';empty.textContent='Your shopping list is empty. Add missing ingredients from a recipe or type an item above.';shoppingList.replaceChildren(empty);}
+    shoppingActions.hidden=shopping.size===0;
+    shoppingCount.textContent=String(shopping.size);
+  };
   renderMyBar=()=>{
     if(!entries.length)return;
     const pantry=readPantry();
@@ -299,6 +403,7 @@ if(myBar){
 
     savedCount.textContent=String(savedRecipes.length);pantryCount.textContent=String(pantry.size);readyCount.textContent=String(ready.length);
     renderPantry(pantry);
+    renderShopping();
 
     if(ready.length){
       readyGrid.replaceChildren(...ready.slice(0,6).map(item=>createRecipeCard(item.recipe,{status:'Ready with your ingredients'})));
@@ -309,12 +414,12 @@ if(myBar){
     }
 
     if(near.length){
-      nearGrid.replaceChildren(...near.slice(0,6).map(item=>createRecipeCard(item.recipe,{status:'Add: '+item.missing[0]})));
+      nearGrid.replaceChildren(...near.slice(0,6).map(item=>createRecipeCard(item.recipe,{status:'Add: '+item.missing[0],shoppingItems:item.missing,shoppingLabel:'Add '+item.missing[0]+' to shopping list'})));
     }else{
       renderEmpty(nearGrid,pantry.size?'No one-ingredient-away matches right now.':'Your near matches will appear here once you add ingredients.');
     }
 
-    if(savedRecipes.length) savedGrid.replaceChildren(...savedRecipes.map(recipe=>createRecipeCard(recipe)));
+    if(savedRecipes.length) savedGrid.replaceChildren(...savedRecipes.map(recipe=>{const score=pantryScore(recipe,pantry);return createRecipeCard(recipe,{shoppingItems:score.missing});}));
     else renderEmpty(savedGrid,'You have not saved any recipes yet. Use Save on any drink and it will appear here.');
     updateSaveButtons();
   };
@@ -330,6 +435,33 @@ if(myBar){
     const pantry=readPantry();pantry.delete(button.dataset.removePantry);writePantry(pantry);renderMyBar();
   });
   clearPantry.addEventListener('click',()=>{writePantry(new Set());renderMyBar();});
+  shoppingForm.addEventListener('submit',event=>{
+    event.preventDefault();
+    const item=shoppingInput.value.trim().toLowerCase();if(!item)return;
+    addShoppingItems([item]);shoppingInput.value='';renderMyBar();
+  });
+  shoppingList.addEventListener('change',event=>{
+    const box=event.target.closest('[data-shopping-check]');if(!box)return;
+    const checked=readShoppingChecked();
+    box.checked?checked.add(box.dataset.shoppingCheck):checked.delete(box.dataset.shoppingCheck);
+    writeShoppingChecked(checked);
+  });
+  shoppingList.addEventListener('click',event=>{
+    const button=event.target.closest('[data-remove-shopping]');if(!button)return;
+    const shopping=readShopping(),checked=readShoppingChecked();
+    shopping.delete(button.dataset.removeShopping);checked.delete(button.dataset.removeShopping);
+    writeShopping(shopping);writeShoppingChecked(checked);renderMyBar();
+  });
+  shoppingToPantry.addEventListener('click',()=>{
+    const shopping=readShopping(),checked=readShoppingChecked(),pantry=readPantry();
+    checked.forEach(item=>{if(shopping.has(item)){pantry.add(item);shopping.delete(item);}});
+    writePantry(pantry);writeShopping(shopping);writeShoppingChecked(new Set());renderMyBar();
+  });
+  shoppingRemoveChecked.addEventListener('click',()=>{
+    const shopping=readShopping(),checked=readShoppingChecked();
+    checked.forEach(item=>shopping.delete(item));writeShopping(shopping);writeShoppingChecked(new Set());renderMyBar();
+  });
+  shoppingClear.addEventListener('click',()=>{writeShopping(new Set());writeShoppingChecked(new Set());renderMyBar();});
   fetch(indexUrl).then(response=>{if(!response.ok)throw Error();return response.json();}).then(data=>{entries=data;renderMyBar();}).catch(()=>{
     renderEmpty(savedGrid,'My Bar could not load the recipe collection. Refresh to retry.');
     renderEmpty(readyGrid,'Recipe matching is temporarily unavailable.');
