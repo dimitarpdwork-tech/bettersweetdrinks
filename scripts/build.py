@@ -329,6 +329,49 @@ for doc in docs:prepare_recipe_editorial(doc)
 
 related_stopwords={'recipe','recipes','drink','drinks','cocktail','cocktails','homemade','copycat','easy','make','with','without','how','the','and','for','from','best','iced','cold','ice','water','fresh','optional','garnish','chilled','syrup'}
 def related_words(value):return set(re.findall(r'[a-z]{4,}',value.lower()))-related_stopwords
+
+def duration_minutes(value):
+    text=str(value or '').upper()
+    if not text.startswith('PT'):return None
+    hours=re.search(r'(\d+(?:\.\d+)?)H',text)
+    minutes=re.search(r'(\d+(?:\.\d+)?)M',text)
+    seconds=re.search(r'(\d+(?:\.\d+)?)S',text)
+    total=(float(hours.group(1))*60 if hours else 0)+(float(minutes.group(1)) if minutes else 0)+(float(seconds.group(1))/60 if seconds else 0)
+    return round(total) if total else None
+
+def recipe_discovery_meta(recipe,categories=None,tags=None):
+    categories=categories or [];tags=tags or []
+    text=' '.join(str(v) for v in recipe.get('ingredients',[])).lower()
+    abv=recipe.get('estimatedAbv')
+    if abv is not None:
+        alcohol='alcoholic' if float(abv)>=0.5 else 'non-alcoholic'
+    elif 'mocktails' in categories or not ALCOHOL_HINT_RE.search(text):
+        alcohol='non-alcoholic'
+    else:
+        alcohol='alcoholic'
+    spirit='none'
+    spirit_rules=[
+        ('vodka',r'\bvodka\b'),('gin',r'\bgin\b'),('rum',r'\b(?:rum|cachaça|cachaca)\b'),
+        ('tequila',r'\btequila\b'),('whiskey',r'\b(?:whiskey|whisky|bourbon)\b'),
+        ('brandy',r'\b(?:brandy|cognac|hennessy)\b'),('wine',r'\b(?:prosecco|champagne|wine|vermouth|sherry)\b')
+    ]
+    for label,pattern in spirit_rules:
+        if re.search(pattern,text):
+            spirit=label;break
+    if alcohol=='alcoholic' and spirit=='none':spirit='other'
+    flavor_text=' '.join([text,' '.join(tags).lower(),' '.join(categories).lower()])
+    flavors=[]
+    flavor_rules=[
+        ('coffee',r'\b(?:coffee|espresso|cold brew|latte|mocha|cappuccino)\b'),
+        ('fruity',r'\b(?:juice|berry|berries|mango|pineapple|strawberry|blueberry|blackberry|raspberry|peach|apple|orange|lemon|lime|grapefruit|watermelon|passion fruit|rhubarb)\b'),
+        ('creamy',r'\b(?:cream|milk|half-and-half|ice cream|coconut cream|yogurt)\b'),
+        ('sparkling',r'\b(?:prosecco|champagne|sparkling|soda|ginger beer|ginger ale|tonic|club soda|sprite|7up)\b')
+    ]
+    for label,pattern in flavor_rules:
+        if re.search(pattern,flavor_text):flavors.append(label)
+    return {'timeMinutes':duration_minutes(recipe.get('totalTime') or recipe.get('prepTime')),
+            'alcoholType':alcohol,'baseSpirit':spirit,'flavors':flavors}
+
 for p in posts:
     p['titleWords']=related_words(p['title'])
     p['ingredientWords']=related_words(' '.join(' '.join(recipes[str(rid)]['ingredients']) for rid in p['recipeIds']))
@@ -336,6 +379,8 @@ for p in posts:
     p['calories']=primary.get('estimatedCalories') if primary else None
     p['abv']=primary.get('estimatedAbv') if primary else None
     p['calorieBand']=primary.get('calorieBand') if primary else None
+    discovery=recipe_discovery_meta(primary,p.get('categories',[]),p.get('tags',[])) if primary else {'timeMinutes':None,'alcoholType':'unknown','baseSpirit':'none','flavors':[]}
+    p.update(discovery)
 def related_posts(post):
     ranked=[]
     for candidate in posts:
@@ -457,7 +502,9 @@ for src,dst in redirects.items():
 (OUT/'_redirects').write_text('\n'.join('/'+s+'/ /'+d+'/ 301' for s,d in redirects.items())+'\n')
 search=[{'title':p['title'],'url':link(p['url']),'description':p['description'],'image':link(p['cardImage']) if p['cardImage'] else '',
          'categories':p['categories'],'date':str(p['publishDate']),'calories':p['calories'],'abv':p['abv'],'calorieBand':p['calorieBand'],
-         'text':' '.join([p['title'],p['description'],*p['categories'],*[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']]])} for p in posts]
+         'timeMinutes':p['timeMinutes'],'alcoholType':p['alcoholType'],'baseSpirit':p['baseSpirit'],'flavors':p['flavors'],
+         'ingredients':[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']],
+         'text':' '.join([p['title'],p['description'],*p['categories'],*p.get('tags',[]),*[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']]])} for p in posts]
 (OUT/'search-index.json').write_text(json.dumps(search,ensure_ascii=False))
 url_lastmod={absolute(d['url']):str(d['updatedDate']) for d in docs if not d.get('noindex',False)}
 sitemap_body=''.join('<url><loc>'+html.escape(u)+'</loc>'+('<lastmod>'+html.escape(url_lastmod[u])+'</lastmod>' if u in url_lastmod else '')+'</url>' for u in urls)
