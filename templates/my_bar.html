@@ -6,6 +6,7 @@
       <div><strong data-bar-saved-count>0</strong><span>saved recipes</span></div>
       <div><strong data-bar-pantry-count>0</strong><span>pantry items</span></div>
       <div><strong data-bar-ready-count>0</strong><span>ready to make</span></div>
+      <div><strong data-bar-shopping-count>0</strong><span>shopping items</span></div>
     </div>
   </header>
 
@@ -18,6 +19,20 @@
     </form>
     <div class="bar-pantry-list" data-bar-pantry-list></div>
     <button type="button" class="quiet-button bar-clear-pantry" data-bar-clear-pantry hidden>Clear pantry</button>
+  </section>
+
+  <section class="bar-shopping" aria-labelledby="bar-shopping-title">
+    <div class="bar-section-copy"><p class="eyebrow">SHOPPING LIST</p><h2 id="bar-shopping-title">Pick up what you’re missing.</h2><p>Add missing ingredients from recipes with one click. When you buy them, move them straight into My Bar.</p></div>
+    <form class="shopping-add-form" data-shopping-add-form>
+      <label for="shopping-add-input">Add an item</label>
+      <div><input id="shopping-add-input" type="text" placeholder="Campari" autocomplete="off"><button type="submit">Add item</button></div>
+    </form>
+    <div class="shopping-list" data-shopping-list></div>
+    <div class="shopping-actions" data-shopping-actions hidden>
+      <button type="button" data-shopping-to-pantry>Move checked to My Bar</button>
+      <button type="button" class="quiet-button" data-shopping-remove-checked>Remove checked</button>
+      <button type="button" class="quiet-button" data-shopping-clear>Clear list</button>
+    </div>
   </section>
 
   <section class="bar-section" aria-labelledby="bar-ready-title">
