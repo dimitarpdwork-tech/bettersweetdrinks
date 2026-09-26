@@ -10,7 +10,9 @@ author: Better Sweet Drinks
 authorSlug: admin
 categories:
 - cocktails
-tags: []
+tags:
+- themed-drinks
+- christmas-drinks
 featuredImage: /images/uploads/christmas-cranberry-rosemary-spritz.jpg
 featuredImageAlt: Cranberry rosemary spritz with an orange slice in a wine glass
 recipeIds:
