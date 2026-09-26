@@ -131,7 +131,12 @@ def ingredient_profile(value):
     # Explanatory text after a colon/parenthesis can mention another ingredient.
     # Match the actual ingredient label first so "Prosecco ... Aperol" stays Prosecco.
     core=str(value).lower().split(':',1)[0].split('(',1)[0]
-    return next((p for p in ingredient_profiles if any(term.lower() in core for term in p['match'])),None)
+    matches=[]
+    for profile in ingredient_profiles:
+        for term in profile['match']:
+            if re.search(r'(?<!\\w)'+re.escape(term.lower())+r'(?!\\w)',core):
+                matches.append((len(term),profile))
+    return max(matches,key=lambda item:item[0])[1] if matches else None
 
 def recipe_yield_count(value):
     match=re.search(r'\d+(?:\.\d+)?',str(value or ''))
