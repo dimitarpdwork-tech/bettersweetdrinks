@@ -171,10 +171,13 @@ for d in docs:
     if d['featuredImage']:
         schemas[0]['image']=absolute(d['featuredImage'])
     related=related_posts(d)
-    render(d['url'],'article.html',title=d['seoTitle'],description=d['description'],image=d['featuredImage'],canonical=d.get('canonicalUrl') or absolute(d['url']),noindex=d.get('noindex',False),doc=d,recipes=cards,comments=comments.get(str(d['id']),[]),related=related,schemas=schemas)
+    seasonal_links=[hub for hub in seasonal_hubs if hub['tag'] in d.get('tags',[])]
+    render(d['url'],'article.html',title=d['seoTitle'],description=d['description'],image=d['featuredImage'],canonical=d.get('canonicalUrl') or absolute(d['url']),noindex=d.get('noindex',False),doc=d,recipes=cards,comments=comments.get(str(d['id']),[]),related=related,seasonal_links=seasonal_links,schemas=schemas)
 def listing(path,title,items,description=None,schemas=None,**kwargs):
     description=description or ('Browse '+title.lower()+'. Find ingredients, step-by-step instructions and ideas for your next drink.')
-    schemas=[] if schemas is None else schemas
+    schemas=[] if schemas is None else list(schemas)
+    if items:
+        schemas.append({'@context':'https://schema.org','@type':'ItemList','name':title,'numberOfItems':len(items),'itemListElement':[{'@type':'ListItem','position':i+1,'url':absolute(item['url']),'name':item['displayTitle']} for i,item in enumerate(items)]})
     render(path,'listing.html',title=title,description=description,items=items,schemas=schemas,**kwargs)
 pages=math.ceil(len(posts)/10)
 for n in range(1,pages+1):
