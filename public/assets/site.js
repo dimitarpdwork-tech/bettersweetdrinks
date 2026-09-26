@@ -22,7 +22,7 @@ const themeToggle=document.querySelector('[data-theme-toggle]');
 const themeLabel=document.querySelector('[data-theme-label]');
 const themeIcon=document.querySelector('[data-theme-icon]');
 const systemTheme=window.matchMedia('(prefers-color-scheme: dark)');
-const getThemePreference=()=>{try{return localStorage.getItem(THEME_KEY)||'system';}catch{return 'system';}};
+const getThemePreference=()=>{try{const value=localStorage.getItem(THEME_KEY)||'system';return ['system','light','dark'].includes(value)?value:'system';}catch{return 'system';}};
 const applyTheme=preference=>{
   const resolved=preference==='dark'||(preference==='system'&&systemTheme.matches)?'dark':'light';
   document.documentElement.dataset.theme=resolved;
