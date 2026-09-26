@@ -6,12 +6,55 @@ menu?.addEventListener('click', () => {
   menu.setAttribute('aria-expanded', String(open));
   navigation.classList.toggle('open', open);
 });
+navigation?.addEventListener('click', event => {
+  if (!event.target.closest('a') || menu?.getAttribute('aria-expanded') !== 'true') return;
+  navigation.classList.remove('open'); menu.setAttribute('aria-expanded', 'false');
+});
 document.addEventListener('keydown', event => {
   if (event.key === 'Escape' && menu?.getAttribute('aria-expanded') === 'true') {
     navigation.classList.remove('open'); menu.setAttribute('aria-expanded', 'false'); menu.focus();
   }
 });
 document.querySelectorAll('[data-print]').forEach(button => button.addEventListener('click', () => window.print()));
+
+const THEME_KEY='bsd-theme';
+const themeToggle=document.querySelector('[data-theme-toggle]');
+const themeLabel=document.querySelector('[data-theme-label]');
+const themeIcon=document.querySelector('[data-theme-icon]');
+const systemTheme=window.matchMedia('(prefers-color-scheme: dark)');
+const getThemePreference=()=>{try{return localStorage.getItem(THEME_KEY)||'system';}catch{return 'system';}};
+const applyTheme=preference=>{
+  const resolved=preference==='dark'||(preference==='system'&&systemTheme.matches)?'dark':'light';
+  document.documentElement.dataset.theme=resolved;
+  document.documentElement.dataset.themePreference=preference;
+  if(themeLabel) themeLabel.textContent=preference[0].toUpperCase()+preference.slice(1);
+  if(themeIcon) themeIcon.textContent=preference==='system'?'◐':preference==='dark'?'☾':'☀';
+  if(themeToggle) themeToggle.setAttribute('aria-label','Theme: '+preference+'. Activate to change theme.');
+  const meta=document.querySelector('#theme-color-meta');
+  if(meta) meta.content=resolved==='dark'?'#171315':'#b8273e';
+};
+applyTheme(getThemePreference());
+themeToggle?.addEventListener('click',()=>{
+  const order=['system','light','dark'];
+  const current=getThemePreference();
+  const next=order[(order.indexOf(current)+1)%order.length];
+  try{localStorage.setItem(THEME_KEY,next);}catch{}
+  applyTheme(next);
+});
+systemTheme.addEventListener?.('change',()=>{if(getThemePreference()==='system')applyTheme('system');});
+
+const toastRegion=document.querySelector('[data-toast-region]');
+let toastTimer=null;
+const showToast=(message,tone='default')=>{
+  if(!toastRegion||!message)return;
+  clearTimeout(toastTimer);
+  const toast=document.createElement('div');
+  toast.className='toast'+(tone!=='default'?' toast-'+tone:'');
+  toast.textContent=message;
+  toastRegion.replaceChildren(toast);
+  requestAnimationFrame(()=>toast.classList.add('show'));
+  toastTimer=setTimeout(()=>{toast.classList.remove('show');setTimeout(()=>toast.remove(),180);},3200);
+};
 
 document.querySelectorAll('[data-open-comments]').forEach(link => link.addEventListener('click', () => {
   const comments = document.querySelector('#reader-comments');
@@ -53,6 +96,17 @@ const readShoppingChecked = () => {
 const writeShoppingChecked = checked => {
   try { localStorage.setItem(SHOPPING_CHECKED_KEY, JSON.stringify([...checked])); } catch {}
 };
+function updateNavBarBadge(){
+  const shopping=readShopping();
+  const total=saved.size+shopping.size;
+  document.querySelectorAll('[data-nav-bar-count]').forEach(badge=>{
+    badge.hidden=total===0;
+    badge.textContent=total>99?'99+':String(total);
+  });
+  document.querySelectorAll('[data-nav-my-bar],[data-mobile-my-bar]').forEach(link=>{
+    link.setAttribute('aria-label',total ? 'My Bar: '+saved.size+' saved recipe'+(saved.size===1?'':'s')+' and '+shopping.size+' shopping item'+(shopping.size===1?'':'s') : 'My Bar');
+  });
+}
 const pantryCovers = (ingredient, pantry) => [...pantry].some(term=>ingredient.includes(term)||term.includes(ingredient));
 const shoppingHas = (ingredient, shopping) => [...shopping].some(term=>ingredient.includes(term)||term.includes(ingredient));
 const addShoppingItems = items => {
@@ -63,6 +117,7 @@ const addShoppingItems = items => {
     shopping.add(item);added+=1;
   });
   writeShopping(shopping);
+  updateNavBarBadge();
   return added;
 };
 const pantryScore = (recipe, pantry) => {
@@ -91,11 +146,15 @@ document.addEventListener('click', event => {
   let persistent = true;
   try { localStorage.setItem('bsd-saved-recipes', JSON.stringify([...saved])); } catch { persistent = false; }
   updateSaveButtons();
-  saveStatus.textContent = persistent ? (saved.has(url) ? 'Recipe saved in this browser.' : 'Recipe removed from saved recipes.') : 'Browser storage is unavailable. This selection will last until you leave this page.';
+  const saveMessage=persistent ? (saved.has(url) ? 'Recipe saved.' : 'Removed from saved recipes.') : 'Could not save permanently in this browser.';
+  saveStatus.textContent=saveMessage;
+  showToast(saveMessage,persistent?'success':'warning');
+  updateNavBarBadge();
   if (document.querySelector('#saved-filter')?.getAttribute('aria-pressed') === 'true') renderSearch?.();
   renderMyBar?.();
 });
 updateSaveButtons();
+updateNavBarBadge();
 const FRACTION_VALUE = {'½':0.5,'¼':0.25,'¾':0.75,'⅓':1/3,'⅔':2/3,'⅛':0.125,'⅜':0.375,'⅝':0.625,'⅞':0.875};
 const VOLUME_ML = {oz:29.5735,ounce:29.5735,ounces:29.5735,ml:1,milliliter:1,milliliters:1,cl:10,cup:240,cups:240,tbsp:15,tablespoon:15,tablespoons:15,tsp:5,teaspoon:5,teaspoons:5,shot:44,shots:44,dash:0.9,dashes:0.9};
 const UNIT_RE = /^(oz|ounce|ounces|ml|milliliter|milliliters|cl|cup|cups|tbsp|tablespoon|tablespoons|tsp|teaspoon|teaspoons|shot|shots|dash|dashes)\b/i;
@@ -228,7 +287,9 @@ document.addEventListener('click',event=>{
   try{items=JSON.parse(button.dataset.addShopping||'[]');}catch{}
   if(!Array.isArray(items)||!items.length)return;
   const added=addShoppingItems(items);
-  if(saveStatus) saveStatus.textContent=added ? (added===1?'Added 1 ingredient to your shopping list.':'Added '+added+' ingredients to your shopping list.') : 'Those ingredients are already in My Bar or on your shopping list.';
+  const message=added ? (added===1?'Added 1 ingredient to your shopping list.':'Added '+added+' ingredients to your shopping list.') : 'Those ingredients are already in My Bar or on your shopping list.';
+  if(saveStatus) saveStatus.textContent=message;
+  showToast(message,added?'success':'default');
   renderMyBar?.();renderRecipeShoppingButtons?.();
 });
 
@@ -364,6 +425,7 @@ if(myBar){
   const shoppingRemoveChecked=myBar.querySelector('[data-shopping-remove-checked]');
   const shoppingClear=myBar.querySelector('[data-shopping-clear]');
   const shoppingCount=myBar.querySelector('[data-bar-shopping-count]');
+  const onboarding=myBar.querySelector('[data-bar-onboarding]');
   let entries=[];
 
   const renderEmpty=(grid,message)=>{const p=document.createElement('p');p.className='empty-state';p.textContent=message;grid.replaceChildren(p);};
@@ -396,14 +458,17 @@ if(myBar){
   renderMyBar=()=>{
     if(!entries.length)return;
     const pantry=readPantry();
+    const shopping=readShopping();
     const savedRecipes=entries.filter(recipe=>saved.has(recipe.url));
     const scored=entries.map(recipe=>({recipe,...pantryScore(recipe,pantry)})).filter(item=>item.matched.length>0);
     const ready=scored.filter(item=>item.missing.length===0).sort((a,b)=>b.matched.length-a.matched.length);
     const near=scored.filter(item=>item.missing.length===1).sort((a,b)=>b.matched.length-a.matched.length);
 
     savedCount.textContent=String(savedRecipes.length);pantryCount.textContent=String(pantry.size);readyCount.textContent=String(ready.length);
+    if(onboarding) onboarding.hidden=Boolean(savedRecipes.length||pantry.size||shopping.size);
     renderPantry(pantry);
     renderShopping();
+    updateNavBarBadge();
 
     if(ready.length){
       readyGrid.replaceChildren(...ready.slice(0,6).map(item=>createRecipeCard(item.recipe,{status:'Ready with your ingredients'})));
@@ -428,17 +493,17 @@ if(myBar){
     event.preventDefault();
     const additions=pantryInput.value.split(',').map(value=>value.trim().toLowerCase()).filter(Boolean);
     if(!additions.length)return;
-    const pantry=readPantry();additions.forEach(item=>pantry.add(item));writePantry(pantry);pantryInput.value='';renderMyBar();
+    const pantry=readPantry();const before=pantry.size;additions.forEach(item=>pantry.add(item));writePantry(pantry);pantryInput.value='';renderMyBar();showToast((pantry.size-before)+' item'+(pantry.size-before===1?'':'s')+' added to My Bar.','success');
   });
   pantryList.addEventListener('click',event=>{
     const button=event.target.closest('[data-remove-pantry]');if(!button)return;
-    const pantry=readPantry();pantry.delete(button.dataset.removePantry);writePantry(pantry);renderMyBar();
+    const pantry=readPantry();pantry.delete(button.dataset.removePantry);writePantry(pantry);renderMyBar();showToast('Removed from My Bar.');
   });
-  clearPantry.addEventListener('click',()=>{writePantry(new Set());renderMyBar();});
+  clearPantry.addEventListener('click',()=>{writePantry(new Set());renderMyBar();showToast('My Bar pantry cleared.');});
   shoppingForm.addEventListener('submit',event=>{
     event.preventDefault();
     const item=shoppingInput.value.trim().toLowerCase();if(!item)return;
-    addShoppingItems([item]);shoppingInput.value='';renderMyBar();
+    const added=addShoppingItems([item]);shoppingInput.value='';renderMyBar();showToast(added?'Added to shopping list.':'Already in My Bar or shopping list.',added?'success':'default');
   });
   shoppingList.addEventListener('change',event=>{
     const box=event.target.closest('[data-shopping-check]');if(!box)return;
@@ -450,18 +515,18 @@ if(myBar){
     const button=event.target.closest('[data-remove-shopping]');if(!button)return;
     const shopping=readShopping(),checked=readShoppingChecked();
     shopping.delete(button.dataset.removeShopping);checked.delete(button.dataset.removeShopping);
-    writeShopping(shopping);writeShoppingChecked(checked);renderMyBar();
+    writeShopping(shopping);writeShoppingChecked(checked);renderMyBar();showToast('Removed from shopping list.');
   });
   shoppingToPantry.addEventListener('click',()=>{
     const shopping=readShopping(),checked=readShoppingChecked(),pantry=readPantry();
-    checked.forEach(item=>{if(shopping.has(item)){pantry.add(item);shopping.delete(item);}});
-    writePantry(pantry);writeShopping(shopping);writeShoppingChecked(new Set());renderMyBar();
+    let moved=0;checked.forEach(item=>{if(shopping.has(item)){pantry.add(item);shopping.delete(item);moved+=1;}});
+    writePantry(pantry);writeShopping(shopping);writeShoppingChecked(new Set());renderMyBar();showToast(moved ? 'Moved '+moved+' item'+(moved===1?'':'s')+' to My Bar.' : 'Select items to move.',moved?'success':'default');
   });
   shoppingRemoveChecked.addEventListener('click',()=>{
     const shopping=readShopping(),checked=readShoppingChecked();
-    checked.forEach(item=>shopping.delete(item));writeShopping(shopping);writeShoppingChecked(new Set());renderMyBar();
+    const removed=checked.size;checked.forEach(item=>shopping.delete(item));writeShopping(shopping);writeShoppingChecked(new Set());renderMyBar();showToast(removed ? 'Removed '+removed+' checked item'+(removed===1?'':'s')+'.' : 'Select items to remove.');
   });
-  shoppingClear.addEventListener('click',()=>{writeShopping(new Set());writeShoppingChecked(new Set());renderMyBar();});
+  shoppingClear.addEventListener('click',()=>{writeShopping(new Set());writeShoppingChecked(new Set());renderMyBar();showToast('Shopping list cleared.');});
   fetch(indexUrl).then(response=>{if(!response.ok)throw Error();return response.json();}).then(data=>{entries=data;renderMyBar();}).catch(()=>{
     renderEmpty(savedGrid,'My Bar could not load the recipe collection. Refresh to retry.');
     renderEmpty(readyGrid,'Recipe matching is temporarily unavailable.');
