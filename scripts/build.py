@@ -36,7 +36,13 @@ env.globals['global_schemas']=global_schemas
 def image_srcset(path):
     original=OUT/path.lstrip('/')
     variants={}
-    base_stem=re.sub(r'-\\d+x\\d+
+    base_stem=re.sub(r'-\\d+x\\d+$','',original.stem)
+    for candidate in original.parent.glob(base_stem+'-*x*'+original.suffix):
+        match=re.search(r'-(\\d+)x(\\d+)$',candidate.stem)
+        if not match:continue
+        width=int(match.group(1))
+        if 240<=width<=1600:variants[width]=candidate
+    return ', '.join(f"{link('/'+str(candidate.relative_to(OUT)))} {width}w" for width,candidate in sorted(variants.items()))
 env.globals['image_srcset']=image_srcset
 def asset_link(path):
     fingerprint=hashlib.sha256((OUT/path.lstrip('/')).read_bytes()).hexdigest()[:12]
