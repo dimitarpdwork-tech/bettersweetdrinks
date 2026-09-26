@@ -35,12 +35,14 @@ global_schemas=[
 env.globals['global_schemas']=global_schemas
 def image_srcset(path):
     original=OUT/path.lstrip('/')
-    variants=[]
-    for width in (360,480,720,768,1024):
-        # Use the available square derivatives for consistently cropped listing thumbnails.
-        candidate=original.with_name(f'{original.stem}-{width}x{width}{original.suffix}')
-        if candidate.exists():variants.append(f"{link('/'+str(candidate.relative_to(OUT)))} {width}w")
-    return ', '.join(variants)
+    variants={}
+    base_stem=re.sub(r'-\d+x\d+$','',original.stem)
+    for candidate in original.parent.glob(base_stem+'-*x*'+original.suffix):
+        match=re.search(r'-(\d+)x(\d+)$',candidate.stem)
+        if not match:continue
+        width=int(match.group(1))
+        if 240<=width<=1600:variants[width]=candidate
+    return ', '.join(f"{link('/'+str(candidate.relative_to(OUT)))} {width}w" for width,candidate in sorted(variants.items()))
 env.globals['image_srcset']=image_srcset
 def asset_link(path):
     fingerprint=hashlib.sha256((OUT/path.lstrip('/')).read_bytes()).hexdigest()[:12]
@@ -197,7 +199,55 @@ def estimate_recipe(recipe):
             'caloriesEstimated':manual_calories is None and calories_per_serving is not None,
             'abvEstimated':manual_abv is None and abv is not None,'estimateCoverage':round(coverage,2)}
 
-for recipe in recipes.values():recipe.update(estimate_recipe(recipe))
+for recipe in recipes.values():
+    recipe.update(estimate_recipe(recipe))
+    recipe['servingCount']=recipe_yield_count(recipe.get('yield'))
+
+def duration_minutes(value):
+    match=re.fullmatch(r'PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?',str(value or '').upper())
+    if not match:return None
+    hours,minutes,seconds=(int(v or 0) for v in match.groups())
+    return hours*60+minutes+(1 if seconds>=30 else 0)
+
+SPIRIT_GROUPS=[
+    ('vodka',['vodka']),('gin',['gin']),('rum',['rum','cachaça','cachaca']),
+    ('tequila',['tequila','mezcal']),('whiskey',['whiskey','whisky','bourbon','rye']),
+    ('brandy',['brandy','cognac']),('wine',['prosecco','champagne','wine','vermouth']),
+    ('liqueur',['liqueur','aperol','campari','amaretto','schnapps','curacao','curaçao'])
+]
+PANTRY_STOP={'fresh','chilled','optional','garnish','garnishes','ice','water','to','taste','for','and','or','plus','of','the','a','an','oz','ounce','ounces','ml','milliliter','milliliters','cup','cups','tbsp','tablespoon','tablespoons','tsp','teaspoon','teaspoons'}
+
+def recipe_discovery_meta(recipe):
+    ingredient_text=' '.join(str(v).lower() for v in recipe.get('ingredients',[]))
+    spirit='none'
+    for name,terms in SPIRIT_GROUPS:
+        if any(re.search(r'(?<!\w)'+re.escape(term)+r'(?!\w)',ingredient_text) for term in terms):
+            spirit=name;break
+    abv=recipe.get('estimatedAbv')
+    alcohol_type='non-alcoholic' if abv is not None and float(abv)==0 else 'alcoholic' if abv is not None and float(abv)>0 else ('alcoholic' if ALCOHOL_HINT_RE.search(ingredient_text) else 'unknown')
+    flavors=[]
+    flavor_rules={
+        'fruity':['berry','blackberry','blueberry','strawberry','raspberry','mango','pineapple','peach','apple','orange','grapefruit','lemon','lime','watermelon','cherry'],
+        'coffee':['coffee','espresso','cold brew'],
+        'creamy':['cream','milk','half-and-half','coconut cream','ice cream'],
+        'fizzy':['soda','sparkling','prosecco','champagne','ginger beer','ginger ale','tonic'],
+        'citrus':['lemon','lime','orange','grapefruit'],
+        'sweet':['syrup','honey','caramel','chocolate','cookie butter']
+    }
+    for flavor,terms in flavor_rules.items():
+        if any(term in ingredient_text for term in terms):flavors.append(flavor)
+    pantry=[]
+    for raw in recipe.get('ingredients',[]):
+        raw_lower=str(raw).lower()
+        if 'for garnish' in raw_lower or raw_lower.startswith(('garnish','optional','ice ')) or raw_lower in {'ice','ice cubes'}:continue
+        text=re.sub(r'^\s*(?:\d+(?:[./]\d+)?|\d+\s+\d+/\d+|[½¼¾⅓⅔⅛⅜⅝⅞])\s*(?:oz|ounce|ounces|ml|milliliters?|cl|cups?|tbsp|tablespoons?|tsp|teaspoons?|shots?|parts?|dashes?|scoops?)?\s*','',raw_lower)
+        text=re.sub(r'\([^)]*\)',' ',text)
+        words=[w for w in re.findall(r"[a-zA-ZÀ-ÿ][a-zA-ZÀ-ÿ'-]+",text) if w not in PANTRY_STOP]
+        phrase=' '.join(words[:4]).strip()
+        if phrase:pantry.append(phrase)
+    return {'timeMinutes':duration_minutes(recipe.get('totalTime') or recipe.get('prepTime')),
+            'alcoholType':alcohol_type,'baseSpirit':spirit,'flavorTags':flavors,'pantryIngredients':pantry}
+for recipe in recipes.values():recipe.update(recipe_discovery_meta(recipe))
 
 def heading_key(value):
     return re.sub(r'[^a-z0-9]+',' ',str(value).lower()).strip()
@@ -296,7 +346,32 @@ def prepare_recipe_editorial(doc):
             if key=='ingredients' or key.startswith('ingredients '):
                 doc['recipeIngredientAnchor']=remove_ingredient_block(heading)
                 break
-        method_html=str(method_soup).strip()
+        # Keep the recipe method concise. Legacy articles often bundled bottle
+        # comparisons, serving ideas and tips inside one giant "How to make" section.
+        # Pull the actual ordered steps into the recipe workspace and return the rest
+        # to the editorial article below it.
+        method_core=method_soup.find('ol')
+        if method_core is not None:
+            method_html=str(method_core)
+            method_core.decompose()
+        else:
+            step_nodes=[p for p in method_soup.find_all('p',recursive=True) if re.match(r'^\s*step\s*\d+',p.get_text(' ',strip=True),re.I)]
+            if step_nodes:
+                method_html=''.join(str(node) for node in step_nodes)
+                for node in step_nodes:node.decompose()
+            else:
+                method_html=''
+        # Remove any legacy Instructions/Step-by-step block left behind after the
+        # concise method was extracted, preventing the same directions appearing twice.
+        for heading in list(method_soup.find_all(re.compile(r'^h[2-5]$'))):
+            key=heading_key(heading.get_text(' ',strip=True))
+            if key in {'instructions','directions','steps'} or 'step by step' in key:
+                remove_heading_section(heading)
+        remainder=str(method_soup).strip()
+        if BeautifulSoup(remainder,'html.parser').get_text(' ',strip=True):
+            remainder_soup=BeautifulSoup(remainder,'html.parser')
+            for node in reversed(list(remainder_soup.contents)):
+                body.insert(0,node)
 
     # Some shorter recipes put Ingredients before How-to as a separate top-level block.
     # Remove only that ingredient block, leaving the rest of the editorial article intact.
@@ -336,6 +411,11 @@ for p in posts:
     p['calories']=primary.get('estimatedCalories') if primary else None
     p['abv']=primary.get('estimatedAbv') if primary else None
     p['calorieBand']=primary.get('calorieBand') if primary else None
+    p['timeMinutes']=primary.get('timeMinutes') if primary else None
+    p['alcoholType']=primary.get('alcoholType') if primary else 'unknown'
+    p['baseSpirit']=primary.get('baseSpirit') if primary else 'none'
+    p['flavorTags']=primary.get('flavorTags',[]) if primary else []
+    p['pantryIngredients']=primary.get('pantryIngredients',[]) if primary else []
 def related_posts(post):
     ranked=[]
     for candidate in posts:
@@ -430,7 +510,14 @@ def listing(path,title,items,description=None,schemas=None,**kwargs):
 pages=math.ceil(len(posts)/10)
 for n in range(1,pages+1):
     path='/' if n==1 else f'/page/{n}/'
-    listing(path,'Latest drink recipes' if n==1 else f'Latest drink recipes — Page {n}',posts[(n-1)*10:n*10],page=n,pages=pages)
+    home_kwargs={}
+    if n==1:
+        home_kwargs={
+            'quick_picks':[p for p in posts if p.get('timeMinutes') is not None and p['timeMinutes']<=10][:4],
+            'low_cal_picks':[p for p in posts if p.get('calories') is not None and p['calories']<100][:4],
+            'zero_proof_picks':[p for p in posts if p.get('alcoholType')=='non-alcoholic'][:4]
+        }
+    listing(path,'Latest drink recipes' if n==1 else f'Latest drink recipes — Page {n}',posts[(n-1)*10:n*10],page=n,pages=pages,**home_kwargs)
 listing('/recipes/','All drink recipes',posts)
 for kind in ['category','post_tag']:
     for term in tax[kind]:
@@ -456,6 +543,7 @@ for src,dst in redirects.items():
 (OUT/'_redirects').write_text('\n'.join('/'+s+'/ /'+d+'/ 301' for s,d in redirects.items())+'\n')
 search=[{'title':p['title'],'url':link(p['url']),'description':p['description'],'image':link(p['cardImage']) if p['cardImage'] else '',
          'categories':p['categories'],'date':str(p['publishDate']),'calories':p['calories'],'abv':p['abv'],'calorieBand':p['calorieBand'],
+         'timeMinutes':p['timeMinutes'],'alcoholType':p['alcoholType'],'baseSpirit':p['baseSpirit'],'flavorTags':p['flavorTags'],'pantryIngredients':p['pantryIngredients'],
          'text':' '.join([p['title'],p['description'],*p['categories'],*[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']]])} for p in posts]
 (OUT/'search-index.json').write_text(json.dumps(search,ensure_ascii=False))
 url_lastmod={absolute(d['url']):str(d['updatedDate']) for d in docs if not d.get('noindex',False)}

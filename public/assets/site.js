@@ -44,83 +44,138 @@ document.addEventListener('click', event => {
   if (document.querySelector('#saved-filter')?.getAttribute('aria-pressed') === 'true') renderSearch?.();
 });
 updateSaveButtons();
-const focusButton = document.querySelector('[data-focus]');
-if (focusButton) {
-  focusButton.hidden = false;
-  focusButton.addEventListener('click', () => {
-    const active = document.body.classList.toggle('recipe-focus');
-    focusButton.setAttribute('aria-pressed', String(active));
-    focusButton.textContent = active ? 'Show full article' : 'Recipe mode';
-  });
-}
+const FRACTION_VALUE = {'½':0.5,'¼':0.25,'¾':0.75,'⅓':1/3,'⅔':2/3,'⅛':0.125,'⅜':0.375,'⅝':0.625,'⅞':0.875};
+const VOLUME_ML = {oz:29.5735,ounce:29.5735,ounces:29.5735,ml:1,milliliter:1,milliliters:1,cl:10,cup:240,cups:240,tbsp:15,tablespoon:15,tablespoons:15,tsp:5,teaspoon:5,teaspoons:5,shot:44,shots:44,dash:0.9,dashes:0.9};
+const UNIT_RE = /^(oz|ounce|ounces|ml|milliliter|milliliters|cl|cup|cups|tbsp|tablespoon|tablespoons|tsp|teaspoon|teaspoons|shot|shots|dash|dashes)\b/i;
+const parseNumber = raw => {
+  raw = raw.trim();
+  if (FRACTION_VALUE[raw] !== undefined) return FRACTION_VALUE[raw];
+  if (/^\d+\s+\d+\/\d+$/.test(raw)) { const parts=raw.split(/\s+/); const frac=parts[1].split('/').map(Number); return Number(parts[0]) + frac[0]/frac[1]; }
+  if (/^\d+\/\d+$/.test(raw)) { const parts=raw.split('/').map(Number); return parts[0]/parts[1]; }
+  const value=Number(raw); return Number.isFinite(value)?value:null;
+};
+const formatAmount = value => {
+  if (!Number.isFinite(value)) return '';
+  if (Math.abs(value-Math.round(value))<0.03) return String(Math.round(value));
+  const whole=Math.floor(value), fraction=value-whole;
+  const options=[[0.125,'⅛'],[0.25,'¼'],[1/3,'⅓'],[0.375,'⅜'],[0.5,'½'],[0.625,'⅝'],[2/3,'⅔'],[0.75,'¾'],[0.875,'⅞']];
+  const best=options.reduce((a,b)=>Math.abs(b[0]-fraction)<Math.abs(a[0]-fraction)?b:a);
+  if (Math.abs(best[0]-fraction)<0.055) return (whole?whole+' ':'')+best[1];
+  return value<10?value.toFixed(1).replace(/\.0$/,''):String(Math.round(value));
+};
+const parseIngredient = text => {
+  const match=text.match(/^\s*((?:\d+\s+\d+\/\d+)|(?:\d+\/\d+)|(?:\d+(?:\.\d+)?)|[½¼¾⅓⅔⅛⅜⅝⅞])\s*/);
+  if(!match) return null; const amount=parseNumber(match[1]); if(amount===null) return null;
+  const rest=text.slice(match[0].length), unitMatch=rest.match(UNIT_RE);
+  const unit=unitMatch?unitMatch[1].toLowerCase():'', tail=(unitMatch?rest.slice(unitMatch[0].length):rest).replace(/^\s+/,'');
+  return {amount,unit,tail};
+};
+const transformIngredient = (original,multiplier,units) => {
+  const parsed=parseIngredient(original); if(!parsed) return original;
+  let amount=parsed.amount*multiplier, unit=parsed.unit;
+  if(units==='metric' && unit && VOLUME_ML[unit]) { amount*=VOLUME_ML[unit]; unit='ml'; if(amount>=1000){amount/=1000;unit='L';} }
+  const amountText=(units==='metric'&&unit==='ml')?(amount<10?amount.toFixed(1).replace(/\.0$/,''):String(Math.round(amount))):formatAmount(amount);
+  return [amountText,unit,parsed.tail].filter(Boolean).join(' ');
+};
+
 document.querySelectorAll('.recipe').forEach(recipe => {
-  const boxes = [...recipe.querySelectorAll('.ingredients input')];
-  const counter = recipe.querySelector('.ingredient-count');
-  const reset = recipe.querySelector('[data-reset]');
-  const update = () => { counter.textContent = `${boxes.filter(box => box.checked).length} of ${boxes.length} ready`; };
-  boxes.forEach(box => box.addEventListener('change', update));
-  reset.hidden = false;
-  reset.addEventListener('click', () => { boxes.forEach(box => { box.checked = false; }); update(); });
-  update();
+  const boxes=[...recipe.querySelectorAll('.ingredients input[type="checkbox"]')];
+  const counter=recipe.querySelector('.ingredient-count'), reset=recipe.querySelector('[data-reset]'), tools=recipe.querySelector('[data-recipe-tools]');
+  const recipeId=(tools&&tools.dataset.recipeId)||recipe.id||location.pathname, checkKey='bsd-recipe-checks:'+recipeId;
+  let checked=new Set();
+  try { const stored=JSON.parse(localStorage.getItem(checkKey)||'[]'); if(Array.isArray(stored)) checked=new Set(stored.map(Number)); } catch {}
+  boxes.forEach((box,index)=>{if(checked.has(index)) box.checked=true;});
+  const updateChecklist=()=>{
+    const completed=boxes.filter(box=>box.checked).length;
+    if(counter) counter.textContent=completed+' of '+boxes.length+' ready';
+    if(reset) reset.hidden=completed===0;
+    try { localStorage.setItem(checkKey,JSON.stringify(boxes.map((box,index)=>box.checked?index:null).filter(v=>v!==null))); } catch {}
+  };
+  boxes.forEach(box=>box.addEventListener('change',updateChecklist));
+  if(reset) reset.addEventListener('click',()=>{boxes.forEach(box=>{box.checked=false;});updateChecklist();});
+  updateChecklist();
+  if(!tools) return;
+  const ingredientTexts=[...recipe.querySelectorAll('[data-ingredient-text]')], minus=tools.querySelector('[data-serving-minus]'), plus=tools.querySelector('[data-serving-plus]'), servingCount=tools.querySelector('[data-serving-count]'), servingLabel=recipe.querySelector('[data-serving-label]'), unitButtons=[...tools.querySelectorAll('[data-unit]')];
+  const base=Math.max(1,Number(tools.dataset.baseServings)||1); let servings=base, units='us';
+  try { units=localStorage.getItem('bsd-unit-system')==='metric'?'metric':'us'; } catch {}
+  const originalServingLabel=servingLabel?servingLabel.textContent:'';
+  const renderIngredients=()=>{
+    const multiplier=servings/base;
+    ingredientTexts.forEach(span=>{span.textContent=transformIngredient(span.dataset.original||span.textContent,multiplier,units);});
+    if(servingCount) servingCount.textContent=String(servings);
+    if(servingLabel) { let label=originalServingLabel.replace(/^\d+(?:\.\d+)?/,String(servings)); if(servings!==1) label=label.replace(/\b(cocktail|drink|serving|glass)\b$/i,'$1s'); servingLabel.textContent=label; }
+    unitButtons.forEach(button=>{const selected=button.dataset.unit===units;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));});
+    if(minus) minus.disabled=servings<=1; if(plus) plus.disabled=servings>=24;
+  };
+  if(minus) minus.addEventListener('click',()=>{servings=Math.max(1,servings-1);renderIngredients();});
+  if(plus) plus.addEventListener('click',()=>{servings=Math.min(24,servings+1);renderIngredients();});
+  unitButtons.forEach(button=>button.addEventListener('click',()=>{units=button.dataset.unit;try{localStorage.setItem('bsd-unit-system',units);}catch{}renderIngredients();}));
+  renderIngredients();
 });
 document.querySelectorAll('[data-sortable-listing]').forEach(section => {
-  const grid = section.querySelector('.grid');
-  const sort = section.querySelector('[data-listing-sort]');
-  const calorieFilter = section.querySelector('[data-calorie-filter]');
-  const status = section.querySelector('[data-listing-status]');
-  if (!grid || !sort || !calorieFilter) return;
-  const original = [...grid.querySelectorAll('.card')];
-  const originalOrder = new Map(original.map((card, index) => [card, index]));
-  const metric = (card, key) => {
-    const raw = card.dataset[key];
-    if (raw === undefined || raw === '') return null;
-    const value = Number(raw);
-    return Number.isFinite(value) ? value : null;
+  const grid=section.querySelector('.grid'), sort=section.querySelector('[data-listing-sort]'), calorieFilter=section.querySelector('[data-calorie-filter]'), alcoholFilter=section.querySelector('[data-alcohol-filter]'), timeFilter=section.querySelector('[data-time-filter]'), spiritFilter=section.querySelector('[data-spirit-filter]'), status=section.querySelector('[data-listing-status]'), clear=section.querySelector('[data-clear-listing]'), loadMore=section.querySelector('[data-load-more]');
+  if(!grid||!sort||!calorieFilter) return;
+  const original=[...grid.querySelectorAll('.card')], originalOrder=new Map(original.map((card,index)=>[card,index]));
+  const pageSize=Number(section.dataset.clientPaging)||0; let shown=pageSize||Infinity;
+  const metric=(card,key)=>{const raw=card.dataset[key];if(raw===undefined||raw==='')return null;const value=Number(raw);return Number.isFinite(value)?value:null;};
+  const compareMetric=(key,direction)=>(a,b)=>{const av=metric(a,key),bv=metric(b,key);if(av===null&&bv===null)return originalOrder.get(a)-originalOrder.get(b);if(av===null)return 1;if(bv===null)return -1;return direction*(av-bv)||originalOrder.get(a)-originalOrder.get(b);};
+  const matches=card=>(!calorieFilter.value||card.dataset.calorieBand===calorieFilter.value)&&(!alcoholFilter?.value||card.dataset.alcohol===alcoholFilter.value)&&(!timeFilter?.value||(timeFilter.value==='quick'&&metric(card,'time')!==null&&metric(card,'time')<=10))&&(!spiritFilter?.value||card.dataset.spirit===spiritFilter.value);
+  const render=()=>{
+    let visible=original.filter(matches);
+    if(sort.value==='calories-asc')visible.sort(compareMetric('calories',1)); else if(sort.value==='calories-desc')visible.sort(compareMetric('calories',-1)); else if(sort.value==='abv-asc')visible.sort(compareMetric('abv',1)); else if(sort.value==='abv-desc')visible.sort(compareMetric('abv',-1)); else visible.sort((a,b)=>originalOrder.get(a)-originalOrder.get(b));
+    const displaySet=new Set(visible.slice(0,shown));
+    original.forEach(card=>{card.hidden=!displaySet.has(card);});
+    visible.forEach(card=>grid.append(card));
+    if(status) status.textContent=Math.min(visible.length,shown)+' of '+visible.length+' recipes shown.';
+    if(loadMore){loadMore.hidden=shown>=visible.length;loadMore.textContent='Load more recipes ('+(visible.length-Math.min(visible.length,shown))+' remaining)';}
   };
-  const compareMetric = (key, direction) => (a, b) => {
-    const av = metric(a, key), bv = metric(b, key);
-    if (av === null && bv === null) return originalOrder.get(a) - originalOrder.get(b);
-    if (av === null) return 1;
-    if (bv === null) return -1;
-    return direction * (av - bv) || originalOrder.get(a) - originalOrder.get(b);
-  };
-  const render = () => {
-    const visible = original.filter(card => !calorieFilter.value || card.dataset.calorieBand === calorieFilter.value);
-    if (sort.value === 'calories-asc') visible.sort(compareMetric('calories', 1));
-    else if (sort.value === 'calories-desc') visible.sort(compareMetric('calories', -1));
-    else if (sort.value === 'abv-asc') visible.sort(compareMetric('abv', 1));
-    else if (sort.value === 'abv-desc') visible.sort(compareMetric('abv', -1));
-    else visible.sort((a, b) => originalOrder.get(a) - originalOrder.get(b));
-    const visibleSet = new Set(visible);
-    original.forEach(card => { card.hidden = !visibleSet.has(card); });
-    [...visible, ...original.filter(card => !visibleSet.has(card))].forEach(card => grid.append(card));
-    if (status) status.textContent = `${visible.length} recipe${visible.length === 1 ? '' : 's'} shown.`;
-  };
-  sort.addEventListener('change', render);
-  calorieFilter.addEventListener('change', render);
+  [sort,calorieFilter,alcoholFilter,timeFilter,spiritFilter].filter(Boolean).forEach(control=>control.addEventListener('change',()=>{shown=pageSize||Infinity;render();}));
+  clear?.addEventListener('click',()=>{[calorieFilter,alcoholFilter,timeFilter,spiritFilter].filter(Boolean).forEach(control=>control.value='');sort.value='default';shown=pageSize||Infinity;render();});
+  loadMore?.addEventListener('click',()=>{shown+=pageSize||24;render();});
   render();
 });
-
 const input = document.querySelector('#recipe-search');
 if (input) {
   const status = document.querySelector('#search-status');
   const results = document.querySelector('#search-results');
   const category = document.querySelector('#category-filter');
   const calorie = document.querySelector('#calorie-filter');
+  const alcohol = document.querySelector('#alcohol-filter');
+  const time = document.querySelector('#time-filter');
+  const spirit = document.querySelector('#spirit-filter');
+  const flavor = document.querySelector('#flavor-filter');
   const sort = document.querySelector('#sort-filter');
+  const pantryInput = document.querySelector('#pantry-input');
+  const pantrySearch = document.querySelector('#pantry-search');
+  const pantryClear = document.querySelector('#pantry-clear');
   const savedFilter = document.querySelector('#saved-filter');
   const params = new URLSearchParams(location.search);
   input.value = params.get('q') || '';
   if ([...category.options].some(option => option.value === params.get('category'))) category.value = params.get('category');
   if ([...calorie.options].some(option => option.value === params.get('calories'))) calorie.value = params.get('calories');
+  if ([...alcohol.options].some(option => option.value === params.get('alcohol'))) alcohol.value = params.get('alcohol');
+  if ([...time.options].some(option => option.value === params.get('time'))) time.value = params.get('time');
+  if ([...spirit.options].some(option => option.value === params.get('spirit'))) spirit.value = params.get('spirit');
+  if ([...flavor.options].some(option => option.value === params.get('flavor'))) flavor.value = params.get('flavor');
   if ([...sort.options].some(option => option.value === params.get('sort'))) sort.value = params.get('sort');
   savedFilter.setAttribute('aria-pressed', String(params.get('saved') === '1'));
   let entries = null;
+  let pantryMode = false;
+  const pantryTerms = () => pantryInput.value.split(',').map(v=>v.trim().toLowerCase()).filter(Boolean);
   function display() {
     if (!entries) return;
     const words = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
     const onlySaved = savedFilter.getAttribute('aria-pressed') === 'true';
-    const found = entries.filter(p => words.every(word => p.text.toLowerCase().includes(word)) && (!category.value || p.categories.includes(category.value)) && (!calorie.value || p.calorieBand === calorie.value) && (!onlySaved || saved.has(p.url)));
+    let found = entries.filter(p => words.every(word => p.text.toLowerCase().includes(word)) && (!category.value || p.categories.includes(category.value)) && (!calorie.value || p.calorieBand === calorie.value) && (!alcohol.value || p.alcoholType === alcohol.value) && (!time.value || (time.value === 'quick' && p.timeMinutes != null && Number(p.timeMinutes) <= 10)) && (!spirit.value || p.baseSpirit === spirit.value) && (!flavor.value || (p.flavorTags || []).includes(flavor.value)) && (!onlySaved || saved.has(p.url)));
+    if (pantryMode) {
+      const terms = pantryTerms();
+      found = found.map(p => {
+        const ingredients=(p.pantryIngredients||[]).map(v=>v.toLowerCase());
+        const missing=ingredients.filter(ingredient=>!terms.some(term=>ingredient.includes(term)||term.includes(ingredient))).length;
+        const matched=terms.filter(term=>ingredients.some(ingredient=>ingredient.includes(term)||term.includes(ingredient))).length;
+        return {...p,pantryMissing:missing,pantryMatched:matched};
+      }).filter(p=>p.pantryMatched>0 && p.pantryMissing<=1).sort((a,b)=>a.pantryMissing-b.pantryMissing||b.pantryMatched-a.pantryMatched);
+    }
     const metricSort = (key, direction) => (a, b) => {
       const av = Number.isFinite(Number(a[key])) && a[key] !== null ? Number(a[key]) : null;
       const bv = Number.isFinite(Number(b[key])) && b[key] !== null ? Number(b[key]) : null;
@@ -134,7 +189,7 @@ if (input) {
     else if (sort.value === 'calories-desc') found.sort(metricSort('calories', -1));
     else if (sort.value === 'abv-asc') found.sort(metricSort('abv', 1));
     else if (sort.value === 'abv-desc') found.sort(metricSort('abv', -1));
-    status.textContent = `${found.length} ${onlySaved ? 'saved ' : ''}recipe${found.length === 1 ? '' : 's'} found.`;
+    status.textContent = pantryMode ? (found.length ? found.length + ' pantry match' + (found.length===1?'':'es') + ' — exact matches first, then recipes missing one ingredient.' : 'No close pantry matches yet. Add another ingredient or clear pantry mode.') : `${found.length} ${onlySaved ? 'saved ' : ''}recipe${found.length === 1 ? '' : 's'} found.`;
     const fragment = document.createDocumentFragment();
     for (const p of found) {
       const card = document.createElement('article'); card.className = 'card';
@@ -151,8 +206,11 @@ if (input) {
       const facts = document.createElement('p'); facts.className = 'card-facts';
       if (p.calories != null) { const kcal = document.createElement('span'); kcal.textContent = `≈ ${p.calories} kcal`; facts.append(kcal); }
       if (p.abv != null) { const abv = document.createElement('span'); abv.textContent = `≈ ${p.abv}% ABV`; facts.append(abv); }
+      let pantry = null;
+      if (pantryMode) { pantry = document.createElement('p'); pantry.className='pantry-match'; pantry.textContent = p.pantryMissing===0 ? 'You can make this now' : 'Missing 1 ingredient'; }
       const desc = document.createElement('p'); desc.textContent = p.description.length > 155 ? p.description.slice(0, 152) + '…' : p.description;
-      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); parts.push(desc);
+      const more = document.createElement('a'); more.className = 'read-more'; more.href = p.url; more.textContent = 'Make this drink ↗';
+      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); if (pantry) parts.push(pantry); parts.push(desc, more);
       card.append(...parts); fragment.append(card);
     }
     if (!found.length) { const message = document.createElement('p'); message.className = 'empty-state'; message.textContent = onlySaved ? 'No saved recipes match. Save a drink from the collection, or clear your filters.' : 'No matches yet. Try a different ingredient or choose All drinks.'; fragment.append(message); }
@@ -161,6 +219,10 @@ if (input) {
     if (input.value.trim()) state.set('q', input.value.trim());
     if (category.value) state.set('category', category.value);
     if (calorie.value) state.set('calories', calorie.value);
+    if (alcohol.value) state.set('alcohol', alcohol.value);
+    if (time.value) state.set('time', time.value);
+    if (spirit.value) state.set('spirit', spirit.value);
+    if (flavor.value) state.set('flavor', flavor.value);
     if (sort.value !== 'newest') state.set('sort', sort.value);
     if (onlySaved) state.set('saved', '1');
     history.replaceState(null, '', location.pathname + (state.size ? '?' + state : ''));
@@ -168,9 +230,12 @@ if (input) {
   renderSearch = display;
   let debounce;
   input.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(display, 120); });
-  category.addEventListener('change', display); calorie.addEventListener('change', display); sort.addEventListener('change', display);
+  [category,calorie,alcohol,time,spirit,flavor,sort].forEach(control=>control.addEventListener('change',display));
+  pantrySearch.addEventListener('click',()=>{pantryMode=pantryTerms().length>0;pantryClear.hidden=!pantryMode;display();});
+  pantryInput.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();pantrySearch.click();}});
+  pantryClear.addEventListener('click',()=>{pantryMode=false;pantryInput.value='';pantryClear.hidden=true;display();});
   savedFilter.addEventListener('click', () => { savedFilter.setAttribute('aria-pressed', String(savedFilter.getAttribute('aria-pressed') !== 'true')); display(); });
-  document.querySelector('#clear-filters').addEventListener('click', () => { input.value = ''; category.value = ''; calorie.value = ''; sort.value = 'newest'; savedFilter.setAttribute('aria-pressed', 'false'); display(); input.focus(); });
+  document.querySelector('#clear-filters').addEventListener('click', () => { input.value=''; category.value=''; calorie.value=''; alcohol.value=''; time.value=''; spirit.value=''; flavor.value=''; sort.value='newest'; savedFilter.setAttribute('aria-pressed','false'); pantryMode=false; pantryInput.value=''; pantryClear.hidden=true; display(); input.focus(); });
   fetch(input.dataset.index).then(response => { if (!response.ok) throw Error('Search unavailable'); return response.json(); }).then(data => { entries = data; display(); }).catch(() => { status.textContent = 'Search could not load. Refresh to retry, or browse All recipes in the footer.'; });
 }
 
@@ -189,6 +254,14 @@ document.querySelectorAll('[data-feedback]').forEach(async panel => {
   const commentForm = panel.querySelector('[data-comment-form]');
   const commentStatus = panel.querySelector('[data-comment-status]');
   const commentFormWrap = panel.querySelector('[data-comment-form]');
+  const commentToggle = panel.querySelector('[data-comment-toggle]');
+  const commentCount = panel.querySelector('[data-comment-count]');
+  commentToggle?.addEventListener('click', () => {
+    if (!commentFormWrap) return;
+    commentFormWrap.hidden = !commentFormWrap.hidden;
+    commentToggle.textContent = commentFormWrap.hidden ? 'Leave a comment' : 'Hide comment form';
+    if (!commentFormWrap.hidden) commentFormWrap.querySelector('input[name="name"]')?.focus({preventScroll:true});
+  });
   const api = endpoint + '/api/recipes/' + encodeURIComponent(slug);
 
   let ratedRecipes = new Set();
@@ -227,6 +300,7 @@ document.querySelectorAll('[data-feedback]').forEach(async panel => {
   };
   const renderComments = data => {
     const comments = Array.isArray(data.comments) ? data.comments : [];
+    if (commentCount) commentCount.textContent = comments.length ? '(' + comments.length + ')' : '';
     const fragment = document.createDocumentFragment();
     if (!comments.length) {
       const p = document.createElement('p');
