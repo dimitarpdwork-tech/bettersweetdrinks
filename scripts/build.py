@@ -102,12 +102,112 @@ for d in docs:
     d['body']=str(body)
 posts=sorted([d for d in docs if d['kind']=='posts'],key=lambda d:(str(d['publishDate']),int(d['id'])),reverse=True)
 recipes={p.stem:json.loads(p.read_text()) for p in (ROOT/'content/recipes').glob('*.json')}
+ingredient_profiles=read('data/ingredient_profiles.json')['profiles']
 comments=read('data/comments.json');tax=read('data/taxonomies.json');redirects=read('data/redirects.json')
+
+FRACTIONS={'½':' 1/2','¼':' 1/4','¾':' 3/4','⅓':' 1/3','⅔':' 2/3','⅛':' 1/8','⅜':' 3/8','⅝':' 5/8','⅞':' 7/8'}
+UNIT_ML={'ml':1,'milliliter':1,'milliliters':1,'cl':10,'ounce':29.5735,'ounces':29.5735,'oz':29.5735,
+         'cup':240,'cups':240,'tablespoon':15,'tablespoons':15,'tbsp':15,'teaspoon':5,'teaspoons':5,'tsp':5,
+         'shot':44,'shots':44,'part':30,'parts':30,'dash':0.9,'dashes':0.9,'scoop':120,'scoops':120}
+UNIT_PATTERN='|'.join(sorted((re.escape(v) for v in UNIT_ML),key=len,reverse=True))
+AMOUNT_RE=re.compile(r'(?<![\w.])(\d+(?:\.\d+)?(?:\s+\d+/\d+)?|\d+/\d+)\s*(?:of\s+)?('+UNIT_PATTERN+r')\b',re.I)
+ALCOHOL_HINT_RE=re.compile(r'\b(vodka|gin|rum|tequila|whisk(?:e)?y|bourbon|brandy|cognac|liqueur|schnapps|vermouth|aperol|campari|prosecco|champagne|wine|beer|lager|ale|cachaca|cachaça|sake|sherry|absinthe)\b',re.I)
+
+def number_value(value):
+    value=value.strip()
+    if ' ' in value and '/' in value:
+        whole,fraction=value.split(None,1);return float(whole)+number_value(fraction)
+    if '/' in value:
+        a,b=value.split('/',1);return float(a)/float(b)
+    return float(value)
+
+def ingredient_amount_ml(value):
+    normalized=str(value)
+    for symbol,replacement in FRACTIONS.items():normalized=normalized.replace(symbol,replacement)
+    match=AMOUNT_RE.search(normalized)
+    return number_value(match.group(1))*UNIT_ML[match.group(2).lower()] if match else None
+
+def ingredient_profile(value):
+    # Explanatory text after a colon/parenthesis can mention another ingredient.
+    # Match the actual ingredient label first so "Prosecco ... Aperol" stays Prosecco.
+    core=str(value).lower().split(':',1)[0].split('(',1)[0]
+    matches=[]
+    for profile in ingredient_profiles:
+        for term in profile['match']:
+            if re.search(r'(?<!\\w)'+re.escape(term.lower())+r'(?!\\w)',core):
+                matches.append((len(term),profile))
+    return max(matches,key=lambda item:item[0])[1] if matches else None
+
+def recipe_yield_count(value):
+    match=re.search(r'\d+(?:\.\d+)?',str(value or ''))
+    return max(1.0,float(match.group())) if match else 1.0
+
+def estimate_recipe(recipe):
+    calories=ethanol_ml=liquid_ml=0.0
+    mapped=quantified=0
+    skip_remainder=False
+    ingredient_text=' '.join(str(v) for v in recipe.get('ingredients',[]))
+    for raw in recipe.get('ingredients',[]):
+        line=' '.join(str(raw).split()); lower=line.lower()
+        # Imported recipes sometimes include a complete syrup/garnish sub-recipe after
+        # the drink itself. Do not count that batch when only a small amount is used.
+        if mapped and (re.match(r'^(?:diy|homemade)\b.*syrup',lower) or
+                       (not re.search(r'\d',lower) and re.search(r'(?:optional|garnish|topping|rim)\s*:?\s*$',lower))):
+            skip_remainder=True
+        if skip_remainder:continue
+        if 'for garnish' in lower or lower.startswith(('garnish','optional')):continue
+        amount=ingredient_amount_ml(line)
+        if amount is None:continue
+        quantified+=1
+        profile=ingredient_profile(line)
+        if not profile:continue
+        mapped+=1
+        calories+=amount*float(profile.get('kcalPer100ml',0))/100
+        if profile.get('liquid',True):
+            liquid_ml+=amount
+            ethanol_ml+=amount*float(profile.get('abv',0))/100
+    coverage=mapped/quantified if quantified else 0
+    servings=recipe_yield_count(recipe.get('yield'))
+    manual_nutrition=recipe.get('nutrition') or {}
+    manual_cal_value=recipe.get('calories') if recipe.get('calories') not in (None,'') else manual_nutrition.get('calories','')
+    manual_cal_match=re.search(r'\d+(?:\.\d+)?',str(manual_cal_value))
+    manual_calories=round(float(manual_cal_match.group())) if manual_cal_match else None
+    estimated_calories=round(calories/servings) if coverage>=0.6 and mapped else None
+    calories_per_serving=manual_calories if manual_calories is not None else estimated_calories
+
+    manual_abv=recipe.get('abv')
+    try:manual_abv=float(manual_abv) if manual_abv not in (None,'') else None
+    except (TypeError,ValueError):manual_abv=None
+    abv=None
+    if manual_abv is not None:
+        abv=round(manual_abv,1)
+    elif liquid_ml and coverage>=0.6:
+        # Account for typical water picked up from ice during preparation.
+        instructions=BeautifulSoup(recipe.get('instructions',''),'html.parser').get_text(' ',strip=True).lower()
+        if ethanol_ml:
+            dilution=0.25 if 'shake' in instructions else 0.20 if 'stir' in instructions else 0.15 if 'blend' in instructions else 0.10 if 'ice' in ingredient_text.lower() else 0
+        else:dilution=0
+        abv=round(100*ethanol_ml/(liquid_ml*(1+dilution)),1)
+        if abv==0 and ALCOHOL_HINT_RE.search(ingredient_text):abv=None
+
+    band=None
+    if calories_per_serving is not None:
+        band='under-100' if calories_per_serving<100 else '100-199' if calories_per_serving<200 else '200-plus'
+    return {'estimatedCalories':calories_per_serving,'estimatedAbv':abv,'calorieBand':band,
+            'caloriesEstimated':manual_calories is None and calories_per_serving is not None,
+            'abvEstimated':manual_abv is None and abv is not None,'estimateCoverage':round(coverage,2)}
+
+for recipe in recipes.values():recipe.update(estimate_recipe(recipe))
+
 related_stopwords={'recipe','recipes','drink','drinks','cocktail','cocktails','homemade','copycat','easy','make','with','without','how','the','and','for','from','best','iced','cold','ice','water','fresh','optional','garnish','chilled','syrup'}
 def related_words(value):return set(re.findall(r'[a-z]{4,}',value.lower()))-related_stopwords
 for p in posts:
     p['titleWords']=related_words(p['title'])
     p['ingredientWords']=related_words(' '.join(' '.join(recipes[str(rid)]['ingredients']) for rid in p['recipeIds']))
+    primary=recipes.get(str(p['recipeIds'][0])) if p.get('recipeIds') else None
+    p['calories']=primary.get('estimatedCalories') if primary else None
+    p['abv']=primary.get('estimatedAbv') if primary else None
+    p['calorieBand']=primary.get('calorieBand') if primary else None
 def related_posts(post):
     ranked=[]
     for candidate in posts:
@@ -161,7 +261,15 @@ for d in docs:
         # Recipe rich-result validation warnings and are not useful to readers.
         clean_ingredients=[' '.join(str(v).split()) for v in r.get('ingredients',[]) if len(' '.join(str(v).split()))>=2]
         r['ingredients']=clean_ingredients
-        r['instructions']=str(soup);cards.append(r)
+        r['instructions']=str(soup)
+        # Build a nutrition object for visible details and Recipe JSON-LD. Manual
+        # nutrition wins; otherwise add only the calorie value we can estimate.
+        nutrition=dict(r.get('nutrition') or {})
+        if r.get('estimatedCalories') is not None and not nutrition.get('calories'):
+            nutrition['@type']='NutritionInformation'
+            nutrition['calories']=str(r['estimatedCalories'])+' kcal'
+        r['nutrition']=nutrition
+        cards.append(r)
         author_name=r['author'] or d['author']
         recipe_category=(r.get('category') or ', '.join(d.get('categories',[]))).strip()
         tag_keywords=[str(v).replace('-',' ').strip() for v in d.get('tags',[]) if str(v).strip()]
@@ -218,7 +326,9 @@ for src,dst in redirects.items():
     dest=OUT/src/'index.html';dest.parent.mkdir(exist_ok=True)
     dest.write_text('<!doctype html><html lang="en"><head><meta charset="utf-8"><title>Recipe moved</title><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0;url='+html.escape(link(dst+'/'))+'"><link rel="canonical" href="'+html.escape(absolute(dst+'/'))+'"></head><body><a href="'+html.escape(link(dst+'/'))+'">Continue to recipe</a></body></html>')
 (OUT/'_redirects').write_text('\n'.join('/'+s+'/ /'+d+'/ 301' for s,d in redirects.items())+'\n')
-search=[{'title':p['title'],'url':link(p['url']),'description':p['description'],'image':link(p['cardImage']) if p['cardImage'] else '', 'categories':p['categories'], 'date':str(p['publishDate']), 'text':' '.join([p['title'],p['description'],*p['categories'],*[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']]])} for p in posts]
+search=[{'title':p['title'],'url':link(p['url']),'description':p['description'],'image':link(p['cardImage']) if p['cardImage'] else '',
+         'categories':p['categories'],'date':str(p['publishDate']),'calories':p['calories'],'abv':p['abv'],'calorieBand':p['calorieBand'],
+         'text':' '.join([p['title'],p['description'],*p['categories'],*[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']]])} for p in posts]
 (OUT/'search-index.json').write_text(json.dumps(search,ensure_ascii=False))
 url_lastmod={absolute(d['url']):str(d['updatedDate']) for d in docs if not d.get('noindex',False)}
 sitemap_body=''.join('<url><loc>'+html.escape(u)+'</loc>'+('<lastmod>'+html.escape(url_lastmod[u])+'</lastmod>' if u in url_lastmod else '')+'</url>' for u in urls)
@@ -234,4 +344,4 @@ if repo:
     (admin/'config.yml').write_text(yaml.safe_dump(config,sort_keys=False))
     shutil.copy2(ROOT/'cms/index.html',admin/'index.html')
 else:(admin/'index.html').write_text('<!doctype html><html lang="en"><meta charset="utf-8"><title>Editor setup pending</title><h1>Editor setup pending</h1><p>The editor will be enabled when this website is connected to its GitHub repository.</p></html>')
-print(json.dumps({'articles':len(posts),'pages':len(docs)-len(posts),'recipeCards':sum(len(d['recipeIds']) for d in docs),'htmlPages':len(list(OUT.rglob('*.html'))),'production':PRODUCTION,'base':BASE}))
+print(json.dumps({'articles':len(posts),'pages':len(docs)-len(posts),'recipeCards':sum(len(d['recipeIds']) for d in docs),'recipesWithCalories':sum(1 for r in recipes.values() if r.get('estimatedCalories') is not None),'recipesWithAbv':sum(1 for r in recipes.values() if r.get('estimatedAbv') is not None),'htmlPages':len(list(OUT.rglob('*.html'))),'production':PRODUCTION,'base':BASE}))

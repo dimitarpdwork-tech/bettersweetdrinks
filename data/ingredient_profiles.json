@@ -1,0 +1,661 @@
+{
+  "version": 1,
+  "notes": "Approximate reference values used for per-serving calorie and ABV estimates. Specific brands can vary; more-specific matches must appear before generic matches.",
+  "profiles": [
+    {
+      "name": "coconut rum",
+      "match": [
+        "coconut rum"
+      ],
+      "kcalPer100ml": 190,
+      "abv": 21,
+      "liquid": true
+    },
+    {
+      "name": "cream liqueur",
+      "match": [
+        "cream liqueur",
+        "baileys"
+      ],
+      "kcalPer100ml": 327,
+      "abv": 17,
+      "liquid": true
+    },
+    {
+      "name": "coffee liqueur",
+      "match": [
+        "coffee liqueur",
+        "kahlua",
+        "cocoa cream liqueur"
+      ],
+      "kcalPer100ml": 300,
+      "abv": 20,
+      "liquid": true
+    },
+    {
+      "name": "blue curacao",
+      "match": [
+        "blue curaçao",
+        "blue curacao"
+      ],
+      "kcalPer100ml": 250,
+      "abv": 20,
+      "liquid": true
+    },
+    {
+      "name": "green apple schnapps",
+      "match": [
+        "green apple schnapps",
+        "apple schnapps"
+      ],
+      "kcalPer100ml": 200,
+      "abv": 15,
+      "liquid": true
+    },
+    {
+      "name": "triple sec",
+      "match": [
+        "triple sec",
+        "cointreau",
+        "grand marnier"
+      ],
+      "kcalPer100ml": 280,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "aperol",
+      "match": [
+        "aperol"
+      ],
+      "kcalPer100ml": 140,
+      "abv": 11,
+      "liquid": true
+    },
+    {
+      "name": "campari",
+      "match": [
+        "campari"
+      ],
+      "kcalPer100ml": 160,
+      "abv": 25,
+      "liquid": true
+    },
+    {
+      "name": "sweet vermouth",
+      "match": [
+        "sweet vermouth"
+      ],
+      "kcalPer100ml": 144,
+      "abv": 16,
+      "liquid": true
+    },
+    {
+      "name": "dry vermouth",
+      "match": [
+        "dry vermouth"
+      ],
+      "kcalPer100ml": 117,
+      "abv": 18,
+      "liquid": true
+    },
+    {
+      "name": "vermouth",
+      "match": [
+        "vermouth"
+      ],
+      "kcalPer100ml": 130,
+      "abv": 17,
+      "liquid": true
+    },
+    {
+      "name": "amaretto",
+      "match": [
+        "amaretto"
+      ],
+      "kcalPer100ml": 280,
+      "abv": 28,
+      "liquid": true
+    },
+    {
+      "name": "schnapps",
+      "match": [
+        "schnapps"
+      ],
+      "kcalPer100ml": 210,
+      "abv": 20,
+      "liquid": true
+    },
+    {
+      "name": "liqueur",
+      "match": [
+        "liqueur"
+      ],
+      "kcalPer100ml": 280,
+      "abv": 25,
+      "liquid": true
+    },
+    {
+      "name": "prosecco",
+      "match": [
+        "prosecco"
+      ],
+      "kcalPer100ml": 70,
+      "abv": 11.5,
+      "liquid": true
+    },
+    {
+      "name": "champagne",
+      "match": [
+        "champagne",
+        "sparkling wine"
+      ],
+      "kcalPer100ml": 76,
+      "abv": 12,
+      "liquid": true
+    },
+    {
+      "name": "wine",
+      "match": [
+        "wine"
+      ],
+      "kcalPer100ml": 83,
+      "abv": 12.5,
+      "liquid": true
+    },
+    {
+      "name": "vodka",
+      "match": [
+        "vodka"
+      ],
+      "kcalPer100ml": 231,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "gin",
+      "match": [
+        "gin"
+      ],
+      "kcalPer100ml": 263,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "tequila",
+      "match": [
+        "tequila"
+      ],
+      "kcalPer100ml": 231,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "bourbon",
+      "match": [
+        "bourbon"
+      ],
+      "kcalPer100ml": 250,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "whiskey",
+      "match": [
+        "whiskey",
+        "whisky"
+      ],
+      "kcalPer100ml": 250,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "cognac",
+      "match": [
+        "cognac"
+      ],
+      "kcalPer100ml": 238,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "brandy",
+      "match": [
+        "brandy"
+      ],
+      "kcalPer100ml": 238,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "rum",
+      "match": [
+        "rum"
+      ],
+      "kcalPer100ml": 231,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "beer",
+      "match": [
+        "beer",
+        "lager",
+        "ale"
+      ],
+      "kcalPer100ml": 43,
+      "abv": 5,
+      "liquid": true
+    },
+    {
+      "name": "simple syrup",
+      "match": [
+        "simple syrup"
+      ],
+      "kcalPer100ml": 260,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "grenadine",
+      "match": [
+        "grenadine"
+      ],
+      "kcalPer100ml": 268,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "caramel syrup",
+      "match": [
+        "caramel syrup"
+      ],
+      "kcalPer100ml": 300,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "syrup",
+      "match": [
+        "syrup"
+      ],
+      "kcalPer100ml": 260,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "honey",
+      "match": [
+        "honey"
+      ],
+      "kcalPer100ml": 430,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "agave",
+      "match": [
+        "agave"
+      ],
+      "kcalPer100ml": 310,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "sugar",
+      "match": [
+        "brown sugar",
+        "cane sugar",
+        "granulated sugar",
+        "sugar"
+      ],
+      "kcalPer100ml": 333,
+      "abv": 0,
+      "liquid": false
+    },
+    {
+      "name": "whole milk",
+      "match": [
+        "whole milk"
+      ],
+      "kcalPer100ml": 61,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "skim milk",
+      "match": [
+        "skim milk"
+      ],
+      "kcalPer100ml": 34,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "almond milk",
+      "match": [
+        "almond milk"
+      ],
+      "kcalPer100ml": 15,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "oat milk",
+      "match": [
+        "oat milk"
+      ],
+      "kcalPer100ml": 46,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "milk",
+      "match": [
+        "milk"
+      ],
+      "kcalPer100ml": 50,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "heavy cream",
+      "match": [
+        "heavy cream"
+      ],
+      "kcalPer100ml": 340,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "cream",
+      "match": [
+        "cream"
+      ],
+      "kcalPer100ml": 195,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "ice cream",
+      "match": [
+        "ice cream"
+      ],
+      "kcalPer100ml": 207,
+      "abv": 0,
+      "liquid": false
+    },
+    {
+      "name": "pineapple juice",
+      "match": [
+        "pineapple juice"
+      ],
+      "kcalPer100ml": 53,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "orange juice",
+      "match": [
+        "orange juice"
+      ],
+      "kcalPer100ml": 45,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "apple juice",
+      "match": [
+        "apple juice"
+      ],
+      "kcalPer100ml": 46,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "cranberry juice",
+      "match": [
+        "cranberry juice"
+      ],
+      "kcalPer100ml": 46,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "grapefruit juice",
+      "match": [
+        "grapefruit juice"
+      ],
+      "kcalPer100ml": 39,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "lemon juice",
+      "match": [
+        "lemon juice"
+      ],
+      "kcalPer100ml": 22,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "lime juice",
+      "match": [
+        "lime juice"
+      ],
+      "kcalPer100ml": 25,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "juice",
+      "match": [
+        "juice"
+      ],
+      "kcalPer100ml": 45,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "lemonade",
+      "match": [
+        "lemonade"
+      ],
+      "kcalPer100ml": 40,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "tonic water",
+      "match": [
+        "tonic water",
+        "tonic"
+      ],
+      "kcalPer100ml": 34,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "lemon-lime soda",
+      "match": [
+        "lemon-lime soda",
+        "sprite",
+        "7up"
+      ],
+      "kcalPer100ml": 40,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "cola",
+      "match": [
+        "cola",
+        "coke"
+      ],
+      "kcalPer100ml": 42,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "soda water",
+      "match": [
+        "soda water",
+        "club soda",
+        "sparkling water"
+      ],
+      "kcalPer100ml": 0,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "water",
+      "match": [
+        "water"
+      ],
+      "kcalPer100ml": 0,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "cold brew",
+      "match": [
+        "cold brew"
+      ],
+      "kcalPer100ml": 2,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "espresso",
+      "match": [
+        "espresso"
+      ],
+      "kcalPer100ml": 2,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "coffee",
+      "match": [
+        "coffee"
+      ],
+      "kcalPer100ml": 2,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "tea",
+      "match": [
+        "tea"
+      ],
+      "kcalPer100ml": 0,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "pumpkin puree",
+      "match": [
+        "pumpkin puree",
+        "pumpkin purée"
+      ],
+      "kcalPer100ml": 34,
+      "abv": 0,
+      "liquid": false
+    },
+    {
+      "name": "cachaca",
+      "match": [
+        "cachaça",
+        "cachaca",
+        "ypióca",
+        "ypioca"
+      ],
+      "kcalPer100ml": 231,
+      "abv": 40,
+      "liquid": true
+    },
+    {
+      "name": "sake",
+      "match": [
+        "sake"
+      ],
+      "kcalPer100ml": 134,
+      "abv": 15,
+      "liquid": true
+    },
+    {
+      "name": "sherry",
+      "match": [
+        "sherry"
+      ],
+      "kcalPer100ml": 116,
+      "abv": 17,
+      "liquid": true
+    },
+    {
+      "name": "absinthe",
+      "match": [
+        "absinthe"
+      ],
+      "kcalPer100ml": 295,
+      "abv": 55,
+      "liquid": true
+    },
+    {
+      "name": "hard cider",
+      "match": [
+        "hard cider",
+        "cider"
+      ],
+      "kcalPer100ml": 50,
+      "abv": 5,
+      "liquid": true
+    },
+    {
+      "name": "sour mix",
+      "match": [
+        "sour mix"
+      ],
+      "kcalPer100ml": 85,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "ginger beer",
+      "match": [
+        "ginger beer"
+      ],
+      "kcalPer100ml": 42,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "ginger ale",
+      "match": [
+        "ginger ale"
+      ],
+      "kcalPer100ml": 34,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "coconut cream",
+      "match": [
+        "coconut cream"
+      ],
+      "kcalPer100ml": 330,
+      "abv": 0,
+      "liquid": true
+    },
+    {
+      "name": "coconut milk",
+      "match": [
+        "coconut milk"
+      ],
+      "kcalPer100ml": 180,
+      "abv": 0,
+      "liquid": true
+    }
+  ]
+}

@@ -55,6 +55,8 @@ collections:
       - {name: prepTime, label: Prep duration (e.g. PT10M), widget: string, required: false}
       - {name: cookTime, label: Cook duration (e.g. PT5M), widget: string, required: false}
       - {name: totalTime, label: Total duration (e.g. PT15M), widget: string, required: false}
+      - {name: calories, label: Calories per serving override, widget: number, value_type: int, min: 0, required: false, hint: "Optional. Leave blank to use the automatic estimate."}
+      - {name: abv, label: ABV % override, widget: number, value_type: float, min: 0, max: 80, required: false, hint: "Optional. Leave blank to use the automatic estimate."}
       - {name: keywords, label: Keywords, widget: string, required: false}
       - {name: category, label: Category, widget: string, required: false}
       - {name: cuisine, label: Cuisine, widget: string, required: false}
