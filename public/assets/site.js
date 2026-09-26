@@ -101,18 +101,19 @@ function scaleIngredient(original, ratio, units) {
     } else {
       replacement = `${fractionLabel(scaled)} ${unit}`;
     }
-    const token = `__BSDQ${protectedIndex++}__`;
+    const token = `__BSDQ${String.fromCharCode(65 + protectedIndex++)}__`;
     protectedValues.push(replacement);
     return token;
   });
   text = text.replace(amountRe, (match, amount, offset, full) => {
+    const before = full.slice(0, offset);
     const after = full.slice(offset + match.length);
-    if (/^\s*(?:%|proof\b|abv\b)/i.test(after)) return match;
+    if (/:\s*$/.test(before) || /^\s*:/.test(after) || /^\s*(?:%|proof\b|abv\b)/i.test(after)) return match;
     const value = parseAmount(amount);
     if (!Number.isFinite(value)) return match;
     return fractionLabel(value * ratio);
   });
-  protectedValues.forEach((value, index) => { text = text.replace(`__BSDQ${index}__`, value); });
+  protectedValues.forEach((value, index) => { text = text.replace(`__BSDQ${String.fromCharCode(65 + index)}__`, value); });
   return text;
 }
 function servingLabel(baseText, servings) {
