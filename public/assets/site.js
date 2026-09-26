@@ -87,7 +87,7 @@ function metricLabel(ml) {
     const liters = ml / 1000;
     return `${Number(liters.toFixed(liters >= 10 ? 0 : 2))} L`;
   }
-  const rounded = ml >= 100 ? Math.round(ml / 5) * 5 : ml >= 20 ? Math.round(ml) : Math.round(ml * 2) / 2;
+  const rounded = ml >= 100 ? Math.round(ml / 5) * 5 : ml >= 10 ? Math.round(ml / 2.5) * 2.5 : Math.round(ml * 2) / 2;
   return `${Number(rounded.toFixed(rounded < 10 && !Number.isInteger(rounded) ? 1 : 0))} ml`;
 }
 function scaleIngredient(original, ratio, units) {
