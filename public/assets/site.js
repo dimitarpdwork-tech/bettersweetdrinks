@@ -85,10 +85,10 @@ function fractionLabel(value) {
 function metricLabel(ml) {
   if (ml >= 1000) {
     const liters = ml / 1000;
-    return \`\${Number(liters.toFixed(liters >= 10 ? 0 : 2))} L\`;
+    return `${Number(liters.toFixed(liters >= 10 ? 0 : 2))} L`;
   }
   const rounded = ml >= 100 ? Math.round(ml / 5) * 5 : ml >= 20 ? Math.round(ml) : Math.round(ml * 2) / 2;
-  return \`\${Number(rounded.toFixed(rounded < 10 && !Number.isInteger(rounded) ? 1 : 0))} ml\`;
+  return `${Number(rounded.toFixed(rounded < 10 && !Number.isInteger(rounded) ? 1 : 0))} ml`;
 }
 function scaleIngredient(original, ratio, units) {
   let protectedIndex = 0;
@@ -99,9 +99,9 @@ function scaleIngredient(original, ratio, units) {
     if (units === 'metric') {
       replacement = metricLabel(scaled * (unitMl[unit.toLowerCase()] || 1));
     } else {
-      replacement = \`\${fractionLabel(scaled)} \${unit}\`;
+      replacement = `${fractionLabel(scaled)} ${unit}`;
     }
-    const token = \`__BSDQ\${protectedIndex++}__\`;
+    const token = `__BSDQ${protectedIndex++}__`;
     protectedValues.push(replacement);
     return token;
   });
@@ -112,7 +112,7 @@ function scaleIngredient(original, ratio, units) {
     if (!Number.isFinite(value)) return match;
     return fractionLabel(value * ratio);
   });
-  protectedValues.forEach((value, index) => { text = text.replace(\`__BSDQ\${index}__\`, value); });
+  protectedValues.forEach((value, index) => { text = text.replace(`__BSDQ${index}__`, value); });
   return text;
 }
 function servingLabel(baseText, servings) {
@@ -122,7 +122,7 @@ function servingLabel(baseText, servings) {
   if (!noun) noun = 'serving';
   if (servings === 1) noun = noun.replace(/s\b/i, '');
   else if (!/s\b/i.test(noun)) noun += 's';
-  return \`\${Number(servings.toFixed(Number.isInteger(servings) ? 0 : 1))} \${noun}\`;
+  return `${Number(servings.toFixed(Number.isInteger(servings) ? 0 : 1))} ${noun}`;
 }
 let preferredUnits = 'us';
 try {
@@ -135,7 +135,7 @@ document.querySelectorAll('.recipe').forEach(recipe => {
   const counter = recipe.querySelector('.ingredient-count');
   const reset = recipe.querySelector('[data-reset]');
   const recipeId = recipe.dataset.recipeId || recipe.id || location.pathname;
-  const checklistKey = \`bsd-checklist:\${recipeId}\`;
+  const checklistKey = `bsd-checklist:${recipeId}`;
   let checked = [];
   try {
     const stored = JSON.parse(localStorage.getItem(checklistKey) || '[]');
@@ -145,7 +145,7 @@ document.querySelectorAll('.recipe').forEach(recipe => {
 
   const updateChecklist = () => {
     const active = boxes.map((box,index) => box.checked ? index : null).filter(index => index !== null);
-    if (counter) counter.textContent = \`\${active.length} of \${boxes.length} ready\`;
+    if (counter) counter.textContent = `${active.length} of ${boxes.length} ready`;
     if (reset) reset.hidden = active.length === 0;
     try { localStorage.setItem(checklistKey, JSON.stringify(active)); } catch {}
   };
@@ -249,7 +249,7 @@ document.querySelectorAll('[data-sortable-listing]').forEach(section => {
     original.forEach(card => { card.hidden = !visibleSet.has(card); });
     [...matched, ...original.filter(card => !matched.includes(card))].forEach(card => grid.append(card));
     if (status) status.textContent = matched.length
-      ? \`\${visible.length} of \${matched.length} recipe\${matched.length === 1 ? '' : 's'} shown.\`
+      ? `${visible.length} of ${matched.length} recipe${matched.length === 1 ? '' : 's'} shown.`
       : 'No recipes match these filters.';
     if (loadMore) loadMore.hidden = visible.length >= matched.length;
   };
@@ -341,8 +341,8 @@ if (input) {
     const visible = found.slice(0, searchLimit);
     if (found.length) {
       status.textContent = pantry.length
-        ? \`Showing \${visible.length} of \${found.length} best matches for what you have.\`
-        : \`Showing \${visible.length} of \${found.length} \${onlySaved ? 'saved ' : ''}recipe\${found.length === 1 ? '' : 's'}.\`;
+        ? `Showing ${visible.length} of ${found.length} best matches for what you have.`
+        : `Showing ${visible.length} of ${found.length} ${onlySaved ? 'saved ' : ''}recipe${found.length === 1 ? '' : 's'}.`;
     } else {
       status.textContent = pantry.length
         ? 'No good pantry matches yet. Try fewer or broader ingredient names.'
@@ -361,17 +361,17 @@ if (input) {
       const photo = document.createElement('div'); photo.className = 'card-photo';
       const imageLink = document.createElement('a'); imageLink.href = p.url; imageLink.tabIndex = -1; imageLink.setAttribute('aria-hidden', 'true');
       if (p.image) { const img = document.createElement('img'); Object.assign(img, {src:p.image, alt:p.title, loading:'lazy', decoding:'async', width:480, height:480}); imageLink.append(img); }
-      const save = document.createElement('button'); save.className = 'save-button'; save.dataset.save = p.url; save.setAttribute('aria-label', \`Save \${p.title}\`);
+      const save = document.createElement('button'); save.className = 'save-button'; save.dataset.save = p.url; save.setAttribute('aria-label', `Save ${p.title}`);
       photo.append(imageLink, save);
       const label = document.createElement('p'); label.className = 'eyebrow card-category'; label.textContent = (p.categories[0] || 'Drinks').replaceAll('-', ' ');
       const heading = document.createElement('h2'); const a = document.createElement('a'); a.href = p.url; a.textContent = p.title.split('|')[0].trim(); heading.append(a);
       const facts = document.createElement('p'); facts.className = 'card-facts';
-      if (p.calories != null) { const kcal = document.createElement('span'); kcal.textContent = \`≈ \${p.calories} kcal\`; facts.append(kcal); }
-      if (p.abv != null) { const abv = document.createElement('span'); abv.textContent = \`≈ \${p.abv}% ABV\`; facts.append(abv); }
+      if (p.calories != null) { const kcal = document.createElement('span'); kcal.textContent = `≈ ${p.calories} kcal`; facts.append(kcal); }
+      if (p.abv != null) { const abv = document.createElement('span'); abv.textContent = `≈ ${p.abv}% ABV`; facts.append(abv); }
       let pantryFit = null;
       if (pantry.length && p._pantry) {
         pantryFit = document.createElement('p'); pantryFit.className = 'pantry-fit';
-        pantryFit.textContent = p._pantry.missing === 0 ? 'You have everything you need' : \`Missing \${p._pantry.missing} ingredient\${p._pantry.missing === 1 ? '' : 's'}\`;
+        pantryFit.textContent = p._pantry.missing === 0 ? 'You have everything you need' : `Missing ${p._pantry.missing} ingredient${p._pantry.missing === 1 ? '' : 's'}`;
       }
       const desc = document.createElement('p'); desc.textContent = p.description.length > 155 ? p.description.slice(0, 152) + '…' : p.description;
       const cta = document.createElement('a'); cta.className = 'read-more'; cta.href = p.url; cta.append('Make this drink ', Object.assign(document.createElement('span'), {textContent:'↗'}));
