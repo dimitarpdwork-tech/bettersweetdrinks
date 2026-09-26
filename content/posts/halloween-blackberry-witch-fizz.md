@@ -10,7 +10,9 @@ author: Better Sweet Drinks
 authorSlug: admin
 categories:
 - cocktails
-tags: []
+tags:
+- themed-drinks
+- halloween-drinks
 featuredImage: /images/uploads/halloween-blackberry-witch-fizz.jpg
 featuredImageAlt: Blackberry witch fizz with rosemary and blackberries in a highball glass
 recipeIds:

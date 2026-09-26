@@ -1,9 +1,9 @@
 {
   "title": "Better Sweet Drinks",
-  "description": "Incredible Drink Recipes",
+  "description": "Tested cocktail, mocktail, coffee, lemonade and other drink recipes with clear ingredients, practical tips and step-by-step instructions.",
   "url": "https://bettersweetdrinks.com",
   "logo": "/wp-content/uploads/2025/07/cropped-Better_Sweet_Drinks_sleek_logo_coloured_transparent-1.png",
-  "repository": "",
+  "repository": "dimitarpdwork-tech/bettersweetdrinks",
   "branch": "main",
   "contactEmail": "",
   "preview": true

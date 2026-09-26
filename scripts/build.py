@@ -10,6 +10,7 @@ from jinja2 import Environment,FileSystemLoader,select_autoescape
 ROOT=Path(__file__).resolve().parents[1]; OUT=ROOT/'dist'
 def read(path):return json.loads((ROOT/path).read_text())
 site=read('data/site.json'); BASE=os.getenv('SITE_URL',site['url']).rstrip('/')
+seasonal_hubs=read('data/seasonal_hubs.json')
 PREFIX=urlsplit(BASE).path.rstrip('/'); PRODUCTION=os.getenv('PRODUCTION','false').lower()=='true'
 def link(path):return PREFIX+'/'+path.lstrip('/')
 def absolute(path):return BASE+'/'+path.lstrip('/')
@@ -25,6 +26,13 @@ shutil.copytree(ROOT/'public',OUT,dirs_exist_ok=True)
 env=Environment(loader=FileSystemLoader(ROOT/'templates'),autoescape=select_autoescape(['html']))
 site['url']=BASE
 env.globals.update(site=site,link=link,year=date.today().year,preview=not PRODUCTION)
+global_schemas=[
+    {'@context':'https://schema.org','@type':'WebSite','name':site['title'],'url':BASE+'/',
+     'description':site['description'],'potentialAction':{'@type':'SearchAction','target':BASE+'/search/?q={search_term_string}','query-input':'required name=search_term_string'}},
+    {'@context':'https://schema.org','@type':'Organization','name':site['title'],'url':BASE+'/',
+     **({'logo':absolute(site['logo'])} if site.get('logo','').startswith('/') else ({'logo':site['logo']} if site.get('logo') else {}))}
+]
+env.globals['global_schemas']=global_schemas
 def image_srcset(path):
     original=OUT/path.lstrip('/')
     variants=[]
@@ -149,18 +157,25 @@ for d in docs:
             instructions.append({'@type':'HowToStep','text':step.get_text(' ',strip=True),'url':absolute(d['url'])+'#'+step['id']})
         r['instructions']=str(soup);cards.append(r)
         author_name=r['author'] or d['author']
-        schema={'@context':'https://schema.org','@type':'Recipe','name':r['title'],'description':r['description'],'author':{'@type':'Organization' if author_name==site['title'] else 'Person','name':author_name},'recipeIngredient':r['ingredients'],'recipeInstructions':instructions,'recipeYield':r['yield'],'image':absolute(r['image']) if r['image'].startswith('/') else r['image'],'datePublished':str(d['publishDate']),'url':absolute(d['url'])+'#recipe-'+str(rid)}
+        schema={'@context':'https://schema.org','@type':'Recipe','name':r['title'],'description':r['description'],'author':{'@type':'Organization' if author_name==site['title'] else 'Person','name':author_name},'recipeIngredient':r['ingredients'],'recipeInstructions':instructions,'recipeYield':r['yield'],'image':absolute(r['image']) if r['image'].startswith('/') else r['image'],'datePublished':str(d['publishDate']),'dateModified':str(d['updatedDate']),'mainEntityOfPage':absolute(d['url']),'recipeCategory':', '.join(d.get('categories',[])),'keywords':', '.join(d.get('tags',[])) or r.get('keywords'),'url':absolute(d['url'])+'#recipe-'+str(rid)}
         for k in ['prepTime','cookTime','totalTime','nutrition','keywords']:
             if r.get(k):schema[k]=r[k]
         schemas.append(schema)
-    schemas.insert(0,{'@context':'https://schema.org','@type':'BlogPosting' if d['kind']=='posts' else 'WebPage','headline':d['title'],'description':d['description'],'datePublished':str(d['publishDate']),'dateModified':str(d['updatedDate']),'author':{'@type':'Organization' if d['author']==site['title'] else 'Person','name':d['author']},'url':absolute(d['url'])})
-    schemas.append({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'Home','item':BASE+'/'},{'@type':'ListItem','position':2,'name':d['title'],'item':absolute(d['url'])}]})
+    schemas.insert(0,{'@context':'https://schema.org','@type':'BlogPosting' if d['kind']=='posts' else 'WebPage','headline':d['title'],'description':d['description'],'datePublished':str(d['publishDate']),'dateModified':str(d['updatedDate']),'author':{'@type':'Organization' if d['author']==site['title'] else 'Person','name':d['author']},'publisher':{'@type':'Organization','name':site['title']},'mainEntityOfPage':{'@type':'WebPage','@id':absolute(d['url'])},'url':absolute(d['url'])})
+    crumbs=[{'@type':'ListItem','position':1,'name':'Home','item':BASE+'/'}]
+    if d.get('categories'):
+        cat=next((c for c in categories if c['slug']==d['categories'][0]),None)
+        if cat:crumbs.append({'@type':'ListItem','position':2,'name':cat['name'],'item':absolute('/'+cat['slug']+'/')})
+    crumbs.append({'@type':'ListItem','position':len(crumbs)+1,'name':d['title'],'item':absolute(d['url'])})
+    schemas.append({'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':crumbs})
     if d['featuredImage']:
         schemas[0]['image']=absolute(d['featuredImage'])
     related=related_posts(d)
     render(d['url'],'article.html',title=d['seoTitle'],description=d['description'],image=d['featuredImage'],canonical=d.get('canonicalUrl') or absolute(d['url']),noindex=d.get('noindex',False),doc=d,recipes=cards,comments=comments.get(str(d['id']),[]),related=related,schemas=schemas)
-def listing(path,title,items,**kwargs):
-    render(path,'listing.html',title=title,description=('Browse '+title.lower()+'. Find ingredients, step-by-step instructions and ideas for your next drink.'),items=items,schemas=[],**kwargs)
+def listing(path,title,items,description=None,schemas=None,**kwargs):
+    description=description or ('Browse '+title.lower()+'. Find ingredients, step-by-step instructions and ideas for your next drink.')
+    schemas=[] if schemas is None else schemas
+    render(path,'listing.html',title=title,description=description,items=items,schemas=schemas,**kwargs)
 pages=math.ceil(len(posts)/10)
 for n in range(1,pages+1):
     path='/' if n==1 else f'/page/{n}/'
@@ -170,6 +185,13 @@ for kind in ['category','post_tag']:
     for term in tax[kind]:
         selected=[p for p in posts if term['slug'] in p['categories' if kind=='category' else 'tags']]
         if selected:listing(('/' if kind=='category' else '/tag/')+term['slug']+'/',term['name'],selected,noindex=kind!='category')
+for hub in seasonal_hubs:
+    selected=[p for p in posts if hub['tag'] in p['tags']]
+    if not selected:continue
+    hub_url='/'+hub['slug']+'/'
+    hub_schema={'@context':'https://schema.org','@type':'CollectionPage','name':hub['title'],'description':hub['description'],'url':absolute(hub_url)}
+    breadcrumb={'@context':'https://schema.org','@type':'BreadcrumbList','itemListElement':[{'@type':'ListItem','position':1,'name':'Home','item':BASE+'/'},{'@type':'ListItem','position':2,'name':hub['title'],'item':absolute(hub_url)}]}
+    listing(hub_url,hub['title'],selected,description=hub['description'],schemas=[hub_schema,breadcrumb],hub=hub)
 for author in sorted({p['authorSlug'] for p in posts}):
     selected=[p for p in posts if p['authorSlug']==author]
     listing('/author/'+author+'/',selected[0]['author'],selected,noindex=True)
@@ -182,8 +204,11 @@ for src,dst in redirects.items():
 (OUT/'_redirects').write_text('\n'.join('/'+s+'/ /'+d+'/ 301' for s,d in redirects.items())+'\n')
 search=[{'title':p['title'],'url':link(p['url']),'description':p['description'],'image':link(p['cardImage']) if p['cardImage'] else '', 'categories':p['categories'], 'date':str(p['publishDate']), 'text':' '.join([p['title'],p['description'],*p['categories'],*[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']]])} for p in posts]
 (OUT/'search-index.json').write_text(json.dumps(search,ensure_ascii=False))
-(OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join('<url><loc>'+html.escape(u)+'</loc></url>' for u in urls)+'</urlset>')
-(OUT/'robots.txt').write_text('User-agent: *\n'+('Disallow: /admin/\nDisallow: /search/\nSitemap: '+BASE+'/sitemap.xml\n' if PRODUCTION else 'Disallow: /\n'))
+url_lastmod={absolute(d['url']):str(d['updatedDate']) for d in docs if not d.get('noindex',False)}
+sitemap_body=''.join('<url><loc>'+html.escape(u)+'</loc>'+('<lastmod>'+html.escape(url_lastmod[u])+'</lastmod>' if u in url_lastmod else '')+'</url>' for u in urls)
+(OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+sitemap_body+'</urlset>')
+(OUT/'sitemap_index.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>'+html.escape(BASE+'/sitemap.xml')+'</loc></sitemap></sitemapindex>')
+(OUT/'robots.txt').write_text('User-agent: *\n'+('Disallow: /admin/\nDisallow: /search/\nSitemap: '+BASE+'/sitemap_index.xml\n' if PRODUCTION else 'Disallow: /\n'))
 (OUT/'.nojekyll').touch()
 if PRODUCTION and urlsplit(BASE).hostname=='bettersweetdrinks.com':(OUT/'CNAME').write_text('bettersweetdrinks.com\n')
 repo=os.getenv('GITHUB_REPOSITORY',site.get('repository',''))

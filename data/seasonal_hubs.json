@@ -1,0 +1,32 @@
+[
+  {
+    "slug": "seasonal-drinks",
+    "tag": "themed-drinks",
+    "title": "Seasonal Drink Recipes",
+    "description": "Tested seasonal cocktails and mocktails for Halloween, Christmas, New Year's Eve and other occasions, with clear ingredients and practical serving tips."
+  },
+  {
+    "slug": "halloween-drinks",
+    "tag": "halloween-drinks",
+    "title": "Halloween Drink Recipes",
+    "description": "Tested Halloween cocktails and mocktails for parties, spooky dinners and October nights, with clear ingredients and step-by-step instructions."
+  },
+  {
+    "slug": "christmas-drinks",
+    "tag": "christmas-drinks",
+    "title": "Christmas Drink Recipes",
+    "description": "Tested Christmas cocktails, mocktails and festive drinks for holiday gatherings, with practical serving tips and step-by-step instructions."
+  },
+  {
+    "slug": "new-years-eve-drinks",
+    "tag": "new-years-eve-drinks",
+    "title": "New Year's Eve Drink Recipes",
+    "description": "Tested New Year's Eve cocktails, sparkling drinks and party recipes designed for midnight celebrations and easy entertaining."
+  },
+  {
+    "slug": "black-friday-drinks",
+    "tag": "black-friday-drinks",
+    "title": "Black Friday Drink Recipes",
+    "description": "Tested Black Friday drink recipes for post-shopping evenings and late-November gatherings, including coffee cocktails and seasonal serves."
+  }
+]

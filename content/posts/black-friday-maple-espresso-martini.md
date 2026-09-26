@@ -10,7 +10,9 @@ author: Better Sweet Drinks
 authorSlug: admin
 categories:
 - cocktails
-tags: []
+tags:
+- themed-drinks
+- black-friday-drinks
 featuredImage: /images/uploads/black-friday-maple-espresso-martini.jpg
 featuredImageAlt: Espresso martini topped with three coffee beans in a coupe glass
 recipeIds:
