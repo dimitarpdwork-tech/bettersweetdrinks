@@ -4,7 +4,7 @@
 <article class="article recipe-page">
   <p class="breadcrumb"><a href="{{ link('/') }}">Home</a> / {% if doc.categories %}<a href="{{ link('/'+doc.categories[0]+'/') }}">{{ doc.categories[0]|replace('-',' ')|title }}</a>{% endif %}</p>
 
-  <section class="recipe recipe-hero" id="recipe-{{ r.id }}">
+  <section class="recipe recipe-hero" id="recipe-{{ r.id }}" data-recipe-id="{{ r.id }}" data-base-servings="{{ r.yieldCount }}" data-yield-text="{{ r.yield }}">
     <div class="recipe-hero-main">
       <div class="recipe-overview">
         {% if r.image %}<img class="recipe-hero-image" src="{{ link(r.image) if r.image.startswith('/') else r.image }}" alt="{{ doc.featuredImageAlt or r.title }}" width="360" height="360" fetchpriority="high">{% endif %}
@@ -13,15 +13,19 @@
           <h1>{{ doc.displayTitle or doc.title }}</h1>
           <p class="byline">By <a href="{{ link('/author/'+doc.authorSlug+'/') }}">{{ doc.author }}</a> · <time datetime="{{ doc.publishDate }}">{{ doc.publishDate }}</time>{% if doc.updatedDate and doc.updatedDate != doc.publishDate %} · Updated <time datetime="{{ doc.updatedDate }}">{{ doc.updatedDate }}</time>{% endif %}</p>
           <div class="recipe-intro">{{ doc.recipeIntro|safe }}</div>
-          <p class="recipe-meta-line"><strong>{{ r.yield }}</strong>{% if r.totalTime %}<span>·</span><strong>{{ r.totalTime|replace('PT','')|replace('H',' hr ')|replace('M',' min ')|replace('S',' sec') }}</strong>{% endif %}</p>
+          <p class="recipe-meta-line"><strong data-serving-summary>{{ r.yield }}</strong>{% if r.totalTime %}<span>·</span><strong>{{ r.totalTime|replace('PT','')|replace('H',' hr ')|replace('M',' min ')|replace('S',' sec') }}</strong>{% endif %}</p>
           <p class="tested-inline">Tested by Better Sweet Drinks. <a href="{{ link('/about-us/') }}#how-we-test">How we test recipes</a>.</p>
-          <div class="hero-actions"><button data-print>Print recipe</button><button class="quiet-button" data-save="{{ link(doc.url) }}" aria-pressed="false" hidden>Save</button><button class="quiet-button" data-focus aria-pressed="false" hidden>Recipe mode</button></div>
+          <div class="hero-actions"><button data-print>Print recipe</button><button class="quiet-button" data-save="{{ link(doc.url) }}" aria-pressed="false" hidden>Save</button></div>
         </div>
       </div>
 
       <div class="hero-ingredients" id="ingredients">{% if doc.recipeIngredientAnchor and doc.recipeIngredientAnchor != 'ingredients' %}<span id="{{ doc.recipeIngredientAnchor }}" class="anchor-alias" aria-hidden="true"></span>{% endif %}
         <div class="ingredient-heading"><div><p class="eyebrow">WHAT YOU NEED</p><h2>Ingredients</h2></div><span class="ingredient-count" role="status"></span><button class="quiet-button" data-reset hidden>Reset checklist</button></div>
-        <ul class="ingredients">{% for ingredient in r.ingredients %}<li><label><input type="checkbox"> <span>{{ ingredient }}</span></label></li>{% endfor %}</ul>
+        <div class="ingredient-tools" aria-label="Recipe quantity controls">
+          <div class="serving-control"><span>Servings</span><button type="button" class="quiet-button" data-servings-minus aria-label="Decrease servings">−</button><output data-servings-value>{{ r.yieldCount|int if r.yieldCount == r.yieldCount|int else r.yieldCount }}</output><button type="button" class="quiet-button" data-servings-plus aria-label="Increase servings">+</button></div>
+          <div class="unit-control" role="group" aria-label="Ingredient units"><span>Units</span><button type="button" class="quiet-button selected" data-unit-system="us" aria-pressed="true">US</button><button type="button" class="quiet-button" data-unit-system="metric" aria-pressed="false">Metric</button></div>
+        </div>
+        <ul class="ingredients">{% for ingredient in r.ingredients %}<li><label><input type="checkbox"> <span data-ingredient-original="{{ ingredient }}">{{ ingredient }}</span></label></li>{% endfor %}</ul>
       </div>
     </div>
 
@@ -30,7 +34,7 @@
         <p class="eyebrow">AT A GLANCE</p>
         <h2>Nutrition & strength</h2>
         <div class="fact-grid">
-          <div><span>Serving</span><strong>{{ r.yield }}</strong></div>
+          <div><span>Serving</span><strong data-serving-summary>{{ r.yield }}</strong></div>
           {% if r.totalTime %}<div><span>Total time</span><strong>{{ r.totalTime|replace('PT','')|replace('H',' hr ')|replace('M',' min ')|replace('S',' sec') }}</strong></div>{% endif %}
           {% if r.estimatedCalories is not none %}<div><span>Calories</span><strong>{% if r.caloriesEstimated %}≈ {% endif %}{{ r.estimatedCalories }} kcal</strong></div>{% endif %}
           {% if r.estimatedAbv is not none %}<div><span>Alcohol</span><strong>{% if r.abvEstimated %}≈ {% endif %}{{ r.estimatedAbv }}% ABV</strong></div>{% endif %}
@@ -53,26 +57,31 @@
           <p class="rating-status" data-rating-status role="status" aria-live="polite"></p>
         </div>
 
-        <form class="comment-form rating-followup" data-comment-form hidden>
-          <div class="comment-prompt"><p class="eyebrow">ADD YOUR TAKE</p><h3>Leave a comment</h3></div>
-          <div class="comment-fields">
-            <label>Your name <input name="name" maxlength="60" autocomplete="name" required></label>
-            <label class="comment-wide">Comment <textarea name="body" maxlength="1200" rows="4" required placeholder="What did you change? Would you make it again?"></textarea></label>
-            <label class="feedback-honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
-          </div>
-          <button type="submit">Submit comment</button>
-          <p class="comment-note">Comments are reviewed before they appear publicly.</p>
-          <p class="comment-status" data-comment-status role="status" aria-live="polite"></p>
-        </form>
+        <details class="comment-composer">
+          <summary>Leave a comment</summary>
+          <form class="comment-form rating-followup" data-comment-form>
+            <div class="comment-prompt"><p class="eyebrow">ADD YOUR TAKE</p><h3>Tell other readers how it went</h3></div>
+            <div class="comment-fields">
+              <label>Your name <input name="name" maxlength="60" autocomplete="name" required></label>
+              <label class="comment-wide">Comment <textarea name="body" maxlength="1200" rows="4" required placeholder="What did you change? Would you make it again?"></textarea></label>
+              <label class="feedback-honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label>
+            </div>
+            <button type="submit">Submit comment</button>
+            <p class="comment-note">Comments are reviewed before they appear publicly.</p>
+            <p class="comment-status" data-comment-status role="status" aria-live="polite"></p>
+          </form>
+        </details>
 
         <details id="reader-comments" class="community-comments">
-          <summary>Check comments</summary>
+          <summary>Check comments<span data-comments-summary></span></summary>
           <div data-comments><p class="comment-empty">Loading comments…</p></div>
         </details>
       </section>
       {% endif %}
     </aside>
   </section>
+
+  <nav class="recipe-mobile-nav" aria-label="Recipe shortcuts"><a href="#ingredients">Ingredients</a><a href="#how-to-make-it">Method</a><button type="button" data-save="{{ link(doc.url) }}" aria-pressed="false">Save</button></nav>
 
   <section class="recipe-method" id="how-to-make-it">{% if doc.recipeMethodAnchor and doc.recipeMethodAnchor != 'how-to-make-it' %}<span id="{{ doc.recipeMethodAnchor }}" class="anchor-alias" aria-hidden="true"></span>{% endif %}
     <p class="eyebrow">METHOD</p>
@@ -101,8 +110,8 @@
   <section id="reader-feedback" class="reader-feedback feedback-panel feedback-top" data-feedback data-endpoint="{{ site.feedback.endpoint }}" data-slug="{{ doc.slug }}">
     <div class="feedback-top-copy"><p class="eyebrow">TASTED OR TRIED THIS?</p><h2>Rate this drink</h2><p class="rating-summary" data-rating-summary>Loading reader ratings…</p></div>
     <div class="feedback-rating"><div class="rating-stars" role="group" aria-label="Rate this page from 1 to 5 stars">{% for n in range(1,6) %}<button type="button" class="rating-star" data-rating-value="{{ n }}" aria-label="{{ n }} star{% if n != 1 %}s{% endif %}">★</button>{% endfor %}</div><p class="rating-status" data-rating-status role="status" aria-live="polite"></p></div>
-    <form class="comment-form rating-followup" data-comment-form hidden><div class="comment-prompt"><p class="eyebrow">ADD YOUR TAKE</p><h3>Leave a comment</h3></div><div class="comment-fields"><label>Your name <input name="name" maxlength="60" autocomplete="name" required></label><label class="comment-wide">Comment <textarea name="body" maxlength="1200" rows="4" required></textarea></label><label class="feedback-honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label></div><button type="submit">Submit comment</button><p class="comment-note">Comments are reviewed before they appear publicly.</p><p class="comment-status" data-comment-status role="status" aria-live="polite"></p></form>
-    <details id="reader-comments" class="community-comments"><summary>Check comments</summary><div data-comments><p class="comment-empty">Loading comments…</p></div></details>
+    <details class="comment-composer"><summary>Leave a comment</summary><form class="comment-form rating-followup" data-comment-form><div class="comment-prompt"><p class="eyebrow">ADD YOUR TAKE</p><h3>Tell other readers how it went</h3></div><div class="comment-fields"><label>Your name <input name="name" maxlength="60" autocomplete="name" required></label><label class="comment-wide">Comment <textarea name="body" maxlength="1200" rows="4" required></textarea></label><label class="feedback-honeypot" aria-hidden="true">Website <input name="website" tabindex="-1" autocomplete="off"></label></div><button type="submit">Submit comment</button><p class="comment-note">Comments are reviewed before they appear publicly.</p><p class="comment-status" data-comment-status role="status" aria-live="polite"></p></form></details>
+    <details id="reader-comments" class="community-comments"><summary>Check comments<span data-comments-summary></span></summary><div data-comments><p class="comment-empty">Loading comments…</p></div></details>
   </section>
   {% endif %}
   {% if doc.toc|length > 2 %}<details class="article-toc"><summary>In this article <span>{{ doc.toc|length }} sections</span></summary><ol>{% for entry in doc.toc %}<li><a href="#{{ entry.id }}">{{ entry.title }}</a></li>{% endfor %}</ol></details>{% endif %}
