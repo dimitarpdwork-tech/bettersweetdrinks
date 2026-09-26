@@ -199,6 +199,7 @@ for author in sorted({p['authorSlug'] for p in posts}):
     selected=[p for p in posts if p['authorSlug']==author]
     listing('/author/'+author+'/',selected[0]['author'],selected,noindex=True)
 render('/search/','search.html',title='Search recipes',description='Find your next drink recipe.',schemas=[],noindex=True)
+render('/moderate-comments/','moderate.html',title='Moderate comments',description='Private comment moderation tool.',schemas=[],noindex=True)
 render('/404/','message.html',title='Page not found',description='Try searching for a drink recipe.',schemas=[],noindex=True)
 shutil.copy2(OUT/'404/index.html',OUT/'404.html')
 for src,dst in redirects.items():
@@ -211,7 +212,7 @@ url_lastmod={absolute(d['url']):str(d['updatedDate']) for d in docs if not d.get
 sitemap_body=''.join('<url><loc>'+html.escape(u)+'</loc>'+('<lastmod>'+html.escape(url_lastmod[u])+'</lastmod>' if u in url_lastmod else '')+'</url>' for u in urls)
 (OUT/'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+sitemap_body+'</urlset>')
 (OUT/'sitemap_index.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><sitemap><loc>'+html.escape(BASE+'/sitemap.xml')+'</loc></sitemap></sitemapindex>')
-(OUT/'robots.txt').write_text('User-agent: *\n'+('Disallow: /admin/\nDisallow: /search/\nSitemap: '+BASE+'/sitemap_index.xml\n' if PRODUCTION else 'Disallow: /\n'))
+(OUT/'robots.txt').write_text('User-agent: *\n'+('Disallow: /admin/\nDisallow: /search/\nDisallow: /moderate-comments/\nSitemap: '+BASE+'/sitemap_index.xml\n' if PRODUCTION else 'Disallow: /\n'))
 (OUT/'.nojekyll').touch()
 if PRODUCTION and urlsplit(BASE).hostname=='bettersweetdrinks.com':(OUT/'CNAME').write_text('bettersweetdrinks.com\n')
 repo=os.getenv('GITHUB_REPOSITORY',site.get('repository',''))
