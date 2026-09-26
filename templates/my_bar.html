@@ -10,6 +10,16 @@
     </div>
   </header>
 
+  <section class="bar-onboarding" data-bar-onboarding hidden aria-labelledby="bar-onboarding-title">
+    <div><p class="eyebrow">START HERE</p><h2 id="bar-onboarding-title">Set up My Bar in under a minute.</h2><p>Everything stays in this browser. No account, no setup wizard, no email.</p></div>
+    <ol>
+      <li><strong>1</strong><span><b>Add what you have</b><small>Bottles, mixers, juices and syrups.</small></span></li>
+      <li><strong>2</strong><span><b>Save drinks you like</b><small>Your shortlist stays here for later.</small></span></li>
+      <li><strong>3</strong><span><b>Shop only for what’s missing</b><small>Move purchased items straight into My Bar.</small></span></li>
+    </ol>
+    <div class="bar-onboarding-actions"><a class="button" href="{{ link('/recipes/') }}">Browse recipes</a><a class="quiet-button button-link" href="{{ link('/search/') }}">Find a drink</a></div>
+  </section>
+
   <section class="bar-pantry" aria-labelledby="bar-pantry-title">
     <div class="bar-section-copy"><p class="eyebrow">YOUR SHELF</p><h2 id="bar-pantry-title">What do you have?</h2><p>Add ingredients once. They stay in this browser and power your recommendations here and in recipe search.</p></div>
     <form class="bar-pantry-form" data-bar-pantry-form>
