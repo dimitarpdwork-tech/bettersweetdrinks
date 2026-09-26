@@ -169,7 +169,8 @@ def estimate_recipe(recipe):
     coverage=mapped/quantified if quantified else 0
     servings=recipe_yield_count(recipe.get('yield'))
     manual_nutrition=recipe.get('nutrition') or {}
-    manual_cal_match=re.search(r'\d+(?:\.\d+)?',str(manual_nutrition.get('calories','')))
+    manual_cal_value=recipe.get('calories') if recipe.get('calories') not in (None,'') else manual_nutrition.get('calories','')
+    manual_cal_match=re.search(r'\d+(?:\.\d+)?',str(manual_cal_value))
     manual_calories=round(float(manual_cal_match.group())) if manual_cal_match else None
     estimated_calories=round(calories/servings) if coverage>=0.6 and mapped else None
     calories_per_serving=manual_calories if manual_calories is not None else estimated_calories
