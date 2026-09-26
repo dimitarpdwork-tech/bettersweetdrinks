@@ -1,0 +1,147 @@
+{% extends 'base.html' %}{% block content %}
+<main class="moderation-page" data-endpoint="{{ site.feedback.endpoint }}">
+  <p class="eyebrow">ADMIN TOOL</p>
+  <h1>Moderate reader comments</h1>
+  <p class="moderation-intro">Enter the moderation token you created in Cloudflare. It is used only in this browser session and is not stored by the site.</p>
+
+  <section class="moderation-login" data-moderation-login>
+    <label for="moderation-token">Moderation token</label>
+    <div class="moderation-token-row">
+      <input id="moderation-token" type="password" autocomplete="off" placeholder="Paste MODERATION_TOKEN">
+      <button type="button" data-load-comments>Load pending comments</button>
+    </div>
+    <p class="moderation-status" data-moderation-status role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="moderation-list" data-moderation-list hidden>
+    <div class="moderation-toolbar">
+      <h2>Pending comments</h2>
+      <button type="button" class="quiet-button" data-refresh-comments>Refresh</button>
+    </div>
+    <div data-comment-cards></div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const root = document.querySelector('.moderation-page');
+  if (!root) return;
+  const endpoint = (root.dataset.endpoint || '').replace(/\/$/, '');
+  const tokenInput = document.querySelector('#moderation-token');
+  const loadButton = document.querySelector('[data-load-comments]');
+  const refreshButton = document.querySelector('[data-refresh-comments]');
+  const status = document.querySelector('[data-moderation-status]');
+  const list = document.querySelector('[data-moderation-list]');
+  const cards = document.querySelector('[data-comment-cards]');
+
+  let token = '';
+
+  const headers = () => ({
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/json'
+  });
+
+  const render = comments => {
+    cards.replaceChildren();
+    if (!comments.length) {
+      const empty = document.createElement('p');
+      empty.className = 'comment-empty';
+      empty.textContent = 'No pending comments.';
+      cards.append(empty);
+      return;
+    }
+    for (const item of comments) {
+      const card = document.createElement('article');
+      card.className = 'moderation-card';
+
+      const meta = document.createElement('p');
+      meta.className = 'moderation-meta';
+      const strong = document.createElement('strong');
+      strong.textContent = item.name || 'Reader';
+      const recipe = document.createElement('span');
+      recipe.textContent = item.slug ? ' · ' + item.slug : '';
+      const date = document.createElement('time');
+      if (item.createdAt) {
+        const d = new Date(item.createdAt);
+        if (!Number.isNaN(d.getTime())) {
+          date.dateTime = item.createdAt;
+          date.textContent = ' · ' + d.toLocaleString();
+        }
+      }
+      meta.append(strong, recipe, date);
+
+      const body = document.createElement('p');
+      body.className = 'moderation-body';
+      body.textContent = item.body || '';
+
+      const actions = document.createElement('div');
+      actions.className = 'moderation-actions';
+
+      const approve = document.createElement('button');
+      approve.type = 'button';
+      approve.textContent = 'Approve';
+      approve.addEventListener('click', () => updateStatus(item.id, 'approved', card));
+
+      const reject = document.createElement('button');
+      reject.type = 'button';
+      reject.className = 'quiet-button';
+      reject.textContent = 'Reject';
+      reject.addEventListener('click', () => updateStatus(item.id, 'rejected', card));
+
+      actions.append(approve, reject);
+      card.append(meta, body, actions);
+      cards.append(card);
+    }
+  };
+
+  const load = async () => {
+    token = tokenInput.value.trim();
+    if (!token) {
+      status.textContent = 'Enter your moderation token first.';
+      return;
+    }
+    status.textContent = 'Loading pending comments…';
+    loadButton.disabled = true;
+    try {
+      const res = await fetch(endpoint + '/api/admin/comments?status=pending', {headers:headers()});
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Could not load comments');
+      render(Array.isArray(data.comments) ? data.comments : []);
+      list.hidden = false;
+      status.textContent = '';
+    } catch (error) {
+      list.hidden = true;
+      status.textContent = error.message || 'Could not load comments.';
+    } finally {
+      loadButton.disabled = false;
+    }
+  };
+
+  const updateStatus = async (id, nextStatus, card) => {
+    status.textContent = nextStatus === 'approved' ? 'Approving comment…' : 'Rejecting comment…';
+    card.querySelectorAll('button').forEach(b => b.disabled = true);
+    try {
+      const res = await fetch(endpoint + '/api/admin/comments/' + encodeURIComponent(id), {
+        method:'PATCH',
+        headers:{...headers(), 'Content-Type':'application/json'},
+        body:JSON.stringify({status:nextStatus})
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) throw new Error(data.error || 'Could not update comment');
+      card.remove();
+      status.textContent = nextStatus === 'approved' ? 'Comment approved.' : 'Comment rejected.';
+      if (!cards.children.length) render([]);
+    } catch (error) {
+      status.textContent = error.message || 'Could not update comment.';
+      card.querySelectorAll('button').forEach(b => b.disabled = false);
+    }
+  };
+
+  loadButton.addEventListener('click', load);
+  refreshButton.addEventListener('click', load);
+  tokenInput.addEventListener('keydown', event => {
+    if (event.key === 'Enter') load();
+  });
+})();
+</script>
+{% endblock %}
