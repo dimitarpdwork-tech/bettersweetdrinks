@@ -1,5 +1,11 @@
 [
   {
+    "slug": "seasonal-drinks",
+    "tag": "themed-drinks",
+    "title": "Seasonal Drink Recipes",
+    "description": "Tested seasonal cocktails and mocktails for Halloween, Christmas, New Year's Eve and other occasions, with clear ingredients and practical serving tips."
+  },
+  {
     "slug": "halloween-drinks",
     "tag": "halloween-drinks",
     "title": "Halloween Drink Recipes",
