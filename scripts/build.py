@@ -197,7 +197,54 @@ def estimate_recipe(recipe):
             'caloriesEstimated':manual_calories is None and calories_per_serving is not None,
             'abvEstimated':manual_abv is None and abv is not None,'estimateCoverage':round(coverage,2)}
 
-for recipe in recipes.values():recipe.update(estimate_recipe(recipe))
+for recipe in recipes.values():
+    recipe.update(estimate_recipe(recipe))
+    recipe['servingCount']=recipe_yield_count(recipe.get('yield'))
+
+def duration_minutes(value):
+    match=re.fullmatch(r'PT(?:(\\d+)H)?(?:(\\d+)M)?(?:(\\d+)S)?',str(value or '').upper())
+    if not match:return None
+    hours,minutes,seconds=(int(v or 0) for v in match.groups())
+    return hours*60+minutes+(1 if seconds>=30 else 0)
+
+SPIRIT_GROUPS=[
+    ('vodka',['vodka']),('gin',['gin']),('rum',['rum','cachaça','cachaca']),
+    ('tequila',['tequila','mezcal']),('whiskey',['whiskey','whisky','bourbon','rye']),
+    ('brandy',['brandy','cognac']),('wine',['prosecco','champagne','wine','vermouth']),
+    ('liqueur',['liqueur','aperol','campari','amaretto','schnapps','curacao','curaçao'])
+]
+PANTRY_STOP={'fresh','chilled','optional','garnish','garnishes','ice','water','to','taste','for','and','or','plus','of','the','a','an'}
+
+def recipe_discovery_meta(recipe):
+    ingredient_text=' '.join(str(v).lower() for v in recipe.get('ingredients',[]))
+    spirit='none'
+    for name,terms in SPIRIT_GROUPS:
+        if any(re.search(r'(?<!\\w)'+re.escape(term)+r'(?!\\w)',ingredient_text) for term in terms):
+            spirit=name;break
+    abv=recipe.get('estimatedAbv')
+    alcohol_type='non-alcoholic' if abv is not None and float(abv)==0 else 'alcoholic' if abv is not None and float(abv)>0 else ('alcoholic' if ALCOHOL_HINT_RE.search(ingredient_text) else 'unknown')
+    flavors=[]
+    flavor_rules={
+        'fruity':['berry','blackberry','blueberry','strawberry','raspberry','mango','pineapple','peach','apple','orange','grapefruit','lemon','lime','watermelon','cherry'],
+        'coffee':['coffee','espresso','cold brew'],
+        'creamy':['cream','milk','half-and-half','coconut cream','ice cream'],
+        'fizzy':['soda','sparkling','prosecco','champagne','ginger beer','ginger ale','tonic'],
+        'citrus':['lemon','lime','orange','grapefruit'],
+        'sweet':['syrup','honey','caramel','chocolate','cookie butter']
+    }
+    for flavor,terms in flavor_rules.items():
+        if any(term in ingredient_text for term in terms):flavors.append(flavor)
+    pantry=[]
+    for raw in recipe.get('ingredients',[]):
+        text=re.sub(r'^\\s*(?:\\d+(?:[./]\\d+)?|\\d+\\s+\\d+/\\d+|[½¼¾⅓⅔⅛⅜⅝⅞])\\s*(?:oz|ounce|ounces|ml|milliliters?|cl|cups?|tbsp|tablespoons?|tsp|teaspoons?|shots?|parts?|dashes?|scoops?)?\\s*','',str(raw).lower())
+        text=re.sub(r'\\([^)]*\\)',' ',text)
+        words=[w for w in re.findall(r"[a-zA-ZÀ-ÿ][a-zA-ZÀ-ÿ'-]+",text) if w not in PANTRY_STOP]
+        phrase=' '.join(words[:4]).strip()
+        if phrase:pantry.append(phrase)
+    return {'timeMinutes':duration_minutes(recipe.get('totalTime') or recipe.get('prepTime')),
+            'alcoholType':alcohol_type,'baseSpirit':spirit,'flavorTags':flavors,'pantryIngredients':pantry}
+
+for recipe in recipes.values():recipe.update(recipe_discovery_meta(recipe))
 
 def heading_key(value):
     return re.sub(r'[^a-z0-9]+',' ',str(value).lower()).strip()
@@ -336,6 +383,11 @@ for p in posts:
     p['calories']=primary.get('estimatedCalories') if primary else None
     p['abv']=primary.get('estimatedAbv') if primary else None
     p['calorieBand']=primary.get('calorieBand') if primary else None
+    p['timeMinutes']=primary.get('timeMinutes') if primary else None
+    p['alcoholType']=primary.get('alcoholType') if primary else 'unknown'
+    p['baseSpirit']=primary.get('baseSpirit') if primary else 'none'
+    p['flavorTags']=primary.get('flavorTags',[]) if primary else []
+    p['pantryIngredients']=primary.get('pantryIngredients',[]) if primary else []
 def related_posts(post):
     ranked=[]
     for candidate in posts:
@@ -430,7 +482,14 @@ def listing(path,title,items,description=None,schemas=None,**kwargs):
 pages=math.ceil(len(posts)/10)
 for n in range(1,pages+1):
     path='/' if n==1 else f'/page/{n}/'
-    listing(path,'Latest drink recipes' if n==1 else f'Latest drink recipes — Page {n}',posts[(n-1)*10:n*10],page=n,pages=pages)
+    home_kwargs={}
+    if n==1:
+        home_kwargs={
+            'quick_picks':[p for p in posts if p.get('timeMinutes') is not None and p['timeMinutes']<=10][:4],
+            'low_cal_picks':[p for p in posts if p.get('calories') is not None and p['calories']<100][:4],
+            'zero_proof_picks':[p for p in posts if p.get('alcoholType')=='non-alcoholic'][:4]
+        }
+    listing(path,'Latest drink recipes' if n==1 else f'Latest drink recipes — Page {n}',posts[(n-1)*10:n*10],page=n,pages=pages,**home_kwargs)
 listing('/recipes/','All drink recipes',posts)
 for kind in ['category','post_tag']:
     for term in tax[kind]:
@@ -456,6 +515,7 @@ for src,dst in redirects.items():
 (OUT/'_redirects').write_text('\n'.join('/'+s+'/ /'+d+'/ 301' for s,d in redirects.items())+'\n')
 search=[{'title':p['title'],'url':link(p['url']),'description':p['description'],'image':link(p['cardImage']) if p['cardImage'] else '',
          'categories':p['categories'],'date':str(p['publishDate']),'calories':p['calories'],'abv':p['abv'],'calorieBand':p['calorieBand'],
+         'timeMinutes':p['timeMinutes'],'alcoholType':p['alcoholType'],'baseSpirit':p['baseSpirit'],'flavorTags':p['flavorTags'],'pantryIngredients':p['pantryIngredients'],
          'text':' '.join([p['title'],p['description'],*p['categories'],*[v for rid in p['recipeIds'] for v in recipes[str(rid)]['ingredients']]])} for p in posts]
 (OUT/'search-index.json').write_text(json.dumps(search,ensure_ascii=False))
 url_lastmod={absolute(d['url']):str(d['updatedDate']) for d in docs if not d.get('noindex',False)}
