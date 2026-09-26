@@ -110,8 +110,8 @@ UNIT_ML={'ml':1,'milliliter':1,'milliliters':1,'cl':10,'ounce':29.5735,'ounces':
          'cup':240,'cups':240,'tablespoon':15,'tablespoons':15,'tbsp':15,'teaspoon':5,'teaspoons':5,'tsp':5,
          'shot':44,'shots':44,'part':30,'parts':30,'dash':0.9,'dashes':0.9,'scoop':120,'scoops':120}
 UNIT_PATTERN='|'.join(sorted((re.escape(v) for v in UNIT_ML),key=len,reverse=True))
-AMOUNT_RE=re.compile(r'(?<![\\w.])(\\d+(?:\\.\\d+)?(?:\\s+\\d+/\\d+)?|\\d+/\\d+)\\s*(?:of\\s+)?('+UNIT_PATTERN+r')\\b',re.I)
-ALCOHOL_HINT_RE=re.compile(r'\\b(vodka|gin|rum|tequila|whisk(?:e)?y|bourbon|brandy|cognac|liqueur|schnapps|vermouth|aperol|campari|prosecco|champagne|wine|beer|lager|ale|cachaca|cachaça|sake|sherry|absinthe)\\b',re.I)
+AMOUNT_RE=re.compile(r'(?<![\w.])(\d+(?:\.\d+)?(?:\s+\d+/\d+)?|\d+/\d+)\s*(?:of\s+)?('+UNIT_PATTERN+r')\b',re.I)
+ALCOHOL_HINT_RE=re.compile(r'\b(vodka|gin|rum|tequila|whisk(?:e)?y|bourbon|brandy|cognac|liqueur|schnapps|vermouth|aperol|campari|prosecco|champagne|wine|beer|lager|ale|cachaca|cachaça|sake|sherry|absinthe)\b',re.I)
 
 def number_value(value):
     value=value.strip()
@@ -134,7 +134,7 @@ def ingredient_profile(value):
     return next((p for p in ingredient_profiles if any(term.lower() in core for term in p['match'])),None)
 
 def recipe_yield_count(value):
-    match=re.search(r'\\d+(?:\\.\\d+)?',str(value or ''))
+    match=re.search(r'\d+(?:\.\d+)?',str(value or ''))
     return max(1.0,float(match.group())) if match else 1.0
 
 def estimate_recipe(recipe):
@@ -146,8 +146,53 @@ def estimate_recipe(recipe):
         line=' '.join(str(raw).split()); lower=line.lower()
         # Imported recipes sometimes include a complete syrup/garnish sub-recipe after
         # the drink itself. Do not count that batch when only a small amount is used.
-        if mapped and (re.match(r'^(?:diy|homemade)\\b.*syrup',lower) or
-                       (not re.search(r'\\d',lower) and re.search(r'(?:optional|garnish|topping|rim)\\s*:?\\s*
+        if mapped and (re.match(r'^(?:diy|homemade)\b.*syrup',lower) or
+                       (not re.search(r'\d',lower) and re.search(r'(?:optional|garnish|topping|rim)\s*:?\s*$',lower))):
+            skip_remainder=True
+        if skip_remainder:continue
+        if 'for garnish' in lower or lower.startswith(('garnish','optional')):continue
+        amount=ingredient_amount_ml(line)
+        if amount is None:continue
+        quantified+=1
+        profile=ingredient_profile(line)
+        if not profile:continue
+        mapped+=1
+        calories+=amount*float(profile.get('kcalPer100ml',0))/100
+        if profile.get('liquid',True):
+            liquid_ml+=amount
+            ethanol_ml+=amount*float(profile.get('abv',0))/100
+    coverage=mapped/quantified if quantified else 0
+    servings=recipe_yield_count(recipe.get('yield'))
+    manual_nutrition=recipe.get('nutrition') or {}
+    manual_cal_match=re.search(r'\d+(?:\.\d+)?',str(manual_nutrition.get('calories','')))
+    manual_calories=round(float(manual_cal_match.group())) if manual_cal_match else None
+    estimated_calories=round(calories/servings) if coverage>=0.6 and mapped else None
+    calories_per_serving=manual_calories if manual_calories is not None else estimated_calories
+
+    manual_abv=recipe.get('abv')
+    try:manual_abv=float(manual_abv) if manual_abv not in (None,'') else None
+    except (TypeError,ValueError):manual_abv=None
+    abv=None
+    if manual_abv is not None:
+        abv=round(manual_abv,1)
+    elif liquid_ml and coverage>=0.6:
+        # Account for typical water picked up from ice during preparation.
+        instructions=BeautifulSoup(recipe.get('instructions',''),'html.parser').get_text(' ',strip=True).lower()
+        if ethanol_ml:
+            dilution=0.25 if 'shake' in instructions else 0.20 if 'stir' in instructions else 0.15 if 'blend' in instructions else 0.10 if 'ice' in ingredient_text.lower() else 0
+        else:dilution=0
+        abv=round(100*ethanol_ml/(liquid_ml*(1+dilution)),1)
+        if abv==0 and ALCOHOL_HINT_RE.search(ingredient_text):abv=None
+
+    band=None
+    if calories_per_serving is not None:
+        band='under-100' if calories_per_serving<100 else '100-199' if calories_per_serving<200 else '200-plus'
+    return {'estimatedCalories':calories_per_serving,'estimatedAbv':abv,'calorieBand':band,
+            'caloriesEstimated':manual_calories is None and calories_per_serving is not None,
+            'abvEstimated':manual_abv is None and abv is not None,'estimateCoverage':round(coverage,2)}
+
+for recipe in recipes.values():recipe.update(estimate_recipe(recipe))
+
 related_stopwords={'recipe','recipes','drink','drinks','cocktail','cocktails','homemade','copycat','easy','make','with','without','how','the','and','for','from','best','iced','cold','ice','water','fresh','optional','garnish','chilled','syrup'}
 def related_words(value):return set(re.findall(r'[a-z]{4,}',value.lower()))-related_stopwords
 for p in posts:
