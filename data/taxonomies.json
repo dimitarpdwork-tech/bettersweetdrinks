@@ -373,6 +373,22 @@
     {
       "slug": "painkiller-cocktail-quick-facts",
       "name": "painkiller cocktail quick facts"
+    },
+    {
+      "slug": "halloween-drinks",
+      "name": "Halloween Drinks"
+    },
+    {
+      "slug": "christmas-drinks",
+      "name": "Christmas Drinks"
+    },
+    {
+      "slug": "new-years-eve-drinks",
+      "name": "New Year's Eve Drinks"
+    },
+    {
+      "slug": "black-friday-drinks",
+      "name": "Black Friday Drinks"
     }
   ]
 }
