@@ -199,6 +199,134 @@ def estimate_recipe(recipe):
 
 for recipe in recipes.values():recipe.update(estimate_recipe(recipe))
 
+def heading_key(value):
+    return re.sub(r'[^a-z0-9]+',' ',str(value).lower()).strip()
+
+def section_after_heading(heading):
+    level=int(heading.name[1])
+    nodes=[]
+    current=heading.next_sibling
+    while current is not None:
+        next_node=current.next_sibling
+        name=getattr(current,'name',None)
+        if name and re.fullmatch(r'h[1-6]',name) and int(name[1])<=level:break
+        nodes.append(current)
+        current=next_node
+    return nodes
+
+def remove_heading_section(heading,keep_html=False):
+    nodes=section_after_heading(heading)
+    content=''.join(str(node) for node in nodes).strip() if keep_html else ''
+    heading.decompose()
+    for node in nodes:
+        try:node.extract()
+        except AttributeError:pass
+    return content
+
+def remove_ingredient_block(heading):
+    anchor=heading.get('id','')
+    level=int(heading.name[1])
+    current=heading.next_sibling
+    heading.decompose()
+    while current is not None:
+        next_node=current.next_sibling
+        name=getattr(current,'name',None)
+        if name and re.fullmatch(r'h[1-6]',name) and int(name[1])<=level:break
+        # Legacy imports sometimes wrap later sub-sections inside blockquotes/divs.
+        # Stop before any container that already contains another heading so we only
+        # remove the ingredient list/table itself.
+        if hasattr(current,'find_all') and current.find(['h1','h2','h3','h4','h5','h6']):break
+        try:current.extract()
+        except AttributeError:pass
+        current=next_node
+    return anchor
+
+def prepare_recipe_editorial(doc):
+    if not doc.get('recipeIds'):return
+    primary=recipes.get(str(doc['recipeIds'][0]))
+    if not primary:return
+    body=BeautifulSoup(doc.get('body',''),'html.parser')
+
+    # Use the opening editorial paragraph as the concise hero description, then remove
+    # it from the lower article so readers do not see the same intro twice.
+    intro=''
+    for node in list(body.contents):
+        name=getattr(node,'name',None)
+        if name and re.fullmatch(r'h[1-6]',name):break
+        if name=='p' and node.get_text(' ',strip=True):
+            intro=str(node);node.decompose();break
+    doc['recipeIntro']=intro or '<p>'+html.escape(doc.get('description',''))+'</p>'
+
+    # The recipe hero owns the main drink image. Remove a matching inline copy from
+    # migrated article content to avoid showing the same photo again a few lines later.
+    image_targets={str(primary.get('image') or ''),str(doc.get('featuredImage') or '')}-{''}
+    for img in list(body.find_all('img')):
+        if img.get('src','') not in image_targets:continue
+        parent=img.parent
+        if getattr(parent,'name',None) in ('p','figure') and not parent.get_text(' ',strip=True):
+            parent.decompose()
+        else:img.decompose()
+        break
+
+    # Remove imported hand-written tables of contents near the top. The site creates
+    # its own TOC later, and keeping both creates broken links when recipe sections move.
+    for node in list(body.contents):
+        name=getattr(node,'name',None)
+        if name and re.fullmatch(r'h[1-6]',name):break
+        if name in ('ol','ul'):
+            anchors=node.find_all('a',href=re.compile(r'^#'))
+            if len(anchors)>=2:node.decompose()
+
+    # Extract the complete method section first so nested headings/tips stay together.
+    method_heading=None
+    for heading in list(body.find_all(re.compile(r'^h[2-4]$'))):
+        key=heading_key(heading.get_text(' ',strip=True))
+        if key in {'instructions','directions','method','steps'} or key.startswith('how to make'):
+            method_heading=heading;break
+
+    method_html=''
+    doc['recipeMethodAnchor']=''
+    doc['recipeIngredientAnchor']=''
+    if method_heading is not None:
+        doc['recipeMethodAnchor']=method_heading.get('id','')
+        method_html=remove_heading_section(method_heading,keep_html=True)
+        method_soup=BeautifulSoup(method_html,'html.parser')
+        for heading in list(method_soup.find_all(re.compile(r'^h[2-5]$'))):
+            key=heading_key(heading.get_text(' ',strip=True))
+            if key=='ingredients' or key.startswith('ingredients '):
+                doc['recipeIngredientAnchor']=remove_ingredient_block(heading)
+                break
+        method_html=str(method_soup).strip()
+
+    # Some shorter recipes put Ingredients before How-to as a separate top-level block.
+    # Remove only that ingredient block, leaving the rest of the editorial article intact.
+    ingredient_heading=None
+    for heading in list(body.find_all(re.compile(r'^h[2-4]$'))):
+        key=heading_key(heading.get_text(' ',strip=True))
+        if key=='ingredients' or key.startswith('ingredients '):
+            ingredient_heading=heading;break
+    if ingredient_heading is not None:
+        anchor=remove_ingredient_block(ingredient_heading)
+        if anchor:doc['recipeIngredientAnchor']=anchor
+
+    doc['recipeMethod']=method_html or primary.get('instructions','')
+    doc['recipeMethodFromArticle']=bool(method_html)
+
+    # Rebuild the TOC from only the remaining editorial material. Ingredients and the
+    # method now have dedicated, prominent UI and should not appear twice in navigation.
+    doc['toc']=[]
+    used_ids={el.get('id') for el in body.select('[id]')}
+    for index,heading in enumerate(body.find_all('h2'),1):
+        if not heading.get('id'):
+            hid=f'editorial-section-{index}'
+            while hid in used_ids:hid+='-section'
+            heading['id']=hid;used_ids.add(hid)
+        doc['toc'].append({'id':heading['id'],'title':heading.get_text(' ',strip=True)})
+    doc['body']=str(body).strip()
+    doc['hasEditorialBody']=bool(body.get_text(' ',strip=True) or body.find(['img','table','ul','ol','blockquote']))
+
+for doc in docs:prepare_recipe_editorial(doc)
+
 related_stopwords={'recipe','recipes','drink','drinks','cocktail','cocktails','homemade','copycat','easy','make','with','without','how','the','and','for','from','best','iced','cold','ice','water','fresh','optional','garnish','chilled','syrup'}
 def related_words(value):return set(re.findall(r'[a-z]{4,}',value.lower()))-related_stopwords
 for p in posts:
@@ -256,7 +384,7 @@ for d in docs:
             step['id']=f'recipe-{rid}-step-{i}'
             text_value=step.get_text(' ',strip=True)
             if not text_value:continue
-            instructions.append({'@type':'HowToStep','name':f'Step {i}','text':text_value,'url':absolute(d['url'])+'#'+step['id']})
+            instructions.append({'@type':'HowToStep','name':f'Step {i}','text':text_value})
         # Keep only meaningful ingredient strings. Empty/one-character values trigger
         # Recipe rich-result validation warnings and are not useful to readers.
         clean_ingredients=[' '.join(str(v).split()) for v in r.get('ingredients',[]) if len(' '.join(str(v).split()))>=2]
