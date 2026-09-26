@@ -8,4 +8,4 @@ ALLOWED_ORIGINS = "https://bettersweetdrinks.com,https://www.bettersweetdrinks.c
 [[d1_databases]]
 binding = "DB"
 database_name = "better-sweet-drinks-feedback"
-database_id = "REPLACE_WITH_D1_DATABASE_ID"
+database_id = "090b76b6-5457-4e8f-8b5e-787919d56aa0"
