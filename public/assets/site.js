@@ -106,3 +106,43 @@ if (input) {
   document.querySelector('#clear-filters').addEventListener('click', () => { input.value = ''; category.value = ''; sort.value = 'newest'; savedFilter.setAttribute('aria-pressed', 'false'); display(); input.focus(); });
   fetch(input.dataset.index).then(response => { if (!response.ok) throw Error('Search unavailable'); return response.json(); }).then(data => { entries = data; display(); }).catch(() => { status.textContent = 'Search could not load. Refresh to retry, or browse All recipes in the footer.'; });
 }
+
+
+// Community ratings are enabled only when data/site.json supplies a persistent API endpoint.
+document.querySelectorAll('[data-rating]').forEach(async panel => {
+  const endpoint = panel.dataset.endpoint;
+  const slug = panel.dataset.slug;
+  const summary = panel.querySelector('[data-rating-summary]');
+  const status = panel.querySelector('[data-rating-status]');
+  const buttons = [...panel.querySelectorAll('[data-rating-value]')];
+  if (!endpoint || !slug) return;
+  const render = data => {
+    const average = Number(data.average || 0);
+    const count = Number(data.count || 0);
+    summary.textContent = count ? `${average.toFixed(1)} out of 5 from ${count} rating${count === 1 ? '' : 's'}.` : 'No ratings yet. Be the first to rate it.';
+  };
+  try {
+    const response = await fetch(endpoint + '?slug=' + encodeURIComponent(slug), {headers:{'Accept':'application/json'}});
+    if (!response.ok) throw Error('Rating service unavailable');
+    render(await response.json());
+  } catch {
+    summary.textContent = 'Ratings are temporarily unavailable.';
+    buttons.forEach(button => button.disabled = true);
+    return;
+  }
+  buttons.forEach(button => button.addEventListener('click', async () => {
+    const rating = Number(button.dataset.ratingValue);
+    buttons.forEach(item => item.disabled = true);
+    status.textContent = 'Saving your rating…';
+    try {
+      const response = await fetch(endpoint, {method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({slug,rating})});
+      if (!response.ok) throw Error('Could not save rating');
+      render(await response.json());
+      status.textContent = 'Thanks — your rating has been recorded.';
+      buttons.forEach(item => item.classList.toggle('selected', Number(item.dataset.ratingValue) <= rating));
+    } catch {
+      status.textContent = 'Your rating could not be saved. Please try again later.';
+      buttons.forEach(item => item.disabled = false);
+    }
+  }));
+});

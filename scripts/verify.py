@@ -13,6 +13,21 @@ for p in report['urls']:
 for file in OUT.rglob('*.html'):
     soup=BeautifulSoup(file.read_text(),'html.parser');pages+=1
     if not soup.title:errors.append(str(file.relative_to(OUT))+': missing title')
+    relpath=str(file.relative_to(OUT))
+    robots=soup.find('meta',attrs={'name':'robots'})
+    noindex=robots and 'noindex' in robots.get('content','').lower()
+    # Canonical/description/H1/alt SEO requirements apply to indexable public pages,
+    # not redirect stubs, the CMS admin shell, 404 pages or preview noindex output.
+    seo_page=not noindex and not relpath.startswith('admin/') and relpath not in ('404.html','404/index.html')
+    if seo_page:
+        canonical=soup.find('link',rel='canonical')
+        if not canonical or not canonical.get('href'):errors.append(relpath+': missing canonical')
+        description=soup.find('meta',attrs={'name':'description'})
+        if not description or not description.get('content','').strip():errors.append(relpath+': missing meta description')
+        h1=soup.find_all('h1')
+        if len(h1)!=1:warnings.append({'page':relpath,'issue':f'{len(h1)} H1 elements'})
+        for img in soup.find_all('img'):
+            if not img.has_attr('alt'):warnings.append({'page':relpath,'issue':'image missing alt text','target':img.get('src','')})
     for anchor in soup.select('a[href^="#"]'):
         fragment=unquote(anchor['href'][1:])
         if fragment and not soup.find(id=fragment) and not soup.find('a',attrs={'name':fragment}):
@@ -36,6 +51,8 @@ for file in OUT.rglob('*.html'):
         if data.get('@type')=='Recipe':
             recipes+=1
             if not data.get('recipeIngredient') or not data.get('recipeInstructions'):errors.append('Recipe missing ingredients or instructions '+data.get('name',''))
+            for field in ['image','author','datePublished','dateModified','recipeYield','mainEntityOfPage']:
+                if not data.get(field):warnings.append({'page':str(file.relative_to(OUT)),'issue':'Recipe schema missing '+field,'recipe':data.get('name','')})
             for step in data.get('recipeInstructions',[]):
                 anchor=urlsplit(step.get('url','')).fragment
                 if anchor and not soup.find(id=anchor):errors.append('Missing recipe step anchor '+anchor)

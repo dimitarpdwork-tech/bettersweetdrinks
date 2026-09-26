@@ -6,5 +6,19 @@
   "repository": "dimitarpdwork-tech/bettersweetdrinks",
   "branch": "main",
   "contactEmail": "",
-  "preview": true
+  "preview": true,
+  "feedback": {
+    "comments": {
+      "enabled": false,
+      "provider": "giscus",
+      "repo": "dimitarpdwork-tech/bettersweetdrinks",
+      "repoId": "",
+      "category": "Recipe comments",
+      "categoryId": ""
+    },
+    "ratings": {
+      "enabled": false,
+      "endpoint": ""
+    }
+  }
 }
