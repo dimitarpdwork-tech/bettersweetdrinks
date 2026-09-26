@@ -364,7 +364,11 @@ def prepare_recipe_editorial(doc):
                 method_html=''
         # Remove any legacy Instructions/Step-by-step block left behind after the
         # concise method was extracted, preventing the same directions appearing twice.
-        for heading in list(method_soup.find_all(re.compile(r'^h[2-5]
+        for heading in list(method_soup.find_all(re.compile(r'^h[2-5]$'))):
+            key=heading_key(heading.get_text(' ',strip=True))
+            if key in {'instructions','directions','steps'} or 'step by step' in key:
+                remove_heading_section(heading)
+        remainder=str(method_soup).strip()
         if BeautifulSoup(remainder,'html.parser').get_text(' ',strip=True):
             remainder_soup=BeautifulSoup(remainder,'html.parser')
             for node in reversed(list(remainder_soup.contents)):
