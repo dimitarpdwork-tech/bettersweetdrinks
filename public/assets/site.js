@@ -206,10 +206,11 @@ if (input) {
       const facts = document.createElement('p'); facts.className = 'card-facts';
       if (p.calories != null) { const kcal = document.createElement('span'); kcal.textContent = `≈ ${p.calories} kcal`; facts.append(kcal); }
       if (p.abv != null) { const abv = document.createElement('span'); abv.textContent = `≈ ${p.abv}% ABV`; facts.append(abv); }
-      if (pantryMode) { const pantry = document.createElement('p'); pantry.className='pantry-match'; pantry.textContent = p.pantryMissing===0 ? 'You can make this now' : 'Missing 1 ingredient'; card.append(pantry); }
+      let pantry = null;
+      if (pantryMode) { pantry = document.createElement('p'); pantry.className='pantry-match'; pantry.textContent = p.pantryMissing===0 ? 'You can make this now' : 'Missing 1 ingredient'; }
       const desc = document.createElement('p'); desc.textContent = p.description.length > 155 ? p.description.slice(0, 152) + '…' : p.description;
       const more = document.createElement('a'); more.className = 'read-more'; more.href = p.url; more.textContent = 'Make this drink ↗';
-      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); parts.push(desc, more);
+      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); if (pantry) parts.push(pantry); parts.push(desc, more);
       card.append(...parts); fragment.append(card);
     }
     if (!found.length) { const message = document.createElement('p'); message.className = 'empty-state'; message.textContent = onlySaved ? 'No saved recipes match. Save a drink from the collection, or clear your filters.' : 'No matches yet. Try a different ingredient or choose All drinks.'; fragment.append(message); }
