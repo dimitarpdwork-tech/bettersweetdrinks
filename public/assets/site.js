@@ -121,7 +121,15 @@ document.querySelectorAll('[data-feedback]').forEach(async panel => {
   const commentsBox = panel.querySelector('[data-comments]');
   const commentForm = panel.querySelector('[data-comment-form]');
   const commentStatus = panel.querySelector('[data-comment-status]');
+  const commentFormWrap = panel.querySelector('[data-comment-form]');
   const api = endpoint + '/api/recipes/' + encodeURIComponent(slug);
+
+  let ratedRecipes = new Set();
+  try {
+    const stored = JSON.parse(localStorage.getItem('bsd-rated-recipes') || '[]');
+    if (Array.isArray(stored)) ratedRecipes = new Set(stored.filter(value => typeof value === 'string'));
+  } catch {}
+  if (ratedRecipes.has(slug) && commentFormWrap) commentFormWrap.hidden = false;
 
   const safeText = value => typeof value === 'string' ? value : '';
   const renderRating = data => {
@@ -194,6 +202,14 @@ document.querySelectorAll('[data-feedback]').forEach(async panel => {
       renderRating({rating:data});
       ratingStatus.textContent = 'Thanks — your rating has been recorded.';
       ratingButtons.forEach(item => item.classList.toggle('selected', Number(item.dataset.ratingValue) <= rating));
+      ratedRecipes.add(slug);
+      try { localStorage.setItem('bsd-rated-recipes', JSON.stringify([...ratedRecipes])); } catch {}
+      if (commentFormWrap) {
+        commentFormWrap.hidden = false;
+        commentFormWrap.scrollIntoView({behavior:'smooth', block:'nearest'});
+        const nameField = commentFormWrap.querySelector('input[name="name"]');
+        window.setTimeout(() => nameField?.focus({preventScroll:true}), 350);
+      }
     } catch {
       ratingStatus.textContent = 'Your rating could not be saved. Please try again later.';
     } finally {
