@@ -103,7 +103,7 @@ document.querySelectorAll('.recipe').forEach(recipe => {
     const multiplier=servings/base;
     ingredientTexts.forEach(span=>{span.textContent=transformIngredient(span.dataset.original||span.textContent,multiplier,units);});
     if(servingCount) servingCount.textContent=String(servings);
-    if(servingLabel) servingLabel.textContent=originalServingLabel.replace(/^\d+(?:\.\d+)?/,String(servings));
+    if(servingLabel) { let label=originalServingLabel.replace(/^\d+(?:\.\d+)?/,String(servings)); if(servings!==1) label=label.replace(/\b(cocktail|drink|serving|glass)\b$/i,'$1s'); servingLabel.textContent=label; }
     unitButtons.forEach(button=>{const selected=button.dataset.unit===units;button.classList.toggle('selected',selected);button.setAttribute('aria-pressed',String(selected));});
     if(minus) minus.disabled=servings<=1; if(plus) plus.disabled=servings>=24;
   };
@@ -166,7 +166,7 @@ if (input) {
     if (!entries) return;
     const words = input.value.trim().toLowerCase().split(/\s+/).filter(Boolean);
     const onlySaved = savedFilter.getAttribute('aria-pressed') === 'true';
-    let found = entries.filter(p => words.every(word => p.text.toLowerCase().includes(word)) && (!category.value || p.categories.includes(category.value)) && (!calorie.value || p.calorieBand === calorie.value) && (!alcohol.value || p.alcoholType === alcohol.value) && (!time.value || (time.value === 'quick' && Number(p.timeMinutes) <= 10)) && (!spirit.value || p.baseSpirit === spirit.value) && (!flavor.value || (p.flavorTags || []).includes(flavor.value)) && (!onlySaved || saved.has(p.url)));
+    let found = entries.filter(p => words.every(word => p.text.toLowerCase().includes(word)) && (!category.value || p.categories.includes(category.value)) && (!calorie.value || p.calorieBand === calorie.value) && (!alcohol.value || p.alcoholType === alcohol.value) && (!time.value || (time.value === 'quick' && p.timeMinutes != null && Number(p.timeMinutes) <= 10)) && (!spirit.value || p.baseSpirit === spirit.value) && (!flavor.value || (p.flavorTags || []).includes(flavor.value)) && (!onlySaved || saved.has(p.url)));
     if (pantryMode) {
       const terms = pantryTerms();
       found = found.map(p => {
