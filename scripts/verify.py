@@ -63,6 +63,17 @@ for file in ROOT.rglob('*'):
     # service's checked-in schema.sql is intentional application source code.
     forbidden=(file.suffix=='.wpress' or file.name in ['wp-config.php','tables.json'] or (file.suffix=='.sql' and (not rel.parts or rel.parts[0] != 'feedback')))
     if file.is_file() and forbidden:errors.append('Private file in source '+str(rel))
+# Reader feedback coverage audit: every published post must expose rating and comment controls.
+for source in (ROOT/'content/posts').glob('*.md'):
+    post=yaml.safe_load(source.read_text().split('---',2)[1])
+    if post.get('draft'):continue
+    page=OUT/post['slug']/'index.html'
+    if not page.is_file():
+        errors.append('Missing built post for feedback audit '+post['slug']);continue
+    html_text=page.read_text()
+    required_feedback=['data-feedback','id="reader-feedback"','data-rating-value','id="reader-comments"','Rate this drink','Check comments']
+    missing=[marker for marker in required_feedback if marker not in html_text]
+    if missing:errors.append('Feedback controls missing on /'+post['slug']+'/: '+', '.join(missing))
 published_posts=(yaml.safe_load(file.read_text().split('---',2)[1]) for file in (ROOT/'content/posts').glob('*.md'))
 expected_recipes=sum(len(post.get('recipeIds',[])) for post in published_posts if not post.get('draft'))
 if recipes!=expected_recipes:errors.append(f'Expected {expected_recipes} recipes, got {recipes}')
