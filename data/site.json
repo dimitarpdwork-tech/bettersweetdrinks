@@ -8,7 +8,7 @@
   "contactEmail": "",
   "preview": true,
   "feedback": {
-    "enabled": false,
+    "enabled": true,
     "provider": "cloudflare-worker-d1",
     "endpoint": "https://feedback.bettersweetdrinks.com"
   }
