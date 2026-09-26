@@ -23,6 +23,23 @@ try {
   const data = JSON.parse(localStorage.getItem('bsd-saved-recipes') || '[]');
   if (Array.isArray(data)) saved = new Set(data.filter(value => typeof value === 'string'));
 } catch { /* Browsing and saving in memory still work if storage is unavailable. */ }
+const PANTRY_KEY = 'bsd-pantry-items';
+const readPantry = () => {
+  try {
+    const data = JSON.parse(localStorage.getItem(PANTRY_KEY) || '[]');
+    return new Set(Array.isArray(data) ? data.filter(value => typeof value === 'string' && value.trim()).map(value => value.trim().toLowerCase()) : []);
+  } catch { return new Set(); }
+};
+const writePantry = pantry => {
+  try { localStorage.setItem(PANTRY_KEY, JSON.stringify([...pantry])); return true; } catch { return false; }
+};
+const pantryScore = (recipe, pantry) => {
+  const terms=[...pantry].map(value=>value.toLowerCase());
+  const ingredients=(recipe.pantryIngredients||[]).map(value=>value.toLowerCase());
+  const missing=ingredients.filter(ingredient=>!terms.some(term=>ingredient.includes(term)||term.includes(ingredient)));
+  const matched=terms.filter(term=>ingredients.some(ingredient=>ingredient.includes(term)||term.includes(ingredient)));
+  return {missing, matched};
+};
 function updateSaveButtons() {
   document.querySelectorAll('[data-save]').forEach(button => {
     const active = saved.has(button.dataset.save);
@@ -32,6 +49,7 @@ function updateSaveButtons() {
   });
 }
 let renderSearch = null;
+let renderMyBar = null;
 document.addEventListener('click', event => {
   const button = event.target.closest('[data-save]');
   if (!button) return;
@@ -42,6 +60,7 @@ document.addEventListener('click', event => {
   updateSaveButtons();
   saveStatus.textContent = persistent ? (saved.has(url) ? 'Recipe saved in this browser.' : 'Recipe removed from saved recipes.') : 'Browser storage is unavailable. This selection will last until you leave this page.';
   if (document.querySelector('#saved-filter')?.getAttribute('aria-pressed') === 'true') renderSearch?.();
+  renderMyBar?.();
 });
 updateSaveButtons();
 const FRACTION_VALUE = {'½':0.5,'¼':0.25,'¾':0.75,'⅓':1/3,'⅔':2/3,'⅛':0.125,'⅜':0.375,'⅝':0.625,'⅞':0.875};
@@ -134,6 +153,28 @@ document.querySelectorAll('[data-sortable-listing]').forEach(section => {
   loadMore?.addEventListener('click',()=>{shown+=pageSize||24;render();});
   render();
 });
+function createRecipeCard(p, options={}) {
+  const card=document.createElement('article'); card.className='card';
+  card.dataset.calories=p.calories??''; card.dataset.abv=p.abv??''; card.dataset.calorieBand=p.calorieBand??'';
+  const photo=document.createElement('div'); photo.className='card-photo';
+  const imageLink=document.createElement('a'); imageLink.href=p.url; imageLink.tabIndex=-1; imageLink.setAttribute('aria-hidden','true');
+  if(p.image){const img=document.createElement('img');Object.assign(img,{src:p.image,alt:p.title,loading:'lazy',width:480,height:480});imageLink.append(img);}
+  const save=document.createElement('button'); save.className='save-button'; save.dataset.save=p.url; save.setAttribute('aria-label','Save '+p.title);
+  photo.append(imageLink,save);
+  const label=document.createElement('p'); label.className='eyebrow card-category'; label.textContent=(p.categories?.[0]||'Drinks').replaceAll('-',' ');
+  const heading=document.createElement('h2'); const link=document.createElement('a'); link.href=p.url; link.textContent=p.title.split('|')[0].trim(); heading.append(link);
+  const facts=document.createElement('p'); facts.className='card-facts';
+  if(p.calories!=null){const kcal=document.createElement('span');kcal.textContent='≈ '+p.calories+' kcal';facts.append(kcal);}
+  if(p.abv!=null){const abv=document.createElement('span');abv.textContent='≈ '+p.abv+'% ABV';facts.append(abv);}
+  const parts=[photo,label,heading];
+  if(facts.children.length) parts.push(facts);
+  if(options.status){const status=document.createElement('p');status.className='pantry-match';status.textContent=options.status;parts.push(status);}
+  const desc=document.createElement('p');desc.textContent=p.description.length>155?p.description.slice(0,152)+'…':p.description;parts.push(desc);
+  const more=document.createElement('a');more.className='read-more';more.href=p.url;more.textContent='Make this drink ↗';parts.push(more);
+  card.append(...parts);
+  return card;
+}
+
 const input = document.querySelector('#recipe-search');
 if (input) {
   const status = document.querySelector('#search-status');
@@ -159,6 +200,8 @@ if (input) {
   if ([...flavor.options].some(option => option.value === params.get('flavor'))) flavor.value = params.get('flavor');
   if ([...sort.options].some(option => option.value === params.get('sort'))) sort.value = params.get('sort');
   savedFilter.setAttribute('aria-pressed', String(params.get('saved') === '1'));
+  const storedPantry=readPantry();
+  if(storedPantry.size) pantryInput.value=[...storedPantry].join(', ');
   let entries = null;
   let pantryMode = false;
   const pantryTerms = () => pantryInput.value.split(',').map(v=>v.trim().toLowerCase()).filter(Boolean);
@@ -168,12 +211,10 @@ if (input) {
     const onlySaved = savedFilter.getAttribute('aria-pressed') === 'true';
     let found = entries.filter(p => words.every(word => p.text.toLowerCase().includes(word)) && (!category.value || p.categories.includes(category.value)) && (!calorie.value || p.calorieBand === calorie.value) && (!alcohol.value || p.alcoholType === alcohol.value) && (!time.value || (time.value === 'quick' && p.timeMinutes != null && Number(p.timeMinutes) <= 10)) && (!spirit.value || p.baseSpirit === spirit.value) && (!flavor.value || (p.flavorTags || []).includes(flavor.value)) && (!onlySaved || saved.has(p.url)));
     if (pantryMode) {
-      const terms = pantryTerms();
+      const pantry=new Set(pantryTerms());
       found = found.map(p => {
-        const ingredients=(p.pantryIngredients||[]).map(v=>v.toLowerCase());
-        const missing=ingredients.filter(ingredient=>!terms.some(term=>ingredient.includes(term)||term.includes(ingredient))).length;
-        const matched=terms.filter(term=>ingredients.some(ingredient=>ingredient.includes(term)||term.includes(ingredient))).length;
-        return {...p,pantryMissing:missing,pantryMatched:matched};
+        const score=pantryScore(p,pantry);
+        return {...p,pantryMissing:score.missing.length,pantryMatched:score.matched.length};
       }).filter(p=>p.pantryMatched>0 && p.pantryMissing<=1).sort((a,b)=>a.pantryMissing-b.pantryMissing||b.pantryMatched-a.pantryMatched);
     }
     const metricSort = (key, direction) => (a, b) => {
@@ -192,26 +233,8 @@ if (input) {
     status.textContent = pantryMode ? (found.length ? found.length + ' pantry match' + (found.length===1?'':'es') + ' — exact matches first, then recipes missing one ingredient.' : 'No close pantry matches yet. Add another ingredient or clear pantry mode.') : `${found.length} ${onlySaved ? 'saved ' : ''}recipe${found.length === 1 ? '' : 's'} found.`;
     const fragment = document.createDocumentFragment();
     for (const p of found) {
-      const card = document.createElement('article'); card.className = 'card';
-      card.dataset.calories = p.calories ?? '';
-      card.dataset.abv = p.abv ?? '';
-      card.dataset.calorieBand = p.calorieBand ?? '';
-      const photo = document.createElement('div'); photo.className = 'card-photo';
-      const imageLink = document.createElement('a'); imageLink.href = p.url; imageLink.tabIndex = -1; imageLink.setAttribute('aria-hidden', 'true');
-      if (p.image) { const img = document.createElement('img'); Object.assign(img, {src:p.image, alt:p.title, loading:'lazy', width:480, height:480}); imageLink.append(img); }
-      const save = document.createElement('button'); save.className = 'save-button'; save.dataset.save = p.url; save.setAttribute('aria-label', `Save ${p.title}`);
-      photo.append(imageLink, save);
-      const label = document.createElement('p'); label.className = 'eyebrow card-category'; label.textContent = (p.categories[0] || 'Drinks').replaceAll('-', ' ');
-      const heading = document.createElement('h2'); const a = document.createElement('a'); a.href = p.url; a.textContent = p.title.split('|')[0].trim(); heading.append(a);
-      const facts = document.createElement('p'); facts.className = 'card-facts';
-      if (p.calories != null) { const kcal = document.createElement('span'); kcal.textContent = `≈ ${p.calories} kcal`; facts.append(kcal); }
-      if (p.abv != null) { const abv = document.createElement('span'); abv.textContent = `≈ ${p.abv}% ABV`; facts.append(abv); }
-      let pantry = null;
-      if (pantryMode) { pantry = document.createElement('p'); pantry.className='pantry-match'; pantry.textContent = p.pantryMissing===0 ? 'You can make this now' : 'Missing 1 ingredient'; }
-      const desc = document.createElement('p'); desc.textContent = p.description.length > 155 ? p.description.slice(0, 152) + '…' : p.description;
-      const more = document.createElement('a'); more.className = 'read-more'; more.href = p.url; more.textContent = 'Make this drink ↗';
-      const parts = [photo, label, heading]; if (facts.children.length) parts.push(facts); if (pantry) parts.push(pantry); parts.push(desc, more);
-      card.append(...parts); fragment.append(card);
+      const pantryStatus=pantryMode ? (p.pantryMissing===0 ? 'You can make this now' : 'Missing 1 ingredient') : '';
+      fragment.append(createRecipeCard(p,{status:pantryStatus}));
     }
     if (!found.length) { const message = document.createElement('p'); message.className = 'empty-state'; message.textContent = onlySaved ? 'No saved recipes match. Save a drink from the collection, or clear your filters.' : 'No matches yet. Try a different ingredient or choose All drinks.'; fragment.append(message); }
     results.replaceChildren(fragment); updateSaveButtons();
@@ -231,14 +254,88 @@ if (input) {
   let debounce;
   input.addEventListener('input', () => { clearTimeout(debounce); debounce = setTimeout(display, 120); });
   [category,calorie,alcohol,time,spirit,flavor,sort].forEach(control=>control.addEventListener('change',display));
-  pantrySearch.addEventListener('click',()=>{pantryMode=pantryTerms().length>0;pantryClear.hidden=!pantryMode;display();});
+  pantrySearch.addEventListener('click',()=>{const pantry=new Set(pantryTerms());writePantry(pantry);pantryMode=pantry.size>0;pantryClear.hidden=!pantryMode;display();});
   pantryInput.addEventListener('keydown',event=>{if(event.key==='Enter'){event.preventDefault();pantrySearch.click();}});
-  pantryClear.addEventListener('click',()=>{pantryMode=false;pantryInput.value='';pantryClear.hidden=true;display();});
+  pantryClear.addEventListener('click',()=>{pantryMode=false;pantryClear.hidden=true;display();});
   savedFilter.addEventListener('click', () => { savedFilter.setAttribute('aria-pressed', String(savedFilter.getAttribute('aria-pressed') !== 'true')); display(); });
-  document.querySelector('#clear-filters').addEventListener('click', () => { input.value=''; category.value=''; calorie.value=''; alcohol.value=''; time.value=''; spirit.value=''; flavor.value=''; sort.value='newest'; savedFilter.setAttribute('aria-pressed','false'); pantryMode=false; pantryInput.value=''; pantryClear.hidden=true; display(); input.focus(); });
+  document.querySelector('#clear-filters').addEventListener('click', () => { input.value=''; category.value=''; calorie.value=''; alcohol.value=''; time.value=''; spirit.value=''; flavor.value=''; sort.value='newest'; savedFilter.setAttribute('aria-pressed','false'); pantryMode=false; pantryInput.value=[...readPantry()].join(', '); pantryClear.hidden=true; display(); input.focus(); });
   fetch(input.dataset.index).then(response => { if (!response.ok) throw Error('Search unavailable'); return response.json(); }).then(data => { entries = data; display(); }).catch(() => { status.textContent = 'Search could not load. Refresh to retry, or browse All recipes in the footer.'; });
 }
 
+
+const myBar=document.querySelector('[data-my-bar]');
+if(myBar){
+  const indexUrl=myBar.dataset.index;
+  const savedGrid=myBar.querySelector('[data-bar-saved]');
+  const readyGrid=myBar.querySelector('[data-bar-ready]');
+  const nearGrid=myBar.querySelector('[data-bar-near]');
+  const pantryList=myBar.querySelector('[data-bar-pantry-list]');
+  const pantryForm=myBar.querySelector('[data-bar-pantry-form]');
+  const pantryInput=myBar.querySelector('#bar-pantry-input');
+  const clearPantry=myBar.querySelector('[data-bar-clear-pantry]');
+  const savedCount=myBar.querySelector('[data-bar-saved-count]');
+  const pantryCount=myBar.querySelector('[data-bar-pantry-count]');
+  const readyCount=myBar.querySelector('[data-bar-ready-count]');
+  const readyStatus=myBar.querySelector('[data-bar-ready-status]');
+  let entries=[];
+
+  const renderEmpty=(grid,message)=>{const p=document.createElement('p');p.className='empty-state';p.textContent=message;grid.replaceChildren(p);};
+  const renderPantry=pantry=>{
+    const fragment=document.createDocumentFragment();
+    [...pantry].sort().forEach(item=>{
+      const chip=document.createElement('button');chip.type='button';chip.className='pantry-chip';chip.dataset.removePantry=item;
+      chip.textContent=item+' ×';chip.setAttribute('aria-label','Remove '+item+' from My Bar');fragment.append(chip);
+    });
+    pantryList.replaceChildren(fragment);
+    clearPantry.hidden=pantry.size===0;
+  };
+  renderMyBar=()=>{
+    if(!entries.length)return;
+    const pantry=readPantry();
+    const savedRecipes=entries.filter(recipe=>saved.has(recipe.url));
+    const scored=entries.map(recipe=>({recipe,...pantryScore(recipe,pantry)})).filter(item=>item.matched.length>0);
+    const ready=scored.filter(item=>item.missing.length===0).sort((a,b)=>b.matched.length-a.matched.length);
+    const near=scored.filter(item=>item.missing.length===1).sort((a,b)=>b.matched.length-a.matched.length);
+
+    savedCount.textContent=String(savedRecipes.length);pantryCount.textContent=String(pantry.size);readyCount.textContent=String(ready.length);
+    renderPantry(pantry);
+
+    if(ready.length){
+      readyGrid.replaceChildren(...ready.slice(0,6).map(item=>createRecipeCard(item.recipe,{status:'Ready with your ingredients'})));
+      readyStatus.textContent=ready.length+' recipe'+(ready.length===1?'':'s')+' match everything currently in My Bar.';
+    }else{
+      renderEmpty(readyGrid,pantry.size?'Nothing is a complete match yet. Add another ingredient and this list will update.':'Add a few bottles, mixers or juices to My Bar to start matching recipes.');
+      readyStatus.textContent=pantry.size?'No complete matches yet.':'Add ingredients above and we’ll match them against the recipe collection.';
+    }
+
+    if(near.length){
+      nearGrid.replaceChildren(...near.slice(0,6).map(item=>createRecipeCard(item.recipe,{status:'Add: '+item.missing[0]})));
+    }else{
+      renderEmpty(nearGrid,pantry.size?'No one-ingredient-away matches right now.':'Your near matches will appear here once you add ingredients.');
+    }
+
+    if(savedRecipes.length) savedGrid.replaceChildren(...savedRecipes.map(recipe=>createRecipeCard(recipe)));
+    else renderEmpty(savedGrid,'You have not saved any recipes yet. Use Save on any drink and it will appear here.');
+    updateSaveButtons();
+  };
+
+  pantryForm.addEventListener('submit',event=>{
+    event.preventDefault();
+    const additions=pantryInput.value.split(',').map(value=>value.trim().toLowerCase()).filter(Boolean);
+    if(!additions.length)return;
+    const pantry=readPantry();additions.forEach(item=>pantry.add(item));writePantry(pantry);pantryInput.value='';renderMyBar();
+  });
+  pantryList.addEventListener('click',event=>{
+    const button=event.target.closest('[data-remove-pantry]');if(!button)return;
+    const pantry=readPantry();pantry.delete(button.dataset.removePantry);writePantry(pantry);renderMyBar();
+  });
+  clearPantry.addEventListener('click',()=>{writePantry(new Set());renderMyBar();});
+  fetch(indexUrl).then(response=>{if(!response.ok)throw Error();return response.json();}).then(data=>{entries=data;renderMyBar();}).catch(()=>{
+    renderEmpty(savedGrid,'My Bar could not load the recipe collection. Refresh to retry.');
+    renderEmpty(readyGrid,'Recipe matching is temporarily unavailable.');
+    renderEmpty(nearGrid,'Recipe matching is temporarily unavailable.');
+  });
+}
 
 // Reader comments and ratings use the external feedback API so they keep working
 // even if the website repository is private.
